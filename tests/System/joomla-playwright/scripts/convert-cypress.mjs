@@ -312,10 +312,16 @@ function convertCyChain(node) {
     if (steps[0].method === 'config') {
       const key = steps[0].args[0];
       if (t.isStringLiteral(key) && key.value === 'fixturesFolder') {
-        return { node: t.memberExpression(t.identifier('joomla'), t.identifier('fixturesFolder')), await: false };
+        return { node: t.stringLiteral('tests/System/fixtures'), await: false };
       }
       if (t.isStringLiteral(key) && key.value === 'projectRoot') {
-        return { node: t.memberExpression(t.memberExpression(t.identifier('joomla'), t.identifier('expose')), t.identifier('cmsPath')), await: false };
+        return {
+          node: t.callExpression(t.memberExpression(t.identifier('process'), t.identifier('cwd')), []),
+          await: false,
+        };
+      }
+      if (t.isStringLiteral(key) && key.value === 'baseUrl') {
+        return { node: t.memberExpression(t.memberExpression(t.identifier('joomla'), t.identifier('config')), t.identifier('baseURL')), await: false };
       }
     }
     if (steps[0].method === 'session' || steps[0].method === 'on' || steps[0].method === 'automation') {
@@ -1204,6 +1210,8 @@ function convertFile(srcFile) {
     'plugins/system/tasknotification/TaskNotification.cy.js',
     'plugins/system/shortcut/ShortcutPlugin.cy.js',
     'cli/Finder.cy.js',
+    'api/com_media/Files.cy.js',
+    'api/com_contenthistory/Content.cy.js',
   ]);
   if (skip.has(rel)) {
     return;

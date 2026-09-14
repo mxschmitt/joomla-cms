@@ -110,9 +110,10 @@ test.describe('Test that contenthistory for content API endpoint', () => {
     } = response.body;
     console.log(`History Entries: ${historyEntries.length}`);
     // Iterate through each history entry
-    historyEntries.forEach(entry => {
+    // Iterate through each history entry
+    for (const entry of historyEntries) {
       const result = await joomla.api_delete(`/content/articles/${entry.id}/contenthistory`);
-      await expect(result.status).toBe(204);
-    });
+      expect(result.status).toBe(204);
+    }
   });
 });

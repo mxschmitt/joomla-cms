@@ -2,9 +2,7 @@
 import { test, expect } from '../../../joomla-playwright/src/fixtures';
 
 test.describe('Test that media files API endpoint', () => {
-  const fixturesFolder = joomla.fixturesFolder;
-  const projectRoot = joomla.expose.cmsPath;
-  const mediaFixturesFolder = `${fixturesFolder.replace(projectRoot, '').replace(/^\//, '')}/com_media`;
+  const mediaFixturesFolder = 'tests/System/fixtures/com_media';
   // Create directories and test images before running each test
   test.beforeEach(async ({
     page,
