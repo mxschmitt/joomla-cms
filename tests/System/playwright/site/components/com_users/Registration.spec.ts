@@ -28,7 +28,7 @@ test.describe('Test in frontend that the users registration view', () => {
     await page.locator('#jform_password1').fill(`${joomla.expose.password}-test`);
     await page.locator('#jform_password2').fill(`${joomla.expose.password}-test`);
     await page.locator('#jform_email1').fill('testuser@example.com');
-    await page.locator('#member-registration').evaluate(form => form.submit());
+    await joomla.submitForm('#member-registration');
     await joomla.checkForSystemMessage('Your account has been created and a verification link has been sent to the email address you entered.');
     let mails = await joomla.getMails();
     await expect(mails).toHaveLength(1);
@@ -55,9 +55,8 @@ test.describe('Test in frontend that the users registration view', () => {
     url = activatelinkadmin;
     await page.goto(url);
     await joomla.checkForSystemMessage('Please log in to confirm that you are authorised to activate new accounts.');
-    await joomla.doFrontendLogin();
-    url = activatelinkadmin;
-    await page.goto(url);
+    await joomla.doFrontendLogin(null, null, false);
+    await page.goto(activatelinkadmin);
     await joomla.checkForSystemMessage('The user\'s account has been activated and the user has been notified about it.');
     await joomla.doFrontendLogout();
     mails = await joomla.getMails();

@@ -11,9 +11,8 @@ test.describe('Test in backend that the Installer', () => {
   });
 
   test('can install and uninstall a component from URL tab', async ({ page, joomla }) => {
-    const urlTab = page.locator('joomla-tab-element#url');
-    await expect(urlTab).toBeAttached();
-    await urlTab.click({ force: true });
+    await expect(page.locator('joomla-tab-element#url')).toBeAttached();
+    await page.getByRole('tab', { name: 'Install from URL' }).click();
     await expect(page.locator('button#installbutton_url')).toContainText('Check & Install');
     await page.locator('input#install_url').fill(
       'https://github.com/joomla-extensions/patchtester/releases/download/4.4.0/com_patchtester_4.4.0.zip',

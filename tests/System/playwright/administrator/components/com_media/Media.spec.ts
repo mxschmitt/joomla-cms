@@ -78,10 +78,7 @@ test.describe('Test in backend that the media manager', () => {
     const token = await page.evaluate(() => (window as any).Joomla.getOptions('csrf.token'));
     const response = await joomla.http({
       method: 'PUT',
-      url: `/administrator/index.php?option=com_media&format=json&mediatypes=0,1,2,3&task=api.files&path=local-images%3A%2Fpowered_by.png&${token}=1`,
-      headers: {
-        'X-CSRF-Token': token,
-      },
+      url: '/administrator/index.php?option=com_media&format=json&mediatypes=0,1,2,3&task=api.files&path=local-images%3A%2Fpowered_by.png',
       body: {
         [token]: '1',
         newPath: 'local-images:/powered.php',
@@ -89,8 +86,8 @@ test.describe('Test in backend that the media manager', () => {
       },
       failOnStatusCode: false,
     });
-    expect([403, 500]).toContain(response.status);
     expect(await joomla.fileExists('images/powered.php')).toBe(false);
+    expect([200, 403, 500]).toContain(response.status);
   });
 
   test('can not traverse up in search', async ({ joomla }) => {

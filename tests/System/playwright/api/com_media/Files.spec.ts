@@ -1,5 +1,7 @@
 // @ts-nocheck
 import { test, expect } from '../../../joomla-playwright/src/fixtures';
+import { deleteRelativePath } from '../../../joomla-playwright/src/node-fs';
+import { loadJoomlaTestConfig } from '../../../joomla-playwright/src/config';
 
 test.describe('Test that media files API endpoint', () => {
   const mediaFixturesFolder = 'tests/System/fixtures/com_media';
@@ -30,12 +32,11 @@ test.describe('Test that media files API endpoint', () => {
     });
   });
   // Delete all files and directories created during the test, only for clean-up and only if they exist
-  test.afterAll(async ({
-    joomla
-  }) => {
-    await joomla.deleteRelativePath('files/test-dir');
-    await joomla.deleteRelativePath('images/test-dir2');
-    await joomla.deleteRelativePath('files/test-image-1.jpg');
+  test.afterAll(() => {
+    const config = loadJoomlaTestConfig();
+    deleteRelativePath('files/test-dir', config);
+    deleteRelativePath('images/test-dir2', config);
+    deleteRelativePath('files/test-image-1.jpg', config);
   });
   test('can deliver a list of files', async ({
     page,

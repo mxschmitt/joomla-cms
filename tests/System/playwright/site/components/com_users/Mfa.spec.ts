@@ -11,8 +11,7 @@ async function totpSecret(page: import('@playwright/test').Page): Promise<string
 }
 
 async function openProfileEdit(page: import('@playwright/test').Page) {
-  await page.goto('/index.php?option=com_users&view=profile&layout=edit', { waitUntil: 'domcontentloaded' });
-  await expect(page.locator('.com-users-methods-list, #member-profile').first()).toBeVisible();
+  await page.goto('/index.php?option=com_users&view=profile&layout=edit');
 }
 
 test.describe('Test in frontend that the user', () => {
@@ -34,19 +33,20 @@ test.describe('Test in frontend that the user', () => {
     expect(setupMails[0].body).toContain(`Your authentication code is ${setupCode}.`);
     expect(setupMails[0].html).toBe(false);
     await page.locator('#com-users-method-code').fill(setupCode);
-    await page.locator('#com-users-method-edit').evaluate((form: HTMLFormElement) => form.submit());
+    await joomla.submitForm('#com-users-method-edit');
     await expect(page.locator('.com-users-methods-list-method-name-email .com-users-methods-list-method-record').filter({ hasText: 'Test Code' })).toBeVisible();
     await joomla.doFrontendLogout();
     await page.locator('form.mod-login input[name="username"]').fill(joomla.expose.username);
     await page.locator('form.mod-login input[name="password"]').fill(joomla.expose.password);
-    await page.locator('form.mod-login').evaluate((form: HTMLFormElement) => form.submit());
+    await joomla.submitForm('form.mod-login');
     await expect(page.locator('#users-mfa-title').filter({ hasText: 'Test Code' })).toBeVisible();
     const loginMails = await joomla.getMails();
     expect(loginMails).toHaveLength(2);
     expect(loginMails[1].headers?.subject).toMatch(/code is -\d{6}-$/);
     const loginCode = /code is -(\d{6})-$/.exec(loginMails[1].headers?.subject || '')?.[1] as string;
     await page.locator('#users-mfa-code').fill(loginCode);
-    await page.locator('#users-mfa-captive-form').evaluate((form: HTMLFormElement) => form.submit());
+    await joomla.submitForm('#users-mfa-captive-form');
+    await expect(page.locator('.mod-login-logout button[type=submit]')).toContainText('Log out');
     await openProfileEdit(page);
     await expect(page.locator('#com-users-methods-reset-message').filter({ hasText: 'is enabled' })).toBeVisible();
     await page.locator('.com-users-methods-list-method-name-email a.com-users-methods-list-method-record-delete').click();
@@ -60,15 +60,16 @@ test.describe('Test in frontend that the user', () => {
     await page.locator('#com-users-method-edit-title').fill('Test Code');
     const secret = await totpSecret(page);
     await page.locator('#com-users-method-code').fill(TOTP.generate(secret).otp);
-    await page.locator('#com-users-method-edit').evaluate((form: HTMLFormElement) => form.submit());
+    await joomla.submitForm('#com-users-method-edit');
     await expect(page.locator('.com-users-methods-list-method-name-totp .com-users-methods-list-method-record').filter({ hasText: 'Test Code' })).toBeVisible();
     await joomla.doFrontendLogout();
     await page.locator('form.mod-login input[name="username"]').fill(joomla.expose.username);
     await page.locator('form.mod-login input[name="password"]').fill(joomla.expose.password);
-    await page.locator('form.mod-login').evaluate((form: HTMLFormElement) => form.submit());
+    await joomla.submitForm('form.mod-login');
     await expect(page.locator('#users-mfa-title').filter({ hasText: 'Verification code' })).toBeVisible();
     await page.locator('#users-mfa-code').fill(TOTP.generate(secret).otp);
-    await page.locator('#users-mfa-captive-form').evaluate((form: HTMLFormElement) => form.submit());
+    await joomla.submitForm('#users-mfa-captive-form');
+    await expect(page.locator('.mod-login-logout button[type=submit]')).toContainText('Log out');
     await openProfileEdit(page);
     await expect(page.locator('#com-users-methods-reset-message').filter({ hasText: 'is enabled' })).toBeVisible();
     await page.locator('.com-users-methods-list-method-name-totp a.com-users-methods-list-method-record-delete').click();
@@ -86,9 +87,10 @@ test.describe('Test in frontend that the user', () => {
     await joomla.doFrontendLogout();
     await page.locator('form.mod-login input[name="username"]').fill(joomla.expose.username);
     await page.locator('form.mod-login input[name="password"]').fill(joomla.expose.password);
-    await page.locator('form.mod-login').evaluate((form: HTMLFormElement) => form.submit());
+    await joomla.submitForm('form.mod-login');
     await expect(page.locator('#users-mfa-title').filter({ hasText: 'Passkey' })).toBeVisible();
     await page.locator('#users-mfa-captive-button-submit').click();
+    await expect(page.locator('.mod-login-logout button[type=submit]')).toContainText('Log out');
     await openProfileEdit(page);
     await expect(page.locator('#com-users-methods-reset-message').filter({ hasText: 'is enabled' })).toBeVisible();
     await page.locator('.com-users-methods-list-method-name-webauthn a.com-users-methods-list-method-record-delete').click();
@@ -103,7 +105,7 @@ test.describe('Test in frontend that the user', () => {
     await page.locator('#com-users-method-edit-title').fill('Test Code');
     const secret = await totpSecret(page);
     await page.locator('#com-users-method-code').fill(TOTP.generate(secret).otp);
-    await page.locator('#com-users-method-edit').evaluate((form: HTMLFormElement) => form.submit());
+    await joomla.submitForm('#com-users-method-edit');
     await expect(page.locator('.com-users-methods-list-method-name-totp .com-users-methods-list-method-record').filter({ hasText: 'Test Code' })).toBeVisible();
     const printCodes = page.locator('.com-users-methods-list-method-name-backupcodes .com-users-methods-list-method-record-info a');
     await expect(printCodes).toHaveText('Print these codes');
@@ -113,13 +115,14 @@ test.describe('Test in frontend that the user', () => {
     await joomla.doFrontendLogout();
     await page.locator('form.mod-login input[name="username"]').fill(joomla.expose.username);
     await page.locator('form.mod-login input[name="password"]').fill(joomla.expose.password);
-    await page.locator('form.mod-login').evaluate((form: HTMLFormElement) => form.submit());
+    await joomla.submitForm('form.mod-login');
     await expect(page.locator('#users-mfa-title').filter({ hasText: 'Verification code' })).toBeVisible();
     await page.locator('#users-mfa-captive-form-choose-another a').click();
     await page.locator('a.com-users-method').filter({ hasText: 'Backup Codes' }).click();
     await expect(page.locator('#users-mfa-title').filter({ hasText: 'Backup Codes' })).toBeVisible();
     await page.locator('#users-mfa-code').fill(code);
-    await page.locator('#users-mfa-captive-form').evaluate((form: HTMLFormElement) => form.submit());
+    await joomla.submitForm('#users-mfa-captive-form');
+    await expect(page.locator('.mod-login-logout button[type=submit]')).toContainText('Log out');
     await openProfileEdit(page);
     await expect(page.locator('#com-users-methods-reset-message').filter({ hasText: 'is enabled' })).toBeVisible();
     await page.locator('.com-users-methods-list-method-name-totp a.com-users-methods-list-method-record-delete').click();

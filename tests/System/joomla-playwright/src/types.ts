@@ -140,6 +140,7 @@ export interface JoomlaHelpers {
   checkForPhpNoticesOrWarnings(): Promise<void>;
   searchForItem(name?: string | null): Promise<void>;
   setFilter(name: string, value: string): Promise<void>;
+  submitForm(selector: string): Promise<void>;
   checkAllResults(): Promise<void>;
   clickDialogConfirm(isOkay: boolean): Promise<void>;
   selectOptionInFancySelect(selectId: string, option: string): Promise<void>;

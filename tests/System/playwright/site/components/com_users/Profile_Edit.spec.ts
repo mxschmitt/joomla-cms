@@ -36,9 +36,7 @@ test.describe('Test in frontend that the users profile view edit layout', () => 
     await page.goto('/index.php?option=com_users&view=profile&layout=edit');
     await page.locator('#jform_name').fill('automated test user edited');
     await page.locator('#jform_email1').fill('testedited@example.com');
-    await page.locator('.controls > .btn-primary').click({
-      force: true
-    });
+    await page.locator('#member-profile button[type="submit"][value="profile.save"]').click();
     await joomla.checkForSystemMessage('Profile saved.');
     await expect(page.locator('#users-profile-core')).toContainText('Name');
     await expect(page.locator('#users-profile-core')).toContainText('automated test user edited');
@@ -58,13 +56,11 @@ test.describe('Test in frontend that the users profile view edit layout', () => 
     });
     await joomla.doFrontendLogin('automatedtestuser', 'test', false);
     await page.goto('/');
-    await page.getByRole('link', { name: 'Automated test edit test user' }).click();
+    await page.locator('a').filter({ hasText: 'Automated test edit' }).first().click();
     await page.locator('#jform_name').fill('automated test user edited');
     await page.locator('#jform_email1').fill('testedited@example.com');
-    await expect(page.locator('.controls > .btn-primary')).toBeVisible();
-    await page.locator('.controls > .btn-primary').click({
-      force: true
-    });
+    await expect(page.locator('#member-profile button[type="submit"][value="profile.save"]')).toBeVisible();
+    await page.locator('#member-profile button[type="submit"][value="profile.save"]').click();
     await joomla.checkForSystemMessage('Profile saved.');
     await expect(page.locator('.profile .btn-primary')).toBeVisible();
     await page.locator('.profile .btn-primary').click({

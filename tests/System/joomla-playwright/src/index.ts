@@ -111,6 +111,7 @@ export function createJoomla({
     checkForPhpNoticesOrWarnings: () => ui.checkForPhpNoticesOrWarnings(page),
     searchForItem: (name) => ui.searchForItem(page, name),
     setFilter: (name, value) => ui.setFilter(page, name, value),
+    submitForm: (selector) => ui.submitForm(page, selector),
     checkAllResults: () => ui.checkAllResults(page),
     clickDialogConfirm: (isOkay) => ui.clickDialogConfirm(page, isOkay),
     selectOptionInFancySelect: (selectId, option) => ui.selectOptionInFancySelect(page, selectId, option),

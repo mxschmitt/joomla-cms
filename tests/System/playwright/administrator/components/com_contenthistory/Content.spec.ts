@@ -84,6 +84,6 @@ test.describe('Test in backend that the content history list', () => {
     await frame.locator('thead input[name=\'checkall-toggle\']').click({ force: true });
     await expect(frame.locator('button.button-load')).toContainText('Restore');
     await frame.locator('button.button-load').click({ force: true });
-    await expectFrameMessage(frame, 'Prior version restored.');
+    await expect(page.locator('#system-message-container .alert-message').filter({ hasText: 'Prior version restored.' })).toBeVisible();
   });
 });

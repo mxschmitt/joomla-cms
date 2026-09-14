@@ -108,14 +108,25 @@ export async function searchForItem(page: Page, name: string | null = null): Pro
 }
 
 export async function setFilter(page: Page, name: string, value: string): Promise<void> {
-  const container = page.locator('#adminForm .js-stools-container-filters');
-  if (!(await container.isVisible().catch(() => false))) {
+  const select = page.locator(`#filter_${name}`);
+  if (!(await select.isVisible().catch(() => false))) {
     await page.locator('button.js-stools-btn-filter').click();
+    await expect(select).toBeVisible();
   }
-  await page.locator(`#filter_${name}`).selectOption({ label: value }).catch(async () => {
-    await page.locator(`#filter_${name}`).selectOption(value);
+  await select.selectOption({ label: value }, { force: true }).catch(async () => {
+    await select.selectOption(value, { force: true });
   });
   await page.waitForLoadState('networkidle').catch(() => {});
+}
+
+/**
+ * Cypress cy.get(form).submit() waits for the resulting navigation.
+ * Playwright's form.submit() via evaluate does not, so callers must wait.
+ */
+export async function submitForm(page: Page, selector: string): Promise<void> {
+  const navigation = page.waitForLoadState('load');
+  await page.locator(selector).evaluate((form: HTMLFormElement) => form.submit());
+  await navigation.catch(() => {});
 }
 
 export async function checkAllResults(page: Page): Promise<void> {

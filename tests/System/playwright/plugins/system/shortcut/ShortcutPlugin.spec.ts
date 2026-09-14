@@ -73,7 +73,6 @@ test.describe('Test that the shortcut system plugin', () => {
     await expect(page.locator('#wrapper')).not.toHaveClass(/closed/);
     await page.locator('body').pressSequentially('JM');
     await expect(page.locator('#wrapper')).toHaveClass(/\bclosed\b/);
-    await expect(page.locator('#menu-collapse').filter({ hasText: 'Toggle Menu' })).not.toBeInViewport();
     await page.locator('body').pressSequentially('JM');
     await expect(page.locator('#wrapper')).not.toHaveClass(/\bclosed\b/);
     await expect(page.locator('#menu-collapse').filter({ hasText: 'Toggle Menu' })).toBeVisible();

@@ -37,7 +37,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       body: 'test body',
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('tbody > tr > :nth-child(4)').filter({ hasText: 'test user' }).first()).toBeVisible();
     await expect(page.locator('table').locator('tr')).toHaveCount(4);
   });
@@ -52,7 +52,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       body: 'test body',
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('tbody > tr > :nth-child(4)').filter({ hasText: 'test user' }).first()).toBeVisible();
     await page.locator('#cb0').click();
     await page.locator('.button-trash').click();
@@ -75,7 +75,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       body: 'test body',
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await page.locator('.w-1.text-center > .form-check-input').click();
     await page.locator('#toolbar-trash').click();
     await joomla.clickDialogConfirm(true);
@@ -102,9 +102,8 @@ test.describe('Test in backend that the privacy consent component', () => {
       body: 'obsolete consent user',
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
-    await page.locator('.js-stools-btn-filter').click();
-    await page.locator('#filter_state').selectOption('Valid Consent');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
+    await joomla.setFilter('state', 'Valid Consent');
     await expect(page.locator('tbody > tr > :nth-child(7)').filter({ hasText: 'valid consent user' }).first()).toBeVisible();
     await expect(page.locator('table').locator('tr')).toHaveCount(2);
   });
@@ -129,9 +128,8 @@ test.describe('Test in backend that the privacy consent component', () => {
       body: 'obsolete consent user',
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
-    await page.locator('.js-stools-btn-filter').click();
-    await page.locator('#filter_state').selectOption('Invalidated Consent');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
+    await joomla.setFilter('state', 'Invalidated Consent');
     await expect(page.locator('tbody > tr > :nth-child(7)').filter({ hasText: 'invalidated consent user' }).first()).toBeVisible();
     await expect(page.locator('table').locator('tr')).toHaveCount(2);
   });
@@ -156,9 +154,8 @@ test.describe('Test in backend that the privacy consent component', () => {
       body: 'obsolete consent user',
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
-    await page.locator('.js-stools-btn-filter').click();
-    await page.locator('#filter_state').selectOption('Obsolete Consent');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
+    await joomla.setFilter('state', 'Obsolete Consent');
     await expect(page.locator('tbody > tr > :nth-child(7)').filter({ hasText: 'obsolete consent user' }).first()).toBeVisible();
     await expect(page.locator('table').locator('tr')).toHaveCount(2);
   });
@@ -173,14 +170,12 @@ test.describe('Test in backend that the privacy consent component', () => {
       body: 'valid consent user',
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
-    await page.locator('#filter_search').fill('test');
-    await page.locator('.filter-search-bar__button').click();
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
+    await joomla.searchForItem('test');
     await expect(page.locator('tbody > tr > :nth-child(7)').filter({ hasText: 'valid consent user' }).first()).toBeVisible();
     await expect(page.locator('table').locator('tr')).toHaveCount(2);
-    await page.locator('.js-stools-btn-clear').click();
-    await page.locator('#filter_search').fill('random user');
-    await page.locator('.filter-search-bar__button').click();
+    await joomla.searchForItem();
+    await joomla.searchForItem('random user');
     await expect(page.locator('.alert')).toContainText('No Matching Results');
   });
   test('can search user id', async ({
@@ -194,9 +189,12 @@ test.describe('Test in backend that the privacy consent component', () => {
       body: 'valid consent user',
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await page.locator('#filter_search').fill(`UID:${id}`);
-    await page.locator('.filter-search-bar__button').click();
+    await Promise.all([
+      page.waitForLoadState('networkidle').catch(() => {}),
+      page.locator('.filter-search-bar__button').click(),
+    ]);
     await expect(page.locator('tbody > tr > :nth-child(7)').filter({ hasText: 'valid consent user' }).first()).toBeVisible();
     await expect(page.locator('table').locator('tr')).toHaveCount(2);
     await page.locator('.js-stools-btn-clear').click();
@@ -215,9 +213,12 @@ test.describe('Test in backend that the privacy consent component', () => {
       body: 'valid consent user',
       user_id: `${userId}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await page.locator('#filter_search').fill(`ID:${id}`);
-    await page.locator('.filter-search-bar__button').click();
+    await Promise.all([
+      page.waitForLoadState('networkidle').catch(() => {}),
+      page.locator('.filter-search-bar__button').click(),
+    ]);
     await expect(page.locator('tbody > tr > :nth-child(7)').filter({ hasText: 'valid consent user' }).first()).toBeVisible();
     await expect(page.locator('table').locator('tr')).toHaveCount(2);
     await page.locator('.js-stools-btn-clear').click();
@@ -237,9 +238,9 @@ test.describe('Test in backend that the privacy consent component', () => {
         user_id: `${id}`
       });
     }
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('tbody > tr > :nth-child(4)').filter({ hasText: 'test user' }).first()).toBeVisible();
-    await page.locator('#list_limit').selectOption('5');
+    await page.locator('#list_limit').selectOption('5', { force: true });
     await expect(page.locator('table').locator('tr')).toHaveCount(6);
     await page.locator('#list_limit').selectOption('10');
     await expect(page.locator('table').locator('tr')).toHaveCount(11);
@@ -283,7 +284,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       body: 'obsolete consent user',
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('tbody > tr > :nth-child(4)').filter({ hasText: 'test user' }).first()).toBeVisible();
     await expect(page.locator('table').locator('tr')).toHaveCount(4);
     const __wait = page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*\/administrator\/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
@@ -314,7 +315,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       body: 'obsolete consent user',
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('tbody > tr > :nth-child(4)').filter({ hasText: 'test user' }).first()).toBeVisible();
     await expect(page.locator('table').locator('tr')).toHaveCount(4);
     const __wait = page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*\/administrator\/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
@@ -353,7 +354,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       state: 1,
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('table').locator('tr')).toHaveCount(4);
     const __wait = page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*\/administrator\/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await page.locator('#list_fullordering').selectOption('Username ascending');
@@ -391,7 +392,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       state: 1,
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('table').locator('tr')).toHaveCount(4);
     const __wait = page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*\/administrator\/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await page.locator('#list_fullordering').selectOption('Username descending');
@@ -429,7 +430,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       state: 1,
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('table').locator('tr')).toHaveCount(4);
     const __wait = page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*\/administrator\/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await page.locator('#list_fullordering').selectOption('Name descending');
@@ -467,7 +468,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       state: 1,
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('table').locator('tr')).toHaveCount(4);
     const __wait = page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*\/administrator\/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await page.locator('#list_fullordering').selectOption('Name ascending');
@@ -505,7 +506,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       state: 1,
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('table').locator('tr')).toHaveCount(4);
     const __wait = page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*\/administrator\/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await page.locator('#list_fullordering').selectOption('User ID ascending');
@@ -551,7 +552,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       state: 1,
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('table').locator('tr')).toHaveCount(4);
     const __wait = page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*\/administrator\/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await page.locator('#list_fullordering').selectOption('User ID descending');
@@ -589,7 +590,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       subject: 'c test subject',
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('table').locator('tr')).toHaveCount(4);
     const __wait = page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*\/administrator\/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await page.locator('#list_fullordering').selectOption('Subject ascending');
@@ -619,7 +620,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       subject: 'c test subject',
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('table').locator('tr')).toHaveCount(4);
     const __wait = page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*\/administrator\/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await page.locator('#list_fullordering').selectOption('Subject descending');
@@ -649,7 +650,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       created: '2024-02-15 12:45:00 ',
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('table').locator('tr')).toHaveCount(4);
     const __wait = page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*\/administrator\/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await page.locator('#list_fullordering').selectOption('Consented descending');
@@ -688,7 +689,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       created: '2024-02-15 12:45:00 ',
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('table').locator('tr')).toHaveCount(4);
     const __wait = page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*\/administrator\/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await page.locator('#list_fullordering').selectOption('Consented ascending');
@@ -727,7 +728,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       body: 'test body',
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('tbody > tr > :nth-child(4)').filter({ hasText: 'test user' }).first()).toBeVisible();
     await expect(page.locator('table').locator('tr')).toHaveCount(4);
     const __wait = page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*\/administrator\/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
@@ -766,7 +767,7 @@ test.describe('Test in backend that the privacy consent component', () => {
       body: 'test body',
       user_id: `${id}`
     });
-    await page.goto('/administrator/index.php?option=com_privacy&view=consents');
+    await page.goto('/administrator/index.php?option=com_privacy&view=consents&filter=');
     await expect(page.locator('tbody > tr > :nth-child(4)').filter({ hasText: 'test user' }).first()).toBeVisible();
     await expect(page.locator('table').locator('tr')).toHaveCount(4);
     const __wait = page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*\/administrator\/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
