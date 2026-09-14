@@ -238,18 +238,16 @@ export async function setErrorReportingToDevelopment(page: Page): Promise<void> 
 export async function prepareInstaller(page: Page): Promise<void> {
   await page.goto('installation/index.php');
   await page.waitForLoadState('domcontentloaded');
-
-  const langDialog = page.locator('button[data-joomla-dialog]');
-  if (await langDialog.isVisible().catch(() => false)) {
-    await langDialog.click({ force: true });
-    await page.locator('#jform_language').waitFor({ state: 'visible' });
-    await page.locator('#jform_language').selectOption('en-GB');
-    await page.locator('button[data-button-close]').click({ force: true });
-  } else if (await page.locator('#jform_language').isVisible().catch(() => false)) {
-    await page.locator('#jform_language').selectOption('en-GB');
-  }
-
   await expect(page.locator('#jform_site_name')).toBeVisible();
+
+  // Joomla < 6 shows a language <select> on the page. Joomla 7 keeps it in a
+  // dialog behind a Change button; English is already selected, so leave it.
+  const language = page.locator('#jform_language');
+  if (await language.isVisible().catch(() => false)) {
+    await language.selectOption('en-GB').catch(async () => {
+      await language.selectOption({ label: /English/ });
+    });
+  }
 }
 
 export async function doInstallation(page: Page, config: JoomlaExpose): Promise<void> {
