@@ -48,7 +48,9 @@ test.describe('Test in backend that the menu list', () => {
     await $body.locator('.accordion-button').filter({
       hasText: 'System Links'
     }).click();
-    await $body.locator('a[data-type="url"]').click({ force: true });
+    const urlType = $body.locator('a[data-type="url"]').filter({ hasText: 'URL' });
+    await expect(urlType).toBeVisible();
+    await urlType.click();
     await expect(page.locator('joomla-dialog.joomla-dialog-content-select-field')).toHaveCount(0);
     await page.locator('input[name="jform[link]"]').fill('#');
     await joomla.clickToolbarButton('Save & Close');
