@@ -18,25 +18,25 @@ test.describe('Test that group field content API endpoint', () => {
         title: `automated test group field content ${context}`,
         context: `com_content.${context}`
       });
-      let response = await joomla.api_get(`/fields/groups/content/${endpoint}`);
+      const response = await joomla.api_get(`/fields/groups/content/${endpoint}`);
       await expect(response.body.data[0].attributes.title).toContain(`automated test group field content ${context}`);
     });
     test(`can deliver a single group field (${context})`, async ({
       page,
       joomla
     }) => {
-      let id = await joomla.db_createFieldGroup({
+      const id = await joomla.db_createFieldGroup({
         title: `automated test group field content ${context}`,
         context: `com_content.${context}`
       });
-      response = await joomla.api_get(`/fields/groups/content/${endpoint}/${id}`);
+      const response = await joomla.api_get(`/fields/groups/content/${endpoint}/${id}`);
       await expect(response.body.data.attributes.title).toContain(`automated test group field content ${context}`);
     });
     test(`can create a group field (${context})`, async ({
       page,
       joomla
     }) => {
-      response = await joomla.api_post(`/fields/groups/content/${endpoint}`, {
+      const response = await joomla.api_post(`/fields/groups/content/${endpoint}`, {
         title: `automated test group field content ${context}`,
         access: 1,
         context: `com_content.${context}`,
@@ -71,12 +71,12 @@ test.describe('Test that group field content API endpoint', () => {
       page,
       joomla
     }) => {
-      id = await joomla.db_createFieldGroup({
+      const id = await joomla.db_createFieldGroup({
         title: 'automated test group field',
         access: 1,
         context: `com_content.${context}`
       });
-      response = await joomla.api_patch(`/fields/groups/content/${endpoint}/${id}`, {
+      const response = await joomla.api_patch(`/fields/groups/content/${endpoint}/${id}`, {
         title: `updated automated test group field ${context}`
       });
       await expect(response.body.data.attributes.title).toContain(`updated automated test group field ${context}`);
@@ -85,7 +85,7 @@ test.describe('Test that group field content API endpoint', () => {
       page,
       joomla
     }) => {
-      id = await joomla.db_createFieldGroup({
+      const id = await joomla.db_createFieldGroup({
         title: 'automated test group field',
         context: `com_content.${context}`,
         state: -2

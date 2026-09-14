@@ -7,7 +7,7 @@ test.describe('Test in frontend that the newsfeeds details view', () => {
       page,
       joomla
     }) => {
-      let feed = await joomla.db_createNewsFeed({
+      const feed = await joomla.db_createNewsFeed({
         name: 'automated test feed 1',
         link: `${joomla.config.baseURL.replace('https://', 'http://')}/tests/System/data/com_newsfeeds/${file}.xml`
       });
@@ -25,7 +25,7 @@ test.describe('Test in frontend that the newsfeeds details view', () => {
       page,
       joomla
     }) => {
-      feed = await joomla.db_createNewsFeed({
+      const feed = await joomla.db_createNewsFeed({
         name: 'automated test feed 1',
         link: `${joomla.config.baseURL.replace('https://', 'http://')}/tests/System/data/com_newsfeeds/${file}.xml`
       });

@@ -39,7 +39,7 @@ test.describe('Test in frontend that the content category view', () => {
       page,
       joomla
     }) => {
-      article = await joomla.db_createArticle({
+      let article = await joomla.db_createArticle({
         title: 'article 1'
       });
       article = await joomla.db_createArticle({

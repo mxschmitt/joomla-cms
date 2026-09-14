@@ -17,25 +17,25 @@ test.describe('Test that field contact API endpoint', () => {
         title: `automated test field contacts ${context}`,
         context: `com_contact.${context}`
       });
-      let response = await joomla.api_get(`/fields/contacts/${context}`);
+      const response = await joomla.api_get(`/fields/contacts/${context}`);
       await expect(response.body.data[0].attributes.title).toContain(`automated test field contacts ${context}`);
     });
     test(`can deliver a single field (${context})`, async ({
       page,
       joomla
     }) => {
-      let id = await joomla.db_createField({
+      const id = await joomla.db_createField({
         title: `automated test field contacts ${context}`,
         context: `com_contact.${context}`
       });
-      response = await joomla.api_get(`/fields/contacts/${context}/${id}`);
+      const response = await joomla.api_get(`/fields/contacts/${context}/${id}`);
       await expect(response.body.data.attributes.title).toContain(`automated test field contacts ${context}`);
     });
     test(`can create a field (${context})`, async ({
       page,
       joomla
     }) => {
-      response = await joomla.api_post(`/fields/contacts/${context}`, {
+      const response = await joomla.api_post(`/fields/contacts/${context}`, {
         title: `automated test field contacts ${context}`,
         access: 1,
         context: `com_contact.${context}`,
@@ -70,11 +70,11 @@ test.describe('Test that field contact API endpoint', () => {
       page,
       joomla
     }) => {
-      id = await joomla.db_createField({
+      const id = await joomla.db_createField({
         title: 'automated test field',
         context: `com_contact.${context}`
       });
-      response = await joomla.api_patch(`/fields/contacts/${context}/${id}`, {
+      const response = await joomla.api_patch(`/fields/contacts/${context}/${id}`, {
         title: `updated automated test field ${context}`
       });
       await expect(response.body.data.attributes.title).toContain(`updated automated test field ${context}`);
@@ -83,7 +83,7 @@ test.describe('Test that field contact API endpoint', () => {
       page,
       joomla
     }) => {
-      id = await joomla.db_createField({
+      const id = await joomla.db_createField({
         title: 'automated test field',
         context: `com_contact.${context}`,
         state: -2

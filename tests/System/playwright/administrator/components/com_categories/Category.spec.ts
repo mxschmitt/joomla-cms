@@ -22,7 +22,8 @@ test.describe('Test in backend that the category form', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_categories&task=category.add&extension=com_content');
-    await expect(page.locator('#jform_title')).toBeVisible().fill('Test category');
+    await expect(page.locator('#jform_title')).toBeVisible();
+    await page.locator('#jform_title').fill('Test category');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Category saved.');
     await expect(page.getByText('Test category').first()).toBeVisible();

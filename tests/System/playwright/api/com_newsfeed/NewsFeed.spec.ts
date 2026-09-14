@@ -17,7 +17,7 @@ test.describe('Test that newsfeed API endpoint', () => {
         name: 'automated test feed',
         link: `${joomla.config.baseURL}/tests/System/data/com_newsfeeds/${file}.xml`
       });
-      let response = await joomla.api_get('/newsfeeds/feeds');
+      const response = await joomla.api_get('/newsfeeds/feeds');
       await expect(response.body.data[0].attributes.name).toContain('automated test feed');
     });
     test('can create a feed', async ({
@@ -27,7 +27,7 @@ test.describe('Test that newsfeed API endpoint', () => {
       const categoryId = await joomla.db_createCategory({
         extension: 'com_newsfeeds'
       });
-      response = await joomla.api_post('/newsfeeds/feeds', {
+      const response = await joomla.api_post('/newsfeeds/feeds', {
         name: 'automated test feed',
         alias: 'test-feed',
         link: `${joomla.config.baseURL}/tests/System/data/com_newsfeeds/${file}.xml`,
@@ -71,12 +71,12 @@ test.describe('Test that newsfeed API endpoint', () => {
       page,
       joomla
     }) => {
-      let feed = await joomla.db_createNewsFeed({
+      const feed = await joomla.db_createNewsFeed({
         name: 'automated test contact',
         access: 1,
         link: `${joomla.config.baseURL}/tests/System/data/com_newsfeeds/${file}.xml`
       });
-      response = await joomla.api_patch(`/newsfeeds/feeds/${feed.id}`, {
+      const response = await joomla.api_patch(`/newsfeeds/feeds/${feed.id}`, {
         name: 'updated automated test feed'
       });
       await expect(response.body.data.attributes.name).toContain('updated automated test feed');
@@ -85,7 +85,7 @@ test.describe('Test that newsfeed API endpoint', () => {
       page,
       joomla
     }) => {
-      feed = await joomla.db_createNewsFeed({
+      const feed = await joomla.db_createNewsFeed({
         name: 'automated test contact',
         access: 1,
         link: `${joomla.config.baseURL}/tests/System/data/com_newsfeeds/${file}.xml`,

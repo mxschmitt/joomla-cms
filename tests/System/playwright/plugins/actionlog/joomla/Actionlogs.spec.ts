@@ -133,7 +133,8 @@ test.describe('Test that the Action Logs plugin', () => {
   }) => {
     await joomla.db_createUser();
     await page.goto('/index.php?option=com_users&view=remind');
-    await expect(page.locator('#jform_email')).toBeVisible().fill('test@example.com');
+    await expect(page.locator('#jform_email')).toBeVisible();
+    await page.locator('#jform_email').fill('test@example.com');
     await page.locator('button[type="submit"]').filter({
       hasText: 'Submit'
     }).click();
@@ -146,7 +147,8 @@ test.describe('Test that the Action Logs plugin', () => {
   }) => {
     await joomla.db_createUser();
     await page.goto('/index.php?option=com_users&view=reset');
-    await expect(page.locator('#jform_email')).toBeVisible().fill('test@example.com');
+    await expect(page.locator('#jform_email')).toBeVisible();
+    await page.locator('#jform_email').fill('test@example.com');
     await page.locator('button[type="submit"]').filter({
       hasText: 'Submit'
     }).click();

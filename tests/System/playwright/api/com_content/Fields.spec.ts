@@ -18,25 +18,25 @@ test.describe('Test that field content API endpoint', () => {
         title: `automated test field content ${context}`,
         context: `com_content.${context}`
       });
-      let response = await joomla.api_get(`/fields/content/${endpoint}`);
+      const response = await joomla.api_get(`/fields/content/${endpoint}`);
       await expect(response.body.data[0].attributes.title).toContain(`automated test field content ${context}`);
     });
     test(`can deliver a single field (${context})`, async ({
       page,
       joomla
     }) => {
-      let id = await joomla.db_createField({
+      const id = await joomla.db_createField({
         title: `automated test field content ${context}`,
         context: `com_content.${context}`
       });
-      response = await joomla.api_get(`/fields/content/${endpoint}/${id}`);
+      const response = await joomla.api_get(`/fields/content/${endpoint}/${id}`);
       await expect(response.body.data.attributes.title).toContain(`automated test field content ${context}`);
     });
     test(`can create a field (${context})`, async ({
       page,
       joomla
     }) => {
-      response = await joomla.api_post(`/fields/content/${endpoint}`, {
+      const response = await joomla.api_post(`/fields/content/${endpoint}`, {
         title: `automated test field content ${context}`,
         access: 1,
         context: `com_content.${context}`,
@@ -71,12 +71,12 @@ test.describe('Test that field content API endpoint', () => {
       page,
       joomla
     }) => {
-      id = await joomla.db_createField({
+      const id = await joomla.db_createField({
         title: 'automated test field',
         context: `com_content.${context}`,
         access: 1
       });
-      response = await joomla.api_patch(`/fields/content/${endpoint}/${id}`, {
+      const response = await joomla.api_patch(`/fields/content/${endpoint}/${id}`, {
         title: `updated automated test field ${context}`
       });
       await expect(response.body.data.attributes.title).toContain(`updated automated test field ${context}`);
@@ -85,7 +85,7 @@ test.describe('Test that field content API endpoint', () => {
       page,
       joomla
     }) => {
-      id = await joomla.db_createField({
+      const id = await joomla.db_createField({
         title: 'automated test field',
         context: `com_content.${context}`,
         state: -2

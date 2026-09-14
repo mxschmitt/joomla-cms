@@ -590,6 +590,10 @@ function convertCyChain(node) {
       continue;
     }
     if (step.method === 'type') {
+      if (isPlaywrightExpect(expr) && locatorTarget) {
+        pendingAsserts.push(expr);
+        expr = clone(locatorTarget);
+      }
       if (isShortcutType(expr, step.args)) {
         expr = t.callExpression(t.memberExpression(expr, t.identifier('pressSequentially')), [clone(step.args[0])]);
         needsAwait = true;
@@ -1153,7 +1157,8 @@ function postProcess(code) {
   s = s.replace(/await expect\(page\.url\(\)\)\.toHaveText\(/g, 'expect(page.url()).toMatch(');
   s = s.replace(/await expect\(page\.url\(\)\)\.toBe\(/g, 'expect(page.url()).toBe(');
   s = s.replace(/await expect\(page\.title\(\)\)\.toHaveText\(/g, 'expect(await page.title()).toMatch(');
-  s = s.replace(/\.fill\(""\)\.fill\(/g, '.fill(');
+  s = s.replace(/option:selected/g, 'option:checked');
+  s = s.replace(/await expect\(([^;]+?)\)\.toBeVisible\(\)\.fill\(/g, 'await expect($1).toBeVisible();\n    await $1.fill(');
   s = s.replace(/\.fill\(''\)\.fill\(/g, '.fill(');
   s = s.replace(/(\n\s*)(await (?:joomla\.clickToolbarButton\([^;]+\)|page\.goto\([^;]+\)|page\.locator\([^;]+\)\.(?:click|pressSequentially)\([^;]+\)|page\.getByText\([^;]+\)(?:\.first\(\))?\.click\(\));)\n(\s*)await page\.waitForResponse\(([^;]+)\);/g,
     '$1const __wait = page.waitForResponse($4);$1$2\n$3await __wait;');
@@ -1181,22 +1186,50 @@ function cleanupGenerated(code) {
     return `locator('${sel}').filter({ hasText: ${quoted} })`;
   });
 
-  // Duplicate const declarations in the same function become later assignments.
-  s = s.replace(/test\(([\s\S]*?)(?=\n  test\(|\n\}\);)/g, (block) => {
+  // Duplicate const declarations in the same async callback become later assignments.
+  s = dedupeConstsInAsyncCallbacks(s);
+  return s;
+}
+
+function dedupeConstsInAsyncCallbacks(code) {
+  const marker = 'async ({';
+  let output = '';
+  let i = 0;
+  while (i < code.length) {
+    const start = code.indexOf(marker, i);
+    if (start === -1) {
+      output += code.slice(i);
+      break;
+    }
+    const brace = code.indexOf('{', start + marker.length);
+    if (brace === -1) {
+      output += code.slice(i);
+      break;
+    }
+    let depth = 1;
+    let j = brace + 1;
+    while (j < code.length && depth > 0) {
+      const ch = code[j];
+      if (ch === '{') depth += 1;
+      else if (ch === '}') depth -= 1;
+      j += 1;
+    }
+    const block = code.slice(brace, j);
     const seen = new Set();
-    return block.replace(/\bconst (\w+) = /g, (match, name) => {
+    const rewritten = block.replace(/\bconst (\w+) = /g, (match, name) => {
       if (seen.has(name)) {
         return `${name} = `;
       }
       seen.add(name);
       if ((block.match(new RegExp(`\\bconst ${name} = `, 'g')) || []).length > 1) {
-        seen.add(name);
         return `let ${name} = `;
       }
       return match;
     });
-  });
-  return s;
+    output += code.slice(i, brace) + rewritten;
+    i = j;
+  }
+  return output;
 }
 
 function convertFile(srcFile) {

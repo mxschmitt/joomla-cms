@@ -14,7 +14,7 @@ test.describe('Test in backend that the styles list', () => {
   }) => {
     await page.goto('/administrator/index.php?option=com_templates&view=styles&client_id=0');
     await expect(page.locator('h1.page-title')).toContainText('Templates: Styles (Site)');
-    await expect(page.locator('#client_id option:selected')).toHaveText('Site');
+    await expect(page.locator('#client_id option:checked')).toHaveText('Site');
     await page.locator('#styleList tbody a').filter({
       hasText: 'Cassiopeia - Default'
     }).click();
@@ -27,7 +27,7 @@ test.describe('Test in backend that the styles list', () => {
   }) => {
     await page.goto('/administrator/index.php?option=com_templates&view=styles&client_id=1');
     await expect(page.locator('h1.page-title')).toContainText('Templates: Styles (Administrator)');
-    await expect(page.locator('#client_id option:selected')).toHaveText('Administrator');
+    await expect(page.locator('#client_id option:checked')).toHaveText('Administrator');
     await page.locator('#styleList tbody a').filter({
       hasText: 'Atum - Default'
     }).click();

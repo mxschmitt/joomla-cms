@@ -14,7 +14,7 @@ test.describe('Test in backend that the templates list', () => {
   }) => {
     await page.goto('/administrator/index.php?option=com_templates&view=templates&client_id=0');
     await expect(page.locator('h1.page-title')).toContainText('Templates: Templates (Site)');
-    await expect(page.locator('#client_id option:selected')).toHaveText('Site');
+    await expect(page.locator('#client_id option:checked')).toHaveText('Site');
     await page.locator('#templateList tbody .template-name a').filter({
       hasText: 'Cassiopeia'
     }).click();
@@ -27,7 +27,7 @@ test.describe('Test in backend that the templates list', () => {
   }) => {
     await page.goto('/administrator/index.php?option=com_templates&view=templates&client_id=1');
     await expect(page.locator('h1.page-title')).toContainText('Templates: Templates (Administrator)');
-    await expect(page.locator('#client_id option:selected')).toHaveText('Administrator');
+    await expect(page.locator('#client_id option:checked')).toHaveText('Administrator');
     await page.locator('#templateList tbody .template-name a').filter({
       hasText: 'Atum'
     }).click();
