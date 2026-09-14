@@ -26,7 +26,10 @@
     "browserlist:update": "npx update-browserslist-db@latest",
     "cypress:install": "cypress install",
     "cypress:open": "cypress open --config-file cypress.config.mjs",
-    "cypress:run": "cypress run --config-file cypress.config.mjs"
+    "cypress:run": "cypress run --config-file cypress.config.mjs",
+    "playwright:install": "playwright install chromium",
+    "playwright:test": "playwright test",
+    "playwright:ui": "playwright test --ui"
   },
   "browserslist": [
     "last 2 major version",
@@ -90,12 +93,14 @@
   "devDependencies": {
     "@babel/core": "^7.29.0",
     "@babel/preset-env": "^7.29.0",
+    "@playwright/test": "^1.63.0",
     "@rollup/plugin-babel": "^6.1.0",
     "@rollup/plugin-commonjs": "^29.0.2",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-replace": "^6.0.3",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@stylistic/stylelint-plugin": "^4.0.1",
+    "@types/node": "^26.5.1",
     "@vue/compiler-sfc": "^3.5.30",
     "chokidar": "^5.0.0",
     "cli-progress": "^3.12.0",
@@ -128,7 +133,8 @@
     "stylelint-config-standard": "^39.0.1",
     "stylelint-order": "^7.0.1",
     "stylelint-scss": "^6.14.0",
-    "totp-generator": "^1.0.0"
+    "totp-generator": "^1.0.0",
+    "typescript": "^7.0.2"
   },
   "allowScripts": {
     "core-js@3.48.0": true,
