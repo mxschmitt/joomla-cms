@@ -28,7 +28,7 @@ test.describe('Test that the Action Logs plugin', () => {
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('User saved');
     await joomla.searchForItem('test user');
-    await expect(page.getByText('test user').first()).toBeVisible();
+    await expect(page.locator('#userList').getByText('test user').first()).toBeVisible();
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
     await expect(page.getByText('added new user').filter({ visible: true }).first()).toBeVisible();
   });

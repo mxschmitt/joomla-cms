@@ -49,7 +49,7 @@ test.describe('Test in backend that the menu list', () => {
       hasText: 'System Links'
     }).click();
     await $body.locator('a[data-type="url"]').click({ force: true });
-    await page.locator('input[name="jform[link]"]').click();
+    await expect(page.locator('joomla-dialog.joomla-dialog-content-select-field')).toHaveCount(0);
     await page.locator('input[name="jform[link]"]').fill('#');
     await joomla.clickToolbarButton('Save & Close');
     await expect(page.locator('#system-message-container').filter({
