@@ -56,16 +56,13 @@ test.describe('Test in frontend that the users profile view edit layout', () => 
     });
     await joomla.doFrontendLogin('automatedtestuser', 'test', false);
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'Automated test edit' }).first().click();
+    await page.getByRole('link', { name: 'Automated test edit test user', exact: true }).click();
     await page.locator('#jform_name').fill('automated test user edited');
     await page.locator('#jform_email1').fill('testedited@example.com');
     await expect(page.locator('#member-profile button[type="submit"][value="profile.save"]')).toBeVisible();
     await page.locator('#member-profile button[type="submit"][value="profile.save"]').click();
     await joomla.checkForSystemMessage('Profile saved.');
-    await expect(page.locator('.profile .btn-primary')).toBeVisible();
-    await page.locator('.profile .btn-primary').click({
-      force: true
-    });
+    await page.locator('a.btn-primary').filter({ hasText: 'Edit Profile' }).click();
     await expect(page.locator('#jform_name')).toHaveValue('automated test user edited');
     await expect(page.locator('#jform_email1')).toHaveValue('testedited@example.com');
   });

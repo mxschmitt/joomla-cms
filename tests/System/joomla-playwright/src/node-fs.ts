@@ -11,13 +11,6 @@ export function resolveCmsPath(relativePath: string, config: JoomlaTestConfig): 
 
 export function deleteRelativePath(relativePath: string, config: JoomlaTestConfig): null {
   const fullPath = resolveCmsPath(relativePath, config);
-  if (existsSync(fullPath)) {
-    try {
-      chmodSync(fullPath, 0o666);
-    } catch {
-      // Directory or permission bits we cannot change; still try to remove.
-    }
-  }
   rmSync(fullPath, { recursive: true, force: true });
   return null;
 }

@@ -55,7 +55,7 @@ test.describe('Test in frontend that the users registration view', () => {
     url = activatelinkadmin;
     await page.goto(url);
     await joomla.checkForSystemMessage('Please log in to confirm that you are authorised to activate new accounts.');
-    await joomla.doFrontendLogin(null, null, false);
+    await joomla.doFrontendLogin();
     await page.goto(activatelinkadmin);
     await joomla.checkForSystemMessage('The user\'s account has been activated and the user has been notified about it.');
     await joomla.doFrontendLogout();
