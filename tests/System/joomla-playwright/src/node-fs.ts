@@ -1,5 +1,5 @@
 import {
-  chmodSync, copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync,
+  chmodSync, copyFileSync, existsSync, lstatSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync,
 } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { umask } from 'node:process';
@@ -9,8 +9,28 @@ export function resolveCmsPath(relativePath: string, config: JoomlaTestConfig): 
   return join(config.expose.cmsPath, relativePath);
 }
 
+function chmodTree(fullPath: string): void {
+  try {
+    chmodSync(fullPath, 0o777);
+  } catch {
+    // Keep going so a later rmSync can still remove whatever is writable.
+  }
+  try {
+    if (lstatSync(fullPath).isDirectory()) {
+      for (const entry of readdirSync(fullPath)) {
+        chmodTree(join(fullPath, entry));
+      }
+    }
+  } catch {
+    // Directory may already be gone or unreadable.
+  }
+}
+
 export function deleteRelativePath(relativePath: string, config: JoomlaTestConfig): null {
   const fullPath = resolveCmsPath(relativePath, config);
+  if (existsSync(fullPath)) {
+    chmodTree(fullPath);
+  }
   rmSync(fullPath, { recursive: true, force: true });
   return null;
 }
@@ -38,6 +58,11 @@ export function writeRelativeFile(
       const fullPath = join(config.expose.cmsPath, relativePath);
       const oldmask = umask(0);
       mkdirSync(dirname(fullPath), { recursive: true, mode: 0o777 });
+      try {
+        chmodSync(dirname(fullPath), 0o777);
+      } catch {
+        // Parent may already be writable.
+      }
       if (existsSync(fullPath)) {
         chmodSync(fullPath, 0o666);
       }
