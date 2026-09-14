@@ -27,7 +27,7 @@ test.describe('Test that the Action Logs plugin', () => {
     await page.locator('#jform_password2').fill('testtesttest');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('User saved');
-    await joomla.searchForItem('test user');
+    await page.goto('/administrator/index.php?option=com_users&view=users&filter=');
     await expect(page.locator('#userList').getByText('test user').first()).toBeVisible();
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
     await expect(page.getByText('added new user').filter({ visible: true }).first()).toBeVisible();
@@ -119,7 +119,7 @@ test.describe('Test that the Action Logs plugin', () => {
     await page.locator('button[type="submit"]').filter({
       hasText: 'Log in'
     }).first().click();
-    await page.reload();
+    await expect(page.locator('.mod-login-logout button[type=submit], .com-users-logout__form button[type=submit]').first()).toBeVisible();
     await page.goto('/index.php?option=com_users&view=profile&layout=edit');
     await page.locator('#jform_name').fill('test edited frontend');
     await page.locator('button[type="submit"]').filter({
