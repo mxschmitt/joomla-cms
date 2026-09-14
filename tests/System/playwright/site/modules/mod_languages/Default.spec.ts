@@ -11,6 +11,6 @@ test.describe('Test in frontend that the languages module', () => {
       module: 'mod_languages'
     });
     await page.goto('/');
-    await expect(page.getByText('Languages').first()).toBeVisible();
+    await expect(page.getByText('Languages').filter({ visible: true }).first()).toBeVisible();
   });
 });

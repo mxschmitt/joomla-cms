@@ -403,7 +403,13 @@ function convertCyChain(node) {
     if (cmd.args.length === 1) {
       expr = t.callExpression(
         t.memberExpression(
-          t.callExpression(t.memberExpression(t.identifier('page'), t.identifier('getByText')), [clone(cmd.args[0])]),
+          t.callExpression(
+            t.memberExpression(
+              t.callExpression(t.memberExpression(t.identifier('page'), t.identifier('getByText')), [clone(cmd.args[0])]),
+              t.identifier('filter'),
+            ),
+            [t.objectExpression([t.objectProperty(t.identifier('visible'), t.booleanLiteral(true))])],
+          ),
           t.identifier('first'),
         ),
         [],
@@ -1157,7 +1163,7 @@ function postProcess(code) {
   s = s.replace(/await expect\(page\.url\(\)\)\.toHaveText\(/g, 'expect(page.url()).toMatch(');
   s = s.replace(/await expect\(page\.url\(\)\)\.toBe\(/g, 'expect(page.url()).toBe(');
   s = s.replace(/await expect\(page\.title\(\)\)\.toHaveText\(/g, 'expect(await page.title()).toMatch(');
-  s = s.replace(/option:selected/g, 'option:checked');
+  s = s.replace(/page\.getByText\(([^)]+)\)\.first\(\)/g, 'page.getByText($1).filter({ visible: true }).first()');
   s = s.replace(/await expect\(([^;]+?)\)\.toBeVisible\(\)\.fill\(/g, 'await expect($1).toBeVisible();\n    await $1.fill(');
   s = s.replace(/\.fill\(''\)\.fill\(/g, '.fill(');
   s = s.replace(/(\n\s*)(await (?:joomla\.clickToolbarButton\([^;]+\)|page\.goto\([^;]+\)|page\.locator\([^;]+\)\.(?:click|pressSequentially)\([^;]+\)|page\.getByText\([^;]+\)(?:\.first\(\))?\.click\(\));)\n(\s*)await page\.waitForResponse\(([^;]+)\);/g,

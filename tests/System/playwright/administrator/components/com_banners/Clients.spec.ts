@@ -23,14 +23,14 @@ test.describe('Test in backend that the clients list', () => {
       name: 'test banner client'
     });
     await page.reload();
-    await expect(page.getByText('test banner client').first()).toBeVisible();
+    await expect(page.getByText('test banner client').filter({ visible: true }).first()).toBeVisible();
   });
   test('can open the clients form', async ({
     page,
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await expect(page.getByText('Banners: New Client').first()).toBeVisible();
+    await expect(page.getByText('Banners: New Client').filter({ visible: true }).first()).toBeVisible();
   });
   test('can publish the test client', async ({
     page,
@@ -44,7 +44,7 @@ test.describe('Test in backend that the clients list', () => {
     await joomla.searchForItem('test banner client');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Publish').first().click();
+    await page.getByText('Publish').filter({ visible: true }).first().click();
     await joomla.checkForSystemMessage('Client published.');
   });
   test('can unpublish the test client', async ({
@@ -59,7 +59,7 @@ test.describe('Test in backend that the clients list', () => {
     await joomla.searchForItem('test banner client');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Unpublish').first().click();
+    await page.getByText('Unpublish').filter({ visible: true }).first().click();
     await joomla.checkForSystemMessage('Client unpublished.');
   });
   test('can trash the test client', async ({
@@ -73,7 +73,7 @@ test.describe('Test in backend that the clients list', () => {
     await joomla.searchForItem('test banner client');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Trash').first().click();
+    await page.getByText('Trash').filter({ visible: true }).first().click();
     await joomla.checkForSystemMessage('Client trashed.');
   });
   test('can delete the test client', async ({

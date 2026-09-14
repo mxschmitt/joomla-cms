@@ -19,7 +19,7 @@ test.describe('Test in backend that the plugins list', () => {
     page,
     joomla
   }) => {
-    await expect(page.getByText('Action Log - Joomla').first()).toBeVisible();
+    await expect(page.getByText('Action Log - Joomla').filter({ visible: true }).first()).toBeVisible();
   });
   test('can unpublish a plugin', async ({
     page,
@@ -27,7 +27,7 @@ test.describe('Test in backend that the plugins list', () => {
   }) => {
     await joomla.searchForItem('Action Log - Joomla');
     await joomla.checkAllResults();
-    await page.getByText('Disable').first().click();
+    await page.getByText('Disable').filter({ visible: true }).first().click();
     await joomla.checkForSystemMessage('Plugin disabled.');
   });
   test('can publish a plugin', async ({
@@ -36,7 +36,7 @@ test.describe('Test in backend that the plugins list', () => {
   }) => {
     await joomla.searchForItem('Action Log - Joomla');
     await joomla.checkAllResults();
-    await page.getByText('Enable').first().click();
+    await page.getByText('Enable').filter({ visible: true }).first().click();
     await joomla.checkForSystemMessage('Plugin enabled.');
   });
   test('can edit a plugin', async ({
@@ -47,7 +47,7 @@ test.describe('Test in backend that the plugins list', () => {
     await page.locator('a').filter({
       hasText: 'Action Log - Joomla'
     }).click();
-    await expect(page.getByText('Plugins: Action Log - Joomla').first()).toBeVisible();
-    await page.getByText('Close').first().click();
+    await expect(page.getByText('Plugins: Action Log - Joomla').filter({ visible: true }).first()).toBeVisible();
+    await page.getByText('Close').filter({ visible: true }).first().click();
   });
 });

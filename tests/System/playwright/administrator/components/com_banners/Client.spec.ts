@@ -24,7 +24,7 @@ test.describe('Test in backend that the banner clients form', () => {
     await page.locator('#jform_contact').fill('test banner client');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Client saved.');
-    await expect(page.getByText('test banner client').first()).toBeVisible();
+    await expect(page.getByText('test banner client').filter({ visible: true }).first()).toBeVisible();
   });
   test('check redirection to list view', async ({
     page,
@@ -46,6 +46,6 @@ test.describe('Test in backend that the banner clients form', () => {
     await page.locator('#jform_name').fill('test banner client');
     await page.locator('#jform_contact').fill('test banner');
     await joomla.clickToolbarButton('Save & Close');
-    await expect(page.getByText('test banner client').first()).toBeVisible();
+    await expect(page.getByText('test banner client').filter({ visible: true }).first()).toBeVisible();
   });
 });

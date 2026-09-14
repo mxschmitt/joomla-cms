@@ -23,7 +23,7 @@ test.describe('Test in backend that the banners form', () => {
     await page.locator('#jform_name').fill('Test banner');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Banner saved.');
-    await expect(page.getByText('Test banner').first()).toBeVisible();
+    await expect(page.getByText('Test banner').filter({ visible: true }).first()).toBeVisible();
   });
   test('check redirection to list view', async ({
     page,
@@ -44,6 +44,6 @@ test.describe('Test in backend that the banners form', () => {
     await page.goto(`/administrator/index.php?option=com_banners&task=banner.edit&id=${banner.id}`);
     await page.locator('#jform_name').fill('Test banner edited');
     await joomla.clickToolbarButton('Save & Close');
-    await expect(page.getByText('Test banner edited').first()).toBeVisible();
+    await expect(page.getByText('Test banner edited').filter({ visible: true }).first()).toBeVisible();
   });
 });

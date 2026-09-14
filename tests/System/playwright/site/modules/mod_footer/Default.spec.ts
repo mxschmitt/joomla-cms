@@ -10,6 +10,6 @@ test.describe('Test in frontend that the footer module', () => {
       module: 'mod_footer'
     });
     await page.goto('/');
-    await expect(page.getByText('All Rights Reserved').first()).toBeVisible();
+    await expect(page.getByText('All Rights Reserved').filter({ visible: true }).first()).toBeVisible();
   });
 });

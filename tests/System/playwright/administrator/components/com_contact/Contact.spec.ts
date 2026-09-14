@@ -23,7 +23,7 @@ test.describe('Test in backend that the contact form', () => {
     await page.locator('#jform_name').fill('Test contact');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Contact saved.');
-    await expect(page.getByText('Test contact').first()).toBeVisible();
+    await expect(page.getByText('Test contact').filter({ visible: true }).first()).toBeVisible();
   });
   test('can change access level of a test contact', async ({
     page,

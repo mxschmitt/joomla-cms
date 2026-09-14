@@ -28,10 +28,10 @@ test.describe('Test in frontend that the contact featured view', () => {
     });
     await page.goto('/');
     await page.locator('a').filter({ hasText: 'automated test' }).click();
-    await expect(page.getByText('automated test contact 1').first()).toBeVisible();
-    await expect(page.getByText('automated test contact 2').first()).toBeVisible();
-    await expect(page.getByText('automated test contact 3').first()).toBeVisible();
-    await expect(page.getByText('automated test contact 4').first()).toBeVisible();
+    await expect(page.getByText('automated test contact 1').filter({ visible: true }).first()).toBeVisible();
+    await expect(page.getByText('automated test contact 2').filter({ visible: true }).first()).toBeVisible();
+    await expect(page.getByText('automated test contact 3').filter({ visible: true }).first()).toBeVisible();
+    await expect(page.getByText('automated test contact 4').filter({ visible: true }).first()).toBeVisible();
   });
   test('can not display not featured contacts', async ({
     page,
@@ -51,7 +51,7 @@ test.describe('Test in frontend that the contact featured view', () => {
     });
     await page.goto('/');
     await page.locator('a').filter({ hasText: 'automated test' }).click();
-    await expect(page.getByText('automated test contact 1').first()).toHaveCount(0);
-    await expect(page.getByText('automated test contact 2').first()).toHaveCount(0);
+    await expect(page.getByText('automated test contact 1').filter({ visible: true }).first()).toHaveCount(0);
+    await expect(page.getByText('automated test contact 2').filter({ visible: true }).first()).toHaveCount(0);
   });
 });

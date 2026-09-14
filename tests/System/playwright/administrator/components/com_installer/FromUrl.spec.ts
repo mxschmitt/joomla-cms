@@ -28,13 +28,13 @@ test.describe('Test in backend that the Installer', () => {
     await page.locator('button#installbutton_url').click({
       force: true
     });
-    await expect(page.getByText('Installation of the component was successful.').first()).toBeVisible();
+    await expect(page.getByText('Installation of the component was successful.').filter({ visible: true }).first()).toBeVisible();
     await page.goto('/administrator/index.php?option=com_installer&view=manage');
     await joomla.searchForItem('Joomla! Patch Tester');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Uninstall').first().click();
+    await page.getByText('Uninstall').filter({ visible: true }).first().click();
     await joomla.clickDialogConfirm(true);
-    await expect(page.getByText('Uninstalling the component com_patchtester was successful.').first()).toBeVisible();
+    await expect(page.getByText('Uninstalling the component com_patchtester was successful.').filter({ visible: true }).first()).toBeVisible();
   });
 });

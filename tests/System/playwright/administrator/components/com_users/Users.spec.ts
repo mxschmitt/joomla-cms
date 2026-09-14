@@ -23,14 +23,14 @@ test.describe('Test in backend that the user list', () => {
       name: 'Test user'
     });
     await page.reload();
-    await expect(page.getByText('Test user').first()).toBeVisible();
+    await expect(page.getByText('Test user').filter({ visible: true }).first()).toBeVisible();
   });
   test('can open the user form', async ({
     page,
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await expect(page.getByText('New User Details').first()).toBeVisible();
+    await expect(page.getByText('New User Details').filter({ visible: true }).first()).toBeVisible();
   });
   test('can delete the test user', async ({
     page,
@@ -42,7 +42,7 @@ test.describe('Test in backend that the user list', () => {
     await joomla.searchForItem('Test user');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Delete').first().click();
+    await page.getByText('Delete').filter({ visible: true }).first().click();
     await joomla.clickDialogConfirm(true);
     await joomla.checkForSystemMessage('User deleted.');
   });

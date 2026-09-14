@@ -13,7 +13,7 @@ test.describe('Test in frontend that the feed module', () => {
         params: `{"rssurl": "${joomla.config.baseURL.replace('https://', 'http://')}/tests/System/data/com_newsfeeds/${file}.xml" }`
       });
       await page.goto('/');
-      await expect(page.getByText('automated test feed').first()).toBeVisible();
+      await expect(page.getByText('automated test feed').filter({ visible: true }).first()).toBeVisible();
       await expect(page.locator('ul.newsfeed')).toBeVisible();
       await expect(page.locator('ul.newsfeed').locator(":scope > *")).toHaveCount(3);
     });

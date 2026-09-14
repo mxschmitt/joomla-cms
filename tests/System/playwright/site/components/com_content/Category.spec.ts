@@ -30,10 +30,10 @@ test.describe('Test in frontend that the content category view', () => {
       });
       await page.goto('/');
       await page.locator('a').filter({ hasText: 'automated test' }).click();
-      await expect(page.getByText('article 1').first()).toBeVisible();
-      await expect(page.getByText('article 2').first()).toBeVisible();
-      await expect(page.getByText('article 3').first()).toBeVisible();
-      await expect(page.getByText('article 4').first()).toBeVisible();
+      await expect(page.getByText('article 1').filter({ visible: true }).first()).toBeVisible();
+      await expect(page.getByText('article 2').filter({ visible: true }).first()).toBeVisible();
+      await expect(page.getByText('article 3').filter({ visible: true }).first()).toBeVisible();
+      await expect(page.getByText('article 4').filter({ visible: true }).first()).toBeVisible();
     });
     test(`can display a list of articles in the ${layout} layout without a menu item`, async ({
       page,
@@ -55,10 +55,10 @@ test.describe('Test in frontend that the content category view', () => {
         catid: article.catid
       });
       await page.goto(`/index.php?option=com_content&view=category&id=${article.catid}&layout=${layout}`);
-      await expect(page.getByText('article 1').first()).toBeVisible();
-      await expect(page.getByText('article 2').first()).toBeVisible();
-      await expect(page.getByText('article 3').first()).toBeVisible();
-      await expect(page.getByText('article 4').first()).toBeVisible();
+      await expect(page.getByText('article 1').filter({ visible: true }).first()).toBeVisible();
+      await expect(page.getByText('article 2').filter({ visible: true }).first()).toBeVisible();
+      await expect(page.getByText('article 3').filter({ visible: true }).first()).toBeVisible();
+      await expect(page.getByText('article 4').filter({ visible: true }).first()).toBeVisible();
     });
   });
   test('can open the article form in the default layout', async ({

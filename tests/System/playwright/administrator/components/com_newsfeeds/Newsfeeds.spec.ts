@@ -23,14 +23,14 @@ test.describe('Test in backend that the newsfeeds list', () => {
       name: 'Test newsfeed'
     });
     await page.reload();
-    await expect(page.getByText('Test newsfeed').first()).toBeVisible();
+    await expect(page.getByText('Test newsfeed').filter({ visible: true }).first()).toBeVisible();
   });
   test('can open the newsfeed form', async ({
     page,
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await expect(page.getByText('News Feeds: New').first()).toBeVisible();
+    await expect(page.getByText('News Feeds: New').filter({ visible: true }).first()).toBeVisible();
   });
   test('can publish the test newsfeed', async ({
     page,
@@ -45,7 +45,7 @@ test.describe('Test in backend that the newsfeeds list', () => {
     await joomla.searchForItem('Test newsfeed');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Publish').first().click();
+    await page.getByText('Publish').filter({ visible: true }).first().click();
     await joomla.checkForSystemMessage('News feed published.');
   });
   test('can unpublish the test newsfeed', async ({
@@ -61,7 +61,7 @@ test.describe('Test in backend that the newsfeeds list', () => {
     await joomla.searchForItem('Test newsfeed');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Unpublish').first().click();
+    await page.getByText('Unpublish').filter({ visible: true }).first().click();
     await joomla.checkForSystemMessage('News feed unpublished.');
   });
   test('can trash the test newsfeed', async ({
@@ -76,7 +76,7 @@ test.describe('Test in backend that the newsfeeds list', () => {
     await joomla.searchForItem('Test newsfeed');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Trash').first().click();
+    await page.getByText('Trash').filter({ visible: true }).first().click();
     await joomla.checkForSystemMessage('News feed trashed.');
   });
   test('can delete the test newsfeed', async ({

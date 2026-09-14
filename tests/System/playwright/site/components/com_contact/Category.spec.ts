@@ -28,10 +28,10 @@ test.describe('Test in frontend that the contact category view', () => {
     });
     await page.goto('/');
     await page.locator('a').filter({ hasText: 'automated test' }).click();
-    await expect(page.getByText('automated test contact 1').first()).toBeVisible();
-    await expect(page.getByText('automated test contact 2').first()).toBeVisible();
-    await expect(page.getByText('automated test contact 3').first()).toBeVisible();
-    await expect(page.getByText('automated test contact 4').first()).toBeVisible();
+    await expect(page.getByText('automated test contact 1').filter({ visible: true }).first()).toBeVisible();
+    await expect(page.getByText('automated test contact 2').filter({ visible: true }).first()).toBeVisible();
+    await expect(page.getByText('automated test contact 3').filter({ visible: true }).first()).toBeVisible();
+    await expect(page.getByText('automated test contact 4').filter({ visible: true }).first()).toBeVisible();
   });
   test('can display a list of contacts without a menu item', async ({
     page,
@@ -56,10 +56,10 @@ test.describe('Test in frontend that the contact category view', () => {
       catid: contact.catid
     });
     await page.goto(`/index.php?option=com_contact&view=category&id=${contact.catid}`);
-    await expect(page.getByText('automated test contact 1').first()).toBeVisible();
-    await expect(page.getByText('automated test contact 2').first()).toBeVisible();
-    await expect(page.getByText('automated test contact 3').first()).toBeVisible();
-    await expect(page.getByText('automated test contact 4').first()).toBeVisible();
+    await expect(page.getByText('automated test contact 1').filter({ visible: true }).first()).toBeVisible();
+    await expect(page.getByText('automated test contact 2').filter({ visible: true }).first()).toBeVisible();
+    await expect(page.getByText('automated test contact 3').filter({ visible: true }).first()).toBeVisible();
+    await expect(page.getByText('automated test contact 4').filter({ visible: true }).first()).toBeVisible();
   });
   test('can open the contact form in the default layout', async ({
     page,

@@ -27,8 +27,8 @@ test.describe('Test in frontend that the contact categories view', () => {
       catid: id
     });
     await page.goto('/index.php?option=com_contact&view=categories');
-    await expect(page.getByText('automated test category 1').first()).toBeVisible();
-    await expect(page.getByText('automated test category 2').first()).toBeVisible();
+    await expect(page.getByText('automated test category 1').filter({ visible: true }).first()).toBeVisible();
+    await expect(page.getByText('automated test category 2').filter({ visible: true }).first()).toBeVisible();
     await expect(page.locator(':nth-child(2) > .page-header > .badge').filter({
       hasText: 'Contact Count: 1'
     })).toBeVisible();
@@ -66,8 +66,8 @@ test.describe('Test in frontend that the contact categories view', () => {
     });
     await page.goto('/');
     await page.locator('a').filter({ hasText: 'automated test categories' }).click();
-    await expect(page.getByText('automated test category 1').first()).toBeVisible();
-    await expect(page.getByText('automated test category 2').first()).toBeVisible();
+    await expect(page.getByText('automated test category 1').filter({ visible: true }).first()).toBeVisible();
+    await expect(page.getByText('automated test category 2').filter({ visible: true }).first()).toBeVisible();
     await expect(page.locator(':nth-child(1) > .page-header > .badge').filter({
       hasText: 'Contact Count: 1'
     })).toBeVisible();

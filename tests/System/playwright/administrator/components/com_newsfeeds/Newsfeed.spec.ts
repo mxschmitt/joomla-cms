@@ -23,7 +23,7 @@ test.describe('Test in backend that the newsfeed form', () => {
     await page.locator('#jform_link').fill('https://newsfeedtesturl');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('News feed saved.');
-    await expect(page.getByText('Test newsfeed').first()).toBeVisible();
+    await expect(page.getByText('Test newsfeed').filter({ visible: true }).first()).toBeVisible();
   });
   test('can change access level of a test newsfeed', async ({
     page,

@@ -17,7 +17,7 @@ test.describe('Test in frontend that the newsfeeds details view', () => {
       });
       await page.goto('/');
       await page.locator('a').filter({ hasText: 'automated test feed' }).click();
-      await expect(page.getByText('automated test feed 1').first()).toBeVisible();
+      await expect(page.getByText('automated test feed 1').filter({ visible: true }).first()).toBeVisible();
       await expect(page.locator('.com-newsfeeds-newsfeed__items')).toBeVisible();
       await expect(page.locator('.com-newsfeeds-newsfeed__items').locator(":scope > *")).toHaveCount(5);
     });
@@ -30,7 +30,7 @@ test.describe('Test in frontend that the newsfeeds details view', () => {
         link: `${joomla.config.baseURL.replace('https://', 'http://')}/tests/System/data/com_newsfeeds/${file}.xml`
       });
       await page.goto(`/index.php?option=com_newsfeeds&view=newsfeed&id=${feed.id}`);
-      await expect(page.getByText('automated test feed 1').first()).toBeVisible();
+      await expect(page.getByText('automated test feed 1').filter({ visible: true }).first()).toBeVisible();
       await expect(page.locator('.com-newsfeeds-newsfeed__items')).toBeVisible();
       await expect(page.locator('.com-newsfeeds-newsfeed__items').locator(":scope > *")).toHaveCount(5);
     });

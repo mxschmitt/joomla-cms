@@ -52,7 +52,7 @@ test.describe('Test in backend that the content history list', () => {
     await expect(dialogContent).toBeVisible();
     dialogContent;
     await expect(page.locator('h1')).toContainText('Preview of version');
-    await expect(page.getByText('Test article versions').first()).toBeVisible();
+    await expect(page.getByText('Test article versions').filter({ visible: true }).first()).toBeVisible();
   });
   test('cannot compare one history content item only', async ({
     page,

@@ -26,7 +26,7 @@ test.describe('Test in backend that the user form', () => {
     await page.locator('#jform_password2').fill('testtesttest');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('User saved');
-    await expect(page.getByText('test user').first()).toBeVisible();
+    await expect(page.getByText('test user').filter({ visible: true }).first()).toBeVisible();
   });
   test('can edit a user', async ({
     page,
@@ -55,13 +55,13 @@ test.describe('Test in backend that the user form', () => {
       requireReset: 1
     });
     await page.goto('/administrator/index.php?option=com_users');
-    await expect(page.getByText('Password Reset Required').first()).toBeVisible();
+    await expect(page.getByText('Password Reset Required').filter({ visible: true }).first()).toBeVisible();
     await joomla.doAdministratorLogout();
     await page.goto('administrator/index.php');
     await page.locator('#mod-login-username').fill('test');
     await page.locator('#mod-login-password').fill('test');
     await page.locator('#btn-login-submit').click();
-    await expect(page.getByText('You are required to reset your password before proceeding.').first()).toBeVisible();
+    await expect(page.getByText('You are required to reset your password before proceeding.').filter({ visible: true }).first()).toBeVisible();
     await page.locator('#jform_password').fill('testresetpswd');
     await page.locator('#jform_password2').fill('testresetpswd');
     await joomla.clickToolbarButton('Save & Close');
@@ -72,6 +72,6 @@ test.describe('Test in backend that the user form', () => {
     await page.locator('#mod-login-password').fill('testresetpswd');
     await page.locator('#btn-login-submit').click();
     await page.goto('/administrator/index.php?option=com_users');
-    await expect(page.getByText('Password Reset Required').first()).toHaveCount(0);
+    await expect(page.getByText('Password Reset Required').filter({ visible: true }).first()).toHaveCount(0);
   });
 });

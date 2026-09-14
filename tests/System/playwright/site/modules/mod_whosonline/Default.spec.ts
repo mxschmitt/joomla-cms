@@ -11,6 +11,6 @@ test.describe('Test in frontend that the who is online module', () => {
       module: 'mod_whosonline'
     });
     await page.goto('/');
-    await expect(page.getByText('Who is Online').first()).toBeVisible();
+    await expect(page.getByText('Who is Online').filter({ visible: true }).first()).toBeVisible();
   });
 });

@@ -23,7 +23,7 @@ test.describe('Test in backend that the field form', () => {
     await page.locator('#jform_title').fill('Test field');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Field saved');
-    await expect(page.getByText('Test field').first()).toBeVisible();
+    await expect(page.getByText('Test field').filter({ visible: true }).first()).toBeVisible();
   });
   test('check redirection to list view', async ({
     page,
@@ -44,6 +44,6 @@ test.describe('Test in backend that the field form', () => {
     await page.goto(`/administrator/index.php?option=com_fields&task=field.edit&id=${id}&context=com_content.article`);
     await page.locator('#jform_title').fill('Test field edited');
     await joomla.clickToolbarButton('Save & Close');
-    await expect(page.getByText('Test field edited').first()).toBeVisible();
+    await expect(page.getByText('Test field edited').filter({ visible: true }).first()).toBeVisible();
   });
 });

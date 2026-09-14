@@ -23,14 +23,14 @@ test.describe('Test in backend that the menu list', () => {
       title: 'Test menu item'
     });
     await page.reload();
-    await expect(page.getByText('Test menu item').first()).toBeVisible();
+    await expect(page.getByText('Test menu item').filter({ visible: true }).first()).toBeVisible();
   });
   test('can open the menu item form', async ({
     page,
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await expect(page.getByText('Menus: New Item').first()).toBeVisible();
+    await expect(page.getByText('Menus: New Item').filter({ visible: true }).first()).toBeVisible();
   });
   test('can create a system link menu item', async ({
     page,
@@ -40,10 +40,10 @@ test.describe('Test in backend that the menu list', () => {
       title: 'can create menu item'
     });
     await page.goto('administrator/index.php?option=com_menus&task=item.add');
-    await expect(page.getByText('Menus: New Item').first()).toBeVisible();
+    await expect(page.getByText('Menus: New Item').filter({ visible: true }).first()).toBeVisible();
     await page.locator('#jform_title').fill('can create menu item');
     await page.locator('button[data-modal-config*="Menu Item Type"]').first().click();
-    await expect(page.getByText('Menu Item Type').first()).toBeVisible();
+    await expect(page.getByText('Menu Item Type').filter({ visible: true }).first()).toBeVisible();
     const $body = page.frameLocator('iframe');
     await $body.locator('.accordion-button').filter({
       hasText: 'System Links'
@@ -66,7 +66,7 @@ test.describe('Test in backend that the menu list', () => {
     await joomla.searchForItem('Test menu item');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Trash').first().click();
+    await page.getByText('Trash').filter({ visible: true }).first().click();
     await joomla.checkForSystemMessage('Menu item trashed.');
   });
 });

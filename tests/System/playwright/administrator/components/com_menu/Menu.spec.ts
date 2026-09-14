@@ -24,6 +24,6 @@ test.describe('Test in backend that the menu form', () => {
     await page.locator('#jform_menudescription').fill('test description');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Menu saved');
-    await expect(page.getByText('test menu').first()).toBeVisible();
+    await expect(page.getByText('test menu').filter({ visible: true }).first()).toBeVisible();
   });
 });

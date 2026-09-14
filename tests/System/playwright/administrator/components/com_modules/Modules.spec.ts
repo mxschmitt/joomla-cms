@@ -24,14 +24,14 @@ test.describe('Test in backend that the module list', () => {
       module: 'mod_custom'
     });
     await page.reload();
-    await expect(page.getByText('Test module').first()).toBeVisible();
+    await expect(page.getByText('Test module').filter({ visible: true }).first()).toBeVisible();
   });
   test('can open the module list', async ({
     page,
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await expect(page.getByText('Select a Module Type').first()).toBeVisible();
+    await expect(page.getByText('Select a Module Type').filter({ visible: true }).first()).toBeVisible();
   });
   test('can publish the test module', async ({
     page,
@@ -46,7 +46,7 @@ test.describe('Test in backend that the module list', () => {
     await joomla.searchForItem('Test module');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Publish').first().click();
+    await page.getByText('Publish').filter({ visible: true }).first().click();
     await joomla.checkForSystemMessage('Module published');
   });
   test('can unpublish the test module', async ({
@@ -62,7 +62,7 @@ test.describe('Test in backend that the module list', () => {
     await joomla.searchForItem('Test module');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Unpublish').first().click();
+    await page.getByText('Unpublish').filter({ visible: true }).first().click();
     await joomla.checkForSystemMessage('Module unpublished');
   });
   test('can trash the test module', async ({
@@ -77,7 +77,7 @@ test.describe('Test in backend that the module list', () => {
     await joomla.searchForItem('Test module');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Trash').first().click();
+    await page.getByText('Trash').filter({ visible: true }).first().click();
     await joomla.checkForSystemMessage('Module trashed');
   });
   test('can delete the test module', async ({

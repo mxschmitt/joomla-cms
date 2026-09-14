@@ -19,13 +19,13 @@ test.describe('Test in backend that the menu list', () => {
     page,
     joomla
   }) => {
-    await expect(page.getByText('Main Menu').first()).toBeVisible();
+    await expect(page.getByText('Main Menu').filter({ visible: true }).first()).toBeVisible();
   });
   test('can open the menu form', async ({
     page,
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await expect(page.getByText('Menus: Add').first()).toBeVisible();
+    await expect(page.getByText('Menus: Add').filter({ visible: true }).first()).toBeVisible();
   });
 });

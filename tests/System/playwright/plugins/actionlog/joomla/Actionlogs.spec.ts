@@ -27,9 +27,9 @@ test.describe('Test that the Action Logs plugin', () => {
     await page.locator('#jform_password2').fill('testtesttest');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('User saved');
-    await expect(page.getByText('test user').first()).toBeVisible();
+    await expect(page.getByText('test user').filter({ visible: true }).first()).toBeVisible();
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText('added new user').first()).toBeVisible();
+    await expect(page.getByText('added new user').filter({ visible: true }).first()).toBeVisible();
   });
   test('logs user modifications (backend)', async ({
     page,
@@ -45,7 +45,7 @@ test.describe('Test that the Action Logs plugin', () => {
     await joomla.clickToolbarButton('Save');
     await joomla.checkForSystemMessage('User saved.');
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText('updated the user').first()).toBeVisible();
+    await expect(page.getByText('updated the user').filter({ visible: true }).first()).toBeVisible();
   });
   test('logs blocking and unblocking via user profile toggle (backend)', async ({
     page,
@@ -57,13 +57,13 @@ test.describe('Test that the Action Logs plugin', () => {
     await joomla.clickToolbarButton('Save');
     await joomla.checkForSystemMessage('User saved.');
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText('blocked user').first()).toBeVisible();
+    await expect(page.getByText('blocked user').filter({ visible: true }).first()).toBeVisible();
     await page.goto(`/administrator/index.php?option=com_users&task=user.edit&id=${id}`);
     await page.locator('label[for="jform_block1"]').click();
     await joomla.clickToolbarButton('Save');
     await joomla.checkForSystemMessage('User saved.');
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText('unblocked user').first()).toBeVisible();
+    await expect(page.getByText('unblocked user').filter({ visible: true }).first()).toBeVisible();
   });
   test('logs blocking / unblocking directly from the List table view (backend)', async ({
     page,
@@ -75,7 +75,7 @@ test.describe('Test that the Action Logs plugin', () => {
     await page.locator('.btn-group .btn').first().click();
     await page.locator('input[type="checkbox"][name="cid[]"]').first().check();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Block').first().click();
+    await page.getByText('Block').filter({ visible: true }).first().click();
     await joomla.checkForSystemMessage('User blocked.');
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
     await expect(page.locator('tbody tr')).toBeTruthy();
@@ -84,7 +84,7 @@ test.describe('Test that the Action Logs plugin', () => {
     await page.locator('.btn-group .btn').first().click();
     await page.locator('input[type="checkbox"][name="cid[]"]').first().check();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Unblock').first().click();
+    await page.getByText('Unblock').filter({ visible: true }).first().click();
     await joomla.checkForSystemMessage('User unblocked.');
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
     await expect(page.locator('tbody tr')).toBeTruthy();
@@ -104,7 +104,7 @@ test.describe('Test that the Action Logs plugin', () => {
       hasText: 'Register'
     }).click();
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText('registered').first()).toBeVisible();
+    await expect(page.getByText('registered').filter({ visible: true }).first()).toBeVisible();
     await joomla.db_updateExtensionParameter('allowUserRegistration', '0', 'com_users');
   });
   test('logs editing profile from frontend', async ({
@@ -125,7 +125,7 @@ test.describe('Test that the Action Logs plugin', () => {
       hasText: 'Save'
     }).click();
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText('updated the user').first()).toBeVisible();
+    await expect(page.getByText('updated the user').filter({ visible: true }).first()).toBeVisible();
   });
   test('logs username remind request from frontend', async ({
     page,
@@ -139,7 +139,7 @@ test.describe('Test that the Action Logs plugin', () => {
       hasText: 'Submit'
     }).click();
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText('requested a username reminder for their account ').first()).toBeVisible();
+    await expect(page.getByText('requested a username reminder for their account ').filter({ visible: true }).first()).toBeVisible();
   });
   test('logs password reset request from frontend', async ({
     page,
@@ -153,6 +153,6 @@ test.describe('Test that the Action Logs plugin', () => {
       hasText: 'Submit'
     }).click();
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText('requested a password reset for their account ').first()).toBeVisible();
+    await expect(page.getByText('requested a password reset for their account ').filter({ visible: true }).first()).toBeVisible();
   });
 });

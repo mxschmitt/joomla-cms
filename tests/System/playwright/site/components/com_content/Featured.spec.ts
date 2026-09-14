@@ -11,7 +11,7 @@ test.describe('Test in frontend that the content featured view', () => {
       featured: 1
     });
     await page.goto('/');
-    await expect(page.getByText('automated test article').first()).toBeVisible();
+    await expect(page.getByText('automated test article').filter({ visible: true }).first()).toBeVisible();
   });
   test('can not display not featured articles', async ({
     page,
@@ -22,7 +22,7 @@ test.describe('Test in frontend that the content featured view', () => {
       featured: 0
     });
     await page.goto('/');
-    await expect(page.getByText('automated test article').first()).toHaveCount(0);
+    await expect(page.getByText('automated test article').filter({ visible: true }).first()).toHaveCount(0);
   });
   test('can navigate to the article', async ({
     page,

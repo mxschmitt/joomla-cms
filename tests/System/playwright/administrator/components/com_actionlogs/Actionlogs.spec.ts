@@ -31,7 +31,7 @@ test.describe('Test in backend that the action logs', () => {
     await joomla.doAdministratorLogout();
     await joomla.doAdministratorLogin();
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText(`User ${joomla.expose.username} logged in to admin`).first()).toBeVisible();
+    await expect(page.getByText(`User ${joomla.expose.username} logged in to admin`).filter({ visible: true }).first()).toBeVisible();
     await joomla.queryDB('TRUNCATE #__action_logs');
   });
   test('has an export button', async ({

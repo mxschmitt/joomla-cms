@@ -22,7 +22,7 @@ test.describe('Test in backend that the user group form', () => {
     await page.locator('#jform_title').fill('test group');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Group saved.');
-    await expect(page.getByText('test group').first()).toBeVisible();
+    await expect(page.getByText('test group').filter({ visible: true }).first()).toBeVisible();
   });
   test('can edit a group', async ({
     page,

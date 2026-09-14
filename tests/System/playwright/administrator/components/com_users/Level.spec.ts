@@ -22,7 +22,7 @@ test.describe('Test in backend that the user access level form', () => {
     await page.locator('#jform_title').fill('test level');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Access level saved.');
-    await expect(page.getByText('test level').first()).toBeVisible();
+    await expect(page.getByText('test level').filter({ visible: true }).first()).toBeVisible();
   });
   test('can edit an access level', async ({
     page,

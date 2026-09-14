@@ -23,14 +23,14 @@ test.describe('Test in backend that the user access level list', () => {
       title: 'Test level'
     });
     await page.reload();
-    await expect(page.getByText('Test level').first()).toBeVisible();
+    await expect(page.getByText('Test level').filter({ visible: true }).first()).toBeVisible();
   });
   test('can open the access level form', async ({
     page,
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await expect(page.getByText('User Groups With Viewing Access').first()).toBeVisible();
+    await expect(page.getByText('User Groups With Viewing Access').filter({ visible: true }).first()).toBeVisible();
   });
   test('can delete the test level', async ({
     page,

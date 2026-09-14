@@ -128,7 +128,7 @@ test.describe('Test that the webauthn system plugin', { tag: '@chromium-only' },
     await joomla.searchForItem('test user');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Delete').first().click();
+    await page.getByText('Delete').filter({ visible: true }).first().click();
     await joomla.clickDialogConfirm(true);
     await joomla.checkForSystemMessage('User deleted.');
     data = await joomla.queryDB('SELECT * FROM #__webauthn_credentials');

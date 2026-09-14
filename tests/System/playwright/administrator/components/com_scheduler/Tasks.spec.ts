@@ -25,15 +25,15 @@ test.describe('Test in backend that the tasks list', () => {
     page,
     joomla
   }) => {
-    await expect(page.getByText('Update Notification').first()).toBeVisible();
+    await expect(page.getByText('Update Notification').filter({ visible: true }).first()).toBeVisible();
   });
   test('can open the task list', async ({
     page,
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await expect(page.getByText('Select a Task type').first()).toBeVisible();
-    await expect(page.getByText('GET Request').first()).toBeVisible();
+    await expect(page.getByText('Select a Task type').filter({ visible: true }).first()).toBeVisible();
+    await expect(page.getByText('GET Request').filter({ visible: true }).first()).toBeVisible();
   });
   test('can publish the test task', async ({
     page,
@@ -64,7 +64,7 @@ test.describe('Test in backend that the tasks list', () => {
     await joomla.searchForItem('Test task');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Disable').first().click();
+    await page.getByText('Disable').filter({ visible: true }).first().click();
     await joomla.checkForSystemMessage('Task disabled');
   });
   test('can trash the test task', async ({
@@ -86,7 +86,7 @@ test.describe('Test in backend that the tasks list', () => {
     await joomla.searchForItem('Test task');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Trash').first().click();
+    await page.getByText('Trash').filter({ visible: true }).first().click();
     await joomla.checkForSystemMessage('Task trashed');
   });
   test('can delete the test task', async ({

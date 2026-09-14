@@ -22,7 +22,7 @@ test.describe('Test in backend that the Smart Search', () => {
     await page.locator('#jform_title').fill('Test article');
     await joomla.clickToolbarButton('Save & Close');
     await page.goto('/administrator/index.php?option=com_finder&view=index');
-    await expect(page.getByText('Test article').first()).toBeVisible();
+    await expect(page.getByText('Test article').filter({ visible: true }).first()).toBeVisible();
   });
   test('can purge the index', async ({
     page,

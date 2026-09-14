@@ -23,7 +23,7 @@ test.describe('Test in backend that the module form', () => {
     await page.locator('#jform_title').fill('Test module');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Module saved');
-    await expect(page.getByText('Test module').first()).toBeVisible();
+    await expect(page.getByText('Test module').filter({ visible: true }).first()).toBeVisible();
   });
   test('can edit a module', async ({
     page,
@@ -36,6 +36,6 @@ test.describe('Test in backend that the module form', () => {
     await page.goto(`/administrator/index.php?option=com_modules&task=module.edit&id=${id}`);
     await page.locator('#jform_title').fill('Test module edited');
     await joomla.clickToolbarButton('Save & Close');
-    await expect(page.getByText('Test module edited').first()).toBeVisible();
+    await expect(page.getByText('Test module edited').filter({ visible: true }).first()).toBeVisible();
   });
 });
