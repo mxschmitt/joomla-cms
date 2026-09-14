@@ -31,7 +31,6 @@ test.describe('Test that media files API endpoint', () => {
   });
   // Delete all files and directories created during the test, only for clean-up and only if they exist
   test.afterAll(async ({
-    page,
     joomla
   }) => {
     await joomla.deleteRelativePath('files/test-dir');

@@ -117,7 +117,7 @@ test.describe('Test that the Action Logs plugin', () => {
     await page.locator('#password').fill('test');
     await page.locator('button[type="submit"]').filter({
       hasText: 'Log in'
-    }).click();
+    }).first().click();
     await page.reload();
     await page.goto('/index.php?option=com_users&view=profile&layout=edit');
     await page.locator('#jform_name').fill('test edited frontend');

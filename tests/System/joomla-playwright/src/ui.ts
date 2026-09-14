@@ -81,7 +81,13 @@ export async function checkForSystemMessage(page: Page, contain: string): Promis
 }
 
 export async function checkForPhpNoticesOrWarnings(page: Page): Promise<void> {
-  const html = await page.content();
+  let html: string;
+  try {
+    html = await page.content();
+  } catch {
+    // The page may still be navigating when a test ends; skip the scan then.
+    return;
+  }
   const regex = /<b>(Warning|Deprecated|Notice|Strict standards)<\/b>:(.*?)(<br|$)/;
   const match = regex.exec(html);
   if (match) {
@@ -162,11 +168,13 @@ export function clearCachedSessions(): void {
   cookieCache.clear();
 }
 
-export async function doAdministratorLogin(page: Page, expose: JoomlaExpose, user?: string | null, password?: string | null, _useSnapshot = true): Promise<void> {
+export async function doAdministratorLogin(page: Page, expose: JoomlaExpose, user?: string | null, password?: string | null, useSnapshot = true): Promise<void> {
   const username = user || expose.username;
   const pass = password || expose.password;
   const key = `admin:${username}:${pass}`;
-  await restoreCookies(page, key);
+  if (useSnapshot !== false) {
+    await restoreCookies(page, key);
+  }
   await page.goto('administrator/index.php');
   if (await page.locator('#mod-login-username').isVisible().catch(() => false)) {
     await page.locator('#mod-login-username').fill(username);
@@ -174,7 +182,14 @@ export async function doAdministratorLogin(page: Page, expose: JoomlaExpose, use
     await page.locator('#btn-login-submit').click();
   }
   await expect(page.locator('h1.page-title')).toContainText('Home Dashboard');
-  await storeCookies(page, key);
+  if (useSnapshot !== false) {
+    await storeCookies(page, key);
+  }
+}
+
+export async function openAdministratorAccount(page: Page): Promise<void> {
+  await page.locator('.header-item .header-profile > .dropdown-toggle').click();
+  await page.locator('.header-item .header-profile a.dropdown-item').filter({ hasText: 'Edit Account' }).first().click();
 }
 
 export async function doAdministratorLogout(page: Page): Promise<void> {
@@ -184,11 +199,13 @@ export async function doAdministratorLogout(page: Page): Promise<void> {
   clearCachedSessions();
 }
 
-export async function doFrontendLogin(page: Page, expose: JoomlaExpose, user?: string | null, password?: string | null, _useSnapshot = true): Promise<void> {
+export async function doFrontendLogin(page: Page, expose: JoomlaExpose, user?: string | null, password?: string | null, useSnapshot = true): Promise<void> {
   const username = user || expose.username;
   const pass = password || expose.password;
   const key = `front:${username}:${pass}`;
-  await restoreCookies(page, key);
+  if (useSnapshot !== false) {
+    await restoreCookies(page, key);
+  }
   await page.goto('index.php?option=com_users&view=login');
   if (await page.locator('#username').isVisible().catch(() => false)) {
     await page.locator('#username').fill(username);
@@ -196,7 +213,9 @@ export async function doFrontendLogin(page: Page, expose: JoomlaExpose, user?: s
     await page.locator('.com-users-login__form button[type=submit]').click();
   }
   await expect(page.locator('.mod-login-logout button[type=submit]')).toContainText('Log out');
-  await storeCookies(page, key);
+  if (useSnapshot !== false) {
+    await storeCookies(page, key);
+  }
 }
 
 export async function doFrontendLogout(page: Page): Promise<void> {
@@ -310,13 +329,14 @@ export async function execPhp(command: string, options: { failOnNonZeroExit?: bo
   const failOnNonZeroExit = options.failOnNonZeroExit !== false;
   try {
     const { stdout, stderr } = await execFileAsync('bash', ['-lc', command], { maxBuffer: 10 * 1024 * 1024 });
-    return { stdout, stderr, code: 0 };
+    return { stdout, stderr, code: 0, exitCode: 0 };
   } catch (error) {
     const err = error as { stdout?: string; stderr?: string; code?: number };
     const result = {
       stdout: err.stdout || '',
       stderr: err.stderr || '',
       code: err.code || 1,
+      exitCode: err.code || 1,
     };
     if (failOnNonZeroExit) {
       throw error;

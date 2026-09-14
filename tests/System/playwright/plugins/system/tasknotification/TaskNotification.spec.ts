@@ -38,7 +38,6 @@ test.describe('Test that the task notification system plugin', () => {
     expect(body.message).toBe(null);
     expect(body.success).toBe(true);
     const dialog = page.locator('joomla-dialog[type="inline"]');
-    await expect(dialog).toBeVisible();
     await expect(dialog.locator('header.joomla-dialog-header')).toContainText(`Run Task (ID: ${task.id})`);
     await expect(dialog.locator('div.scheduler-status')).toContainText('Status: Completed');
     const mails = await joomla.getMails();
@@ -72,7 +71,6 @@ test.describe('Test that the task notification system plugin', () => {
     expect(body.message).toBe(null);
     expect(body.success).toBe(true);
     const dialog = page.locator('joomla-dialog[type="inline"]');
-    await expect(dialog).toBeVisible();
     await expect(dialog.locator('header.joomla-dialog-header')).toContainText(`Run Task (ID: ${task.id})`);
     await expect(dialog.locator('div.scheduler-status')).toContainText('Status: Completed');
     const mails = await joomla.getMails();

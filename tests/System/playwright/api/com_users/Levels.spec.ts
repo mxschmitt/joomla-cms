@@ -78,7 +78,7 @@ test.describe('Test that users access levels API endpoint', () => {
       expect(normalized).toBe([1, 2]);
     } else {
       const nums = rules.map(r => typeof r === 'string' ? Number(r) : r);
-      expect(nums).to.deep.equal([1, 2]);
+      expect(nums).toEqual([1, 2]);
     }
   });
 });

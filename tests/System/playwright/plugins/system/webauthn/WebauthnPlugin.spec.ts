@@ -60,10 +60,7 @@ test.describe('Test that the webauthn system plugin', { tag: '@chromium-only' },
   }) => {
     await joomla.doAdministratorLogin(null, null, false);
     await page.goto('/administrator/index.php?option=com_users&view=users');
-    await page.locator('.header-profile:visible').click();
-    await page.locator('.header-profile a.dropdown-item').filter({
-      hasText: 'Edit Account'
-    }).click();
+    await joomla.openAdministratorAccount();
     await page.locator('#myTab div[role="tablist"] button[aria-controls="attrib-webauthn"]').filter({
       hasText: 'Passkey Login'
     }).click();
@@ -87,10 +84,7 @@ test.describe('Test that the webauthn system plugin', { tag: '@chromium-only' },
     }).click();
     await expect(page.locator('h1.page-title')).toContainText('Home Dashboard');
     await page.goto('/administrator/index.php?option=com_users&view=users');
-    await page.locator('.header-profile:visible').click();
-    await page.locator('.header-profile a.dropdown-item').filter({
-      hasText: 'Edit Account'
-    }).click();
+    await joomla.openAdministratorAccount();
     await page.locator('#myTab div[role="tablist"] button[aria-controls="attrib-webauthn"]').filter({
       hasText: 'Passkey Login'
     }).click();

@@ -103,6 +103,7 @@ export function createJoomla({
 
     doAdministratorLogin: (user, password, useSnapshot) => ui.doAdministratorLogin(page, config.expose, user, password, useSnapshot),
     doAdministratorLogout: () => ui.doAdministratorLogout(page),
+    openAdministratorAccount: () => ui.openAdministratorAccount(page),
     doFrontendLogin: (user, password, useSnapshot) => ui.doFrontendLogin(page, config.expose, user, password, useSnapshot),
     doFrontendLogout: () => ui.doFrontendLogout(page),
     clickToolbarButton: (button, subselector) => ui.clickToolbarButton(page, button, subselector),
@@ -188,7 +189,9 @@ export function createJoomla({
           Object.entries(payload as Record<string, unknown>).map(([key, value]) => [key, String(value)]),
         ).toString();
       }
-      const response = await request.fetch(url, {
+      const fetchUrl = /^https?:\/\//i.test(url) ? url : new URL(url, config.baseURL).href;
+      // page.request shares the browser cookie jar, matching Cypress cy.request().
+      const response = await page.request.fetch(fetchUrl, {
         method,
         headers: hdrs,
         data: method.toUpperCase() === 'GET' ? undefined : requestData,
@@ -219,7 +222,8 @@ export function createJoomla({
         redirectedToUrl,
         ok: response.ok(),
       };
-      if (failOnStatusCode && !response.ok()) {
+      const isRedirect = result.status >= 300 && result.status < 400;
+      if (failOnStatusCode && !response.ok() && !(isRedirect && !followRedirect)) {
         throw new Error(`HTTP ${result.status} for ${url}`);
       }
       return result;
@@ -228,6 +232,9 @@ export function createJoomla({
       await page.addInitScript(([storageKey, storageValue]) => {
         window.sessionStorage.setItem(storageKey, storageValue);
       }, [key, value]);
+      await page.evaluate(([storageKey, storageValue]) => {
+        window.sessionStorage.setItem(storageKey, storageValue);
+      }, [key, value]).catch(() => {});
     },
   };
 

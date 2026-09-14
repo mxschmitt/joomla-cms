@@ -31,6 +31,7 @@ export interface CliResult {
   stdout: string;
   stderr: string;
   code: number;
+  exitCode: number;
 }
 
 export interface HttpResult<T = any> {
@@ -131,6 +132,7 @@ export interface JoomlaHelpers {
 
   doAdministratorLogin(user?: string | null, password?: string | null, useSnapshot?: boolean): Promise<void>;
   doAdministratorLogout(): Promise<void>;
+  openAdministratorAccount(): Promise<void>;
   doFrontendLogin(user?: string | null, password?: string | null, useSnapshot?: boolean): Promise<void>;
   doFrontendLogout(): Promise<void>;
   clickToolbarButton(button: string, subselector?: string | null): Promise<void>;

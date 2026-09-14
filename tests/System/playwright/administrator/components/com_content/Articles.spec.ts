@@ -146,14 +146,14 @@ test.describe('Test in backend that the articles list', () => {
     await page.reload();
     await joomla.searchForItem('Test article');
     await page.locator('#cb2').click();
-    await page.locator('body').fill('{shift}');
+    await page.keyboard.down('Shift');
     await page.locator('#cb4').click();
     await joomla.clickToolbarButton('Action');
     await joomla.clickToolbarButton('Unpublish');
     await joomla.checkForSystemMessage('3 articles unpublished.');
     await expect(page.locator('thead input[name=\'checkall-toggle\']')).not.toBeChecked();
     await page.locator('#cb0').click();
-    await page.locator('body').fill('{shift}');
+    await page.keyboard.down('Shift');
     await page.locator('#cb4').click();
     await expect(page.locator('thead input[name=\'checkall-toggle\']')).toBeChecked();
     await joomla.clickToolbarButton('Action');
@@ -161,9 +161,9 @@ test.describe('Test in backend that the articles list', () => {
     await joomla.checkForSystemMessage('2 articles unpublished.');
     await joomla.checkAllResults();
     await page.locator('#cb2').click();
-    await page.locator('body').fill('{shift}');
+    await page.keyboard.down('Shift');
     await page.locator('#cb0').click();
-    await page.locator('body').fill('{shift}');
+    await page.keyboard.press('Shift');
     await page.locator('#cb4').click();
     await joomla.clickToolbarButton('Action');
     await joomla.clickToolbarButton('Publish');

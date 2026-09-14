@@ -20,7 +20,7 @@ test.describe('Test in frontend that the users profile view edit layout', () => 
     });
     await joomla.doFrontendLogin();
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'Automated test edit' }).click();
+    await page.locator('a').filter({ hasText: 'Automated test edit' }).first().click();
     await expect(page.locator('#member-profile > :nth-child(1) > legend')).toContainText('Edit Your Profile');
   });
   test('can edit a test user without a menu item', async ({
@@ -58,7 +58,7 @@ test.describe('Test in frontend that the users profile view edit layout', () => 
     });
     await joomla.doFrontendLogin('automatedtestuser', 'test', false);
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'Automated test edit' }).click();
+    await page.getByRole('link', { name: 'Automated test edit test user' }).click();
     await page.locator('#jform_name').fill('automated test user edited');
     await page.locator('#jform_email1').fill('testedited@example.com');
     await expect(page.locator('.controls > .btn-primary')).toBeVisible();

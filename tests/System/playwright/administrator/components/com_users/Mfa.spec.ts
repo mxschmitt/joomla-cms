@@ -19,8 +19,7 @@ test.describe('Test in backend that the user', () => {
   test('can login with Multi-factor Authentication (email)', async ({ page, joomla }) => {
     await joomla.doAdministratorLogin();
     await page.goto('/administrator/index.php?option=com_users&view=users');
-    await page.locator('.header-profile:visible').click();
-    await page.locator('.header-profile a.dropdown-item').filter({ hasText: 'Edit Account' }).click();
+    await joomla.openAdministratorAccount();
     await page.locator('#myTab div[role="tablist"] button[aria-controls="multifactorauth"]').click();
     await joomla.clearEmails();
     await page.locator('.com-users-methods-list-method-name-email a.com-users-methods-list-method-addnew').click();
@@ -47,8 +46,7 @@ test.describe('Test in backend that the user', () => {
     await page.locator('#users-mfa-code').fill(loginCode);
     await page.locator('#users-mfa-captive-form').evaluate((form: HTMLFormElement) => form.submit());
     await page.goto('/administrator/index.php?option=com_users&view=users');
-    await page.locator('.header-profile:visible').click();
-    await page.locator('.header-profile a.dropdown-item').filter({ hasText: 'Edit Account' }).click();
+    await joomla.openAdministratorAccount();
     await page.locator('#myTab div[role="tablist"] button[aria-controls="multifactorauth"]').click();
     await expect(page.locator('#com-users-methods-reset-message').filter({ hasText: 'is enabled' })).toBeVisible();
     await page.locator('.com-users-methods-list-method-name-email a.com-users-methods-list-method-record-delete').click();
@@ -58,8 +56,7 @@ test.describe('Test in backend that the user', () => {
   test('can login with Multi-factor Authentication (totp)', async ({ page, joomla }) => {
     await joomla.doAdministratorLogin();
     await page.goto('/administrator/index.php?option=com_users&view=users');
-    await page.locator('.header-profile:visible').click();
-    await page.locator('.header-profile a.dropdown-item').filter({ hasText: 'Edit Account' }).click();
+    await joomla.openAdministratorAccount();
     await page.locator('#myTab div[role="tablist"] button[aria-controls="multifactorauth"]').click();
     await page.locator('.com-users-methods-list-method-name-totp a.com-users-methods-list-method-addnew').click();
     await page.locator('#com-users-method-edit-title').fill('Test Code');
@@ -76,8 +73,7 @@ test.describe('Test in backend that the user', () => {
     await page.locator('#users-mfa-code').fill(TOTP.generate(secret).otp);
     await page.locator('#users-mfa-captive-form').evaluate((form: HTMLFormElement) => form.submit());
     await page.goto('/administrator/index.php?option=com_users&view=users');
-    await page.locator('.header-profile:visible').click();
-    await page.locator('.header-profile a.dropdown-item').filter({ hasText: 'Edit Account' }).click();
+    await joomla.openAdministratorAccount();
     await page.locator('#myTab div[role="tablist"] button[aria-controls="multifactorauth"]').click();
     await expect(page.locator('#com-users-methods-reset-message').filter({ hasText: 'is enabled' })).toBeVisible();
     await page.locator('.com-users-methods-list-method-name-totp a.com-users-methods-list-method-record-delete').click();
@@ -88,8 +84,7 @@ test.describe('Test in backend that the user', () => {
     await joomla.enableWebAuthn();
     await joomla.doAdministratorLogin();
     await page.goto('/administrator/index.php?option=com_users&view=users');
-    await page.locator('.header-profile:visible').click();
-    await page.locator('.header-profile a.dropdown-item').filter({ hasText: 'Edit Account' }).click();
+    await joomla.openAdministratorAccount();
     await page.locator('#myTab div[role="tablist"] button[aria-controls="multifactorauth"]').click();
     await page.locator('.com-users-methods-list-method-name-webauthn a.com-users-methods-list-method-addnew').click();
     await page.locator('#com-users-method-edit-title').fill('Test Passkey');
@@ -103,8 +98,7 @@ test.describe('Test in backend that the user', () => {
     await expect(page.locator('#users-mfa-title').filter({ hasText: 'Passkey' })).toBeVisible();
     await page.locator('#toolbar-user-mfa-submit').click();
     await page.goto('/administrator/index.php?option=com_users&view=users');
-    await page.locator('.header-profile:visible').click();
-    await page.locator('.header-profile a.dropdown-item').filter({ hasText: 'Edit Account' }).click();
+    await joomla.openAdministratorAccount();
     await page.locator('#myTab div[role="tablist"] button[aria-controls="multifactorauth"]').click();
     await expect(page.locator('#com-users-methods-reset-message').filter({ hasText: 'is enabled' })).toBeVisible();
     await page.locator('.com-users-methods-list-method-name-webauthn a.com-users-methods-list-method-record-delete').click();
@@ -115,8 +109,7 @@ test.describe('Test in backend that the user', () => {
   test('can login with Multi-factor Authentication (backup codes)', async ({ page, joomla }) => {
     await joomla.doAdministratorLogin();
     await page.goto('/administrator/index.php?option=com_users&view=users');
-    await page.locator('.header-profile:visible').click();
-    await page.locator('.header-profile a.dropdown-item').filter({ hasText: 'Edit Account' }).click();
+    await joomla.openAdministratorAccount();
     await page.locator('#myTab div[role="tablist"] button[aria-controls="multifactorauth"]').click();
     await page.locator('.com-users-methods-list-method-name-totp a.com-users-methods-list-method-addnew').click();
     await page.locator('#com-users-method-edit-title').fill('Test Code');
@@ -142,8 +135,7 @@ test.describe('Test in backend that the user', () => {
     await page.locator('#users-mfa-code').fill(code);
     await page.locator('#users-mfa-captive-form').evaluate((form: HTMLFormElement) => form.submit());
     await page.goto('/administrator/index.php?option=com_users&view=users');
-    await page.locator('.header-profile:visible').click();
-    await page.locator('.header-profile a.dropdown-item').filter({ hasText: 'Edit Account' }).click();
+    await joomla.openAdministratorAccount();
     await page.locator('#myTab div[role="tablist"] button[aria-controls="multifactorauth"]').click();
     await expect(page.locator('#com-users-methods-reset-message').filter({ hasText: 'is enabled' })).toBeVisible();
     await page.locator('.com-users-methods-list-method-name-totp a.com-users-methods-list-method-record-delete').click();
