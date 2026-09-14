@@ -8,7 +8,7 @@ test.describe('Test that the rotate media action plugin', () => {
   }) => {
     await joomla.doAdministratorLogin();
     await page.goto('/administrator/index.php?option=com_media&view=file&mediatypes=0,1,2,3&path=local-images:/joomla_black.png');
-    await page.locator('button[role="tab"]').filter({ hasText: 'Rotate'}).click();
+    await page.locator('button[role="tab"]').filter({ hasText: 'Rotate' }).click();
     await expect(page.locator('legend').filter({
       hasText: 'Rotate'
     })).toBeVisible();

@@ -23,14 +23,14 @@ test.describe('Test in backend that the articles list', () => {
       title: 'Test article'
     });
     await page.reload();
-    await expect(page.getByText('Test article')).toBeVisible();
+    await expect(page.getByText('Test article').first()).toBeVisible();
   });
   test('can open the article form', async ({
     page,
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await expect(page.getByText('Articles: New')).toBeVisible();
+    await expect(page.getByText('Articles: New').first()).toBeVisible();
   });
   test('can publish the test article', async ({
     page,
@@ -44,7 +44,7 @@ test.describe('Test in backend that the articles list', () => {
     await joomla.searchForItem('Test article');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Publish').click();
+    await page.getByText('Publish').first().click();
     await joomla.checkForSystemMessage('Article published.');
   });
   test('can unpublish the test article', async ({
@@ -59,7 +59,7 @@ test.describe('Test in backend that the articles list', () => {
     await joomla.searchForItem('Test article');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Unpublish').click();
+    await page.getByText('Unpublish').first().click();
     await joomla.checkForSystemMessage('Article unpublished.');
   });
   test('can feature the test article', async ({
@@ -91,7 +91,7 @@ test.describe('Test in backend that the articles list', () => {
     await joomla.searchForItem('Test article');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Unfeature').click();
+    await page.getByText('Unfeature').first().click();
     await joomla.checkForSystemMessage('Article unfeatured.');
   });
   test('can trash the test article', async ({
@@ -105,7 +105,7 @@ test.describe('Test in backend that the articles list', () => {
     await joomla.searchForItem('Test article');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Trash').click();
+    await page.getByText('Trash').first().click();
     await joomla.checkForSystemMessage('Article trashed.');
   });
   test('can delete the test article', async ({

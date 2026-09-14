@@ -18,7 +18,7 @@ test.describe('Test in frontend that the content article form', () => {
     });
     await joomla.doFrontendLogin();
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'automated test article'}).click();
+    await page.locator('a').filter({ hasText: 'automated test article' }).click();
     await page.locator('#jform_title').fill('test article');
     await page.locator('[data-submit-task="article.save"]').click();
     await expect(page.locator('.success')).toBeVisible();

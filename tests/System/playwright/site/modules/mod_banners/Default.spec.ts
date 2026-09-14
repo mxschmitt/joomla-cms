@@ -24,9 +24,9 @@ test.describe('Test in frontend that the banner module', () => {
       params: '{"count":5 }'
     });
     await page.goto('/');
-    await expect(page.getByText('automated test banner 1')).toBeVisible();
-    await expect(page.getByText('automated test banner 2')).toBeVisible();
-    await expect(page.getByText('automated test banner 3')).toBeVisible();
-    await expect(page.getByText('automated test banner 4')).toBeVisible();
+    await expect(page.getByText('automated test banner 1').first()).toBeVisible();
+    await expect(page.getByText('automated test banner 2').first()).toBeVisible();
+    await expect(page.getByText('automated test banner 3').first()).toBeVisible();
+    await expect(page.getByText('automated test banner 4').first()).toBeVisible();
   });
 });

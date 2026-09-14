@@ -19,9 +19,9 @@ test.describe('Test in frontend that the content archived view', () => {
       state: 2
     });
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'automated test archive article'}).click();
-    await expect(page.getByText('article 1')).toBeVisible();
-    await expect(page.getByText('article 2')).toBeVisible();
+    await page.locator('a').filter({ hasText: 'automated test archive article' }).click();
+    await expect(page.getByText('article 1').first()).toBeVisible();
+    await expect(page.getByText('article 2').first()).toBeVisible();
   });
   test('can display archived articles without a menu item', async ({
     page,
@@ -36,8 +36,8 @@ test.describe('Test in frontend that the content archived view', () => {
       state: 2
     });
     await page.goto('/index.php?option=com_content&view=archive');
-    await expect(page.getByText('article 1')).toBeVisible();
-    await expect(page.getByText('article 2')).toBeVisible();
+    await expect(page.getByText('article 1').first()).toBeVisible();
+    await expect(page.getByText('article 2').first()).toBeVisible();
   });
   test('can not display not archived articles', async ({
     page,
@@ -60,9 +60,9 @@ test.describe('Test in frontend that the content archived view', () => {
       state: 0
     });
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'automated test archive article'}).click();
-    await expect(page.getByText('article 1')).toBeVisible();
-    await expect(page.getByText('article 2')).toHaveCount(0);
-    await expect(page.getByText('article 3')).toHaveCount(0);
+    await page.locator('a').filter({ hasText: 'automated test archive article' }).click();
+    await expect(page.getByText('article 1').first()).toBeVisible();
+    await expect(page.getByText('article 2').first()).toHaveCount(0);
+    await expect(page.getByText('article 3').first()).toHaveCount(0);
   });
 });

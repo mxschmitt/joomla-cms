@@ -18,7 +18,7 @@ test.describe('Test in frontend that the contact form view', () => {
     await page.locator('.mb-2 > .btn-primary').click();
     const id = await joomla.queryDB('SELECT catid FROM #__contact_details WHERE name = \'test contact 1\'');
     await page.goto(`/index.php?option=com_contact&view=category&id=${id[0].catid}`);
-    await expect(page.getByText('test contact 1')).toBeVisible();
+    await expect(page.getByText('test contact 1').first()).toBeVisible();
   });
   test('can send an email on contact form submission ', async ({
     page,

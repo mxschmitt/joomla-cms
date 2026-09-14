@@ -57,8 +57,8 @@ test.describe('Test that contenthistory for contact API endpoint', () => {
       console.log(`Alias: ${alias}`);
       console.log(`Created Date: ${createdDate}`);
       // Perform assertions
-      expect(attributes).to.have.property('editor_user_id');
-      expect(versionData).to.have.property('name');
+      expect(attributes).toHaveProperty('editor_user_id');
+      expect(versionData).toHaveProperty('name');
       expect(contactName).toBe('automated test contact');
     });
 

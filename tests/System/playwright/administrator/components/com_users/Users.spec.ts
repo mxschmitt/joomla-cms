@@ -23,14 +23,14 @@ test.describe('Test in backend that the user list', () => {
       name: 'Test user'
     });
     await page.reload();
-    await expect(page.getByText('Test user')).toBeVisible();
+    await expect(page.getByText('Test user').first()).toBeVisible();
   });
   test('can open the user form', async ({
     page,
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await expect(page.getByText('New User Details')).toBeVisible();
+    await expect(page.getByText('New User Details').first()).toBeVisible();
   });
   test('can delete the test user', async ({
     page,
@@ -42,7 +42,7 @@ test.describe('Test in backend that the user list', () => {
     await joomla.searchForItem('Test user');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Delete').click();
+    await page.getByText('Delete').first().click();
     await joomla.clickDialogConfirm(true);
     await joomla.checkForSystemMessage('User deleted.');
   });
@@ -61,11 +61,14 @@ test.describe('Test in backend that the user list', () => {
       block: 1
     });
     await page.reload();
-    await expect(expect(page.locator('#userList')).toContainText('Test user 1')).toContainText('Test user 2');
+    await expect(page.locator('#userList')).toContainText('Test user 1');
+    await expect(page.locator('#userList')).toContainText('Test user 2');
     await joomla.setFilter('state', 'Enabled');
-    await expect(expect(page.locator('#userList')).toContainText('Test user 1')).toBeTruthy();
+    await expect(page.locator('#userList')).toContainText('Test user 1');
+    await expect(page.locator('#userList')).not.toContainText('Test user 2');
     await joomla.setFilter('state', 'Disabled');
-    await expect(expect(page.locator('#userList')).toBeTruthy()).toContainText('Test user 2');
+    await expect(page.locator('#userList')).not.toContainText('Test user 1');
+    await expect(page.locator('#userList')).toContainText('Test user 2');
   });
   test('can filter group', async ({
     page,
@@ -82,12 +85,16 @@ test.describe('Test in backend that the user list', () => {
       group_id: 6
     });
     await page.reload();
-    await expect(expect(page.locator('#userList')).toContainText('Test user 1')).toContainText('Test user 2');
+    await expect(page.locator('#userList')).toContainText('Test user 1');
+    await expect(page.locator('#userList')).toContainText('Test user 2');
     await joomla.setFilter('group_id', '- Registered');
-    await expect(expect(page.locator('#userList')).toContainText('Test user 1')).toBeTruthy();
+    await expect(page.locator('#userList')).toContainText('Test user 1');
+    await expect(page.locator('#userList')).not.toContainText('Test user 2');
     await joomla.setFilter('group_id', '- Manager');
-    await expect(expect(page.locator('#userList')).toBeTruthy()).toContainText('Test user 2');
+    await expect(page.locator('#userList')).not.toContainText('Test user 1');
+    await expect(page.locator('#userList')).toContainText('Test user 2');
     await joomla.setFilter('group_id', '- Super Users');
-    await expect(expect(page.locator('#userList')).toBeTruthy()).toBeTruthy();
+    await expect(page.locator('#userList')).not.toContainText('Test user 1');
+    await expect(page.locator('#userList')).not.toContainText('Test user 2');
   });
 });

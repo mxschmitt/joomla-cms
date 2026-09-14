@@ -12,18 +12,16 @@ test.describe('Test in backend that the media manager', () => {
     page,
     joomla
   }) => {
-    const __wait = page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await page.goto('/administrator/index.php?option=com_media');
-    await __wait;
+    await page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await expect(page.locator('h1.page-title')).toContainText('Media');
   });
   test('can display the local media data when no path is defined', async ({
     page,
     joomla
   }) => {
-    const __wait = page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await page.goto('/administrator/index.php?option=com_media');
-    await __wait;
+    await page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await expect(page.locator('.media-container')).toContainText('Local');
     await expect(page.locator('.media-browser .media-browser-item-directory')).toBeVisible();
     await expect(page.locator('.media-browser .media-browser-image')).toBeVisible();
@@ -32,9 +30,8 @@ test.describe('Test in backend that the media manager', () => {
     page,
     joomla
   }) => {
-    const __wait = page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await page.goto('/administrator/index.php?option=com_media&path=local-images:/');
-    await __wait;
+    await page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await expect(page.locator('.media-browser .media-browser-image')).toContainText('joomla_black.png');
   });
   test('can display the local media data when an adapter is defined in the session', async ({
@@ -44,18 +41,16 @@ test.describe('Test in backend that the media manager', () => {
     await joomla.setSessionStorage('joomla.mediamanager', JSON.stringify({
       selectedDirectory: 'local-images:/'
     }));
-    const __wait = page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await page.goto('/administrator/index.php?option=com_media');
-    await __wait;
+    await page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await expect(page.locator('.media-browser .media-browser-image')).toContainText('joomla_black.png');
   });
   test('can display the first adapter files when an invalid adapter is defined in the url', async ({
     page,
     joomla
   }) => {
-    const __wait = page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await page.goto('/administrator/index.php?option=com_media&path=local-invalid:/');
-    await __wait;
+    await page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await expect(page.locator('.media-browser .media-browser-image')).toContainText('joomla_black.png');
   });
   test('can display the first adapter files when an invalid adapter is defined in the session', async ({
@@ -65,18 +60,16 @@ test.describe('Test in backend that the media manager', () => {
     await joomla.setSessionStorage('joomla.mediamanager', JSON.stringify({
       selectedDirectory: 'local-invalid:/'
     }));
-    const __wait = page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await page.goto('/administrator/index.php?option=com_media');
-    await __wait;
+    await page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await expect(page.locator('.media-browser .media-browser-image')).toContainText('joomla_black.png');
   });
   test('can display the local media data from the path in the url', async ({
     page,
     joomla
   }) => {
-    const __wait = page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await page.goto('/administrator/index.php?option=com_media&path=local-images:/sampledata/cassiopeia');
-    await __wait;
+    await page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await expect(page.locator('.media-browser .media-browser-image')).toContainText('nasa1-1200.jpg');
   });
   test('can display the local media data from the path in the session', async ({
@@ -86,9 +79,8 @@ test.describe('Test in backend that the media manager', () => {
     await joomla.setSessionStorage('joomla.mediamanager', JSON.stringify({
       selectedDirectory: 'local-images:/sampledata/cassiopeia'
     }));
-    const __wait = page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await page.goto('/administrator/index.php?option=com_media');
-    await __wait;
+    await page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await expect(page.locator('.media-browser .media-browser-image')).toContainText('nasa1-1200.jpg');
   });
   test('can display the local media data from the path in the url when also defined in the session', async ({
@@ -98,18 +90,16 @@ test.describe('Test in backend that the media manager', () => {
     await joomla.setSessionStorage('joomla.mediamanager', JSON.stringify({
       selectedDirectory: 'local-images:/banners'
     }));
-    const __wait = page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await page.goto('/administrator/index.php?option=com_media&path=local-images:/sampledata/cassiopeia');
-    await __wait;
+    await page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await expect(page.locator('.media-browser .media-browser-image')).toContainText('nasa1-1200.jpg');
   });
   test('can display an error message when an invalid path is defined in the url', async ({
     page,
     joomla
   }) => {
-    const __wait = page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await page.goto('/administrator/index.php?option=com_media&path=local-images:/invalid');
-    await __wait;
+    await page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await joomla.checkForSystemMessage('File or Folder not found');
   });
   test('can display an error message when an invalid path is defined in the session', async ({
@@ -119,18 +109,16 @@ test.describe('Test in backend that the media manager', () => {
     await joomla.setSessionStorage('joomla.mediamanager', JSON.stringify({
       selectedDirectory: 'local-images:/invalid'
     }));
-    const __wait = page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await page.goto('/administrator/index.php?option=com_media');
-    await __wait;
+    await page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await joomla.checkForSystemMessage('File or Folder not found');
   });
   test('can not rename to malicious file', async ({
     page,
     joomla
   }) => {
-    const __wait = page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     await page.goto('/administrator/index.php?option=com_media');
-    await __wait;
+    await page.waitForResponse(resp => /.*format=json.*task=api\.files.*/.test(resp.url()));
     const win = page;
     const token = win.Joomla.getOptions('csrf.token');
     const response = await joomla.http({

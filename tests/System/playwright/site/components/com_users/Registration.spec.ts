@@ -23,11 +23,11 @@ test.describe('Test in frontend that the users registration view', () => {
   }) => {
     await page.goto('/index.php?option=com_users&view=registration');
     await expect(page.locator('.com-users-registration__form')).toContainText('User Registration');
-    await page.locator('#jform_name').fill('test user');
-    await page.locator('#jform_username').fill('testuser');
-    await page.locator('#jform_password1').fill(`${joomla.expose.password}-test`);
-    await page.locator('#jform_password2').fill(`${joomla.expose.password}-test`);
-    await page.locator('#jform_email1').fill('testuser@example.com');
+    await page.locator('#jform_name').fill("").fill('test user');
+    await page.locator('#jform_username').fill("").fill('testuser');
+    await page.locator('#jform_password1').fill("").fill(`${joomla.expose.password}-test`);
+    await page.locator('#jform_password2').fill("").fill(`${joomla.expose.password}-test`);
+    await page.locator('#jform_email1').fill("").fill('testuser@example.com');
     await page.locator('#member-registration').evaluate(form => form.submit());
     await joomla.checkForSystemMessage('Your account has been created and a verification link has been sent to the email address you entered.');
     let mails = await joomla.getMails();
@@ -78,7 +78,7 @@ test.describe('Test in frontend that the users registration view', () => {
       link: 'index.php?option=com_users&view=registration'
     });
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'Automated test registration'}).click();
+    await page.locator('a').filter({ hasText: 'Automated test registration' }).click();
     await expect(page.locator('.com-users-registration__form')).toContainText('User Registration');
   });
 });

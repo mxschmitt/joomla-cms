@@ -8,7 +8,7 @@ test.describe('Test that the folder installer plugin', () => {
   }) => {
     await joomla.doAdministratorLogin();
     await page.goto('/administrator/index.php?option=com_installer&view=install');
-    await page.locator('button[role="tab"]').filter({ hasText: 'Install from Folder'}).click();
+    await page.locator('button[role="tab"]').filter({ hasText: 'Install from Folder' }).click();
     await expect(page.locator('legend').filter({
       hasText: 'Install from Folder'
     })).toBeVisible();

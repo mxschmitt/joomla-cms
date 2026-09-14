@@ -27,8 +27,8 @@ test.describe('Test in frontend that the newsfeeds categories view', () => {
       catid: id
     });
     await page.goto('/index.php?option=com_newsfeeds&view=categories');
-    await expect(page.getByText('automated test category 1')).toBeVisible();
-    await expect(page.getByText('automated test category 2')).toBeVisible();
+    await expect(page.getByText('automated test category 1').first()).toBeVisible();
+    await expect(page.getByText('automated test category 2').first()).toBeVisible();
     await expect(page.locator(':nth-child(2) > .page-header > .badge').filter({
       hasText: '# News feeds 1'
     })).toBeVisible();

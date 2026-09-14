@@ -31,12 +31,12 @@ test.describe('Test in frontend that the users login view', () => {
       link: 'index.php?option=com_users&view=login'
     });
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'Automated test login'}).click();
+    await page.locator('a').filter({ hasText: 'Automated test login' }).click();
     await page.locator('#username').fill('test');
     await page.locator('#password').fill('test');
     await page.locator('#remember').check();
     await page.locator('.controls > button[type="submit"].btn').click();
-    await page.locator('a').filter({ hasText: 'Automated test login'}).click();
+    await page.locator('a').filter({ hasText: 'Automated test login' }).click();
     await expect(page.locator('.com-users-logout')).toContainText('Log out');
   });
 });

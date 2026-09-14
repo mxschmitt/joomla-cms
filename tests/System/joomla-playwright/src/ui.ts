@@ -245,7 +245,11 @@ export async function prepareInstaller(page: Page): Promise<void> {
   const language = page.locator('#jform_language');
   if (await language.isVisible().catch(() => false)) {
     await language.selectOption('en-GB').catch(async () => {
-      await language.selectOption({ label: /English/ });
+      const english = language.locator('option').filter({ hasText: 'English' }).first();
+      const value = await english.getAttribute('value');
+      if (value) {
+        await language.selectOption(value);
+      }
     });
   }
 }

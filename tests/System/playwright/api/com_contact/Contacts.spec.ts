@@ -88,7 +88,7 @@ test.describe('Test that contacts API endpoint', () => {
       failOnStatusCode: false
     });
     expect(response.status).toBe(404);
-    expect(response.body.data.message).to.include('Resource not found');
+    expect(response.body.data.message).toContain('Resource not found');
   });
   test('can submit a contact form', async ({
     page,

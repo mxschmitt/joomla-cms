@@ -34,15 +34,15 @@ test.describe('Test in frontend that the content site router', () => {
     // expect(response.status).toBe(301);
     // expect(response.redirectedToUrl).toMatch(new RegExp(`${url}$`));
     await page.goto(url);
-    await expect(page.url()).toHaveText(new RegExp(`${url}$`));
-    await expect(page.title()).toBe('Test Article');
+    expect(page.url()).toMatch(new RegExp(`${url}$`));
+    expect(await page.title()).toBe('Test Article');
     await expect(page.locator('main h1').filter({
       hasText: 'Home'
     })).toBeVisible();
     await expect(page.locator('main h2').filter({
       hasText: 'Test Article'
     })).toBeVisible();
-    const breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs');
+    const breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs').locator(":scope > *");
     await expect(breadcrumb).toHaveCount(4);
     await expect(breadcrumb.nth(2)).toContainText('Uncategorised');
     await expect(breadcrumb.nth(3)).toContainText('Test Article');
@@ -87,12 +87,12 @@ test.describe('Test in frontend that the content site router', () => {
     expect(response.status).toBe(301);
     expect(response.redirectedToUrl).toMatch(new RegExp(`${url}$`));
     await page.goto(url);
-    await expect(page.url()).toHaveText(new RegExp(`${url}$`));
-    await expect(page.title()).toBe('Test Article');
+    expect(page.url()).toMatch(new RegExp(`${url}$`));
+    expect(await page.title()).toBe('Test Article');
     await expect(page.locator('main h1').filter({
       hasText: 'Test Article'
     })).toBeVisible();
-    const breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs');
+    const breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs').locator(":scope > *");
     await expect(breadcrumb).toHaveCount(3);
     await expect(breadcrumb.nth(2)).toContainText('Test Menu Single Article');
   });
@@ -124,22 +124,22 @@ test.describe('Test in frontend that the content site router', () => {
     expect(response.status).toBe(301);
     expect(response.redirectedToUrl).toMatch(new RegExp(`${url}$`));
     await page.goto(url.split('/').slice(0, -1).join('/'));
-    await expect(page.url()).toHaveText(new RegExp(`${url.split('/').slice(0, -1).join('/')}$`));
-    await expect(page.title()).toBe('Test Menu Article Category');
+    expect(page.url()).toMatch(new RegExp(`${url.split('/').slice(0, -1).join('/')}$`));
+    expect(await page.title()).toBe('Test Menu Article Category');
     await expect(page.locator('main h1')).toHaveCount(0);
-    let breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs');
+    let breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs').locator(":scope > *");
     await expect(breadcrumb).toHaveCount(3);
     await expect(breadcrumb.nth(2)).toContainText('Test Menu Article Category');
-    await expect(expect(page.locator('main div.com-content-category a').filter({
+    expect(await page.locator('main div.com-content-category a').filter({
       hasText: 'Test Article'
-    })).toHaveAttribute('href')).toHaveText(new RegExp(`${url}$`));
+    }).getAttribute('href')).toMatch(new RegExp(`${url}$`));
     await page.goto(url);
-    await expect(page.url()).toHaveText(new RegExp(`${url}$`));
-    await expect(page.title()).toBe('Test Article');
+    expect(page.url()).toMatch(new RegExp(`${url}$`));
+    expect(await page.title()).toBe('Test Article');
     await expect(page.locator('main h1').filter({
       hasText: 'Test Article'
     })).toBeVisible();
-    breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs');
+    breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs').locator(":scope > *");
     await expect(breadcrumb).toHaveCount(4);
     await expect(breadcrumb.nth(2)).toContainText('Test Menu Article Category');
     await expect(breadcrumb.nth(3)).toContainText('Test Article');
@@ -166,32 +166,32 @@ test.describe('Test in frontend that the content site router', () => {
     expect(response.status).toBe(301);
     expect(response.redirectedToUrl).toMatch(new RegExp(`${url}$`));
     await page.goto(url.split('/').slice(0, -2).join('/'));
-    await expect(page.url()).toHaveText(new RegExp(`${url.split('/').slice(0, -2).join('/')}$`));
-    await expect(page.title()).toBe('Test Menu Article Categories');
-    let breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs');
+    expect(page.url()).toMatch(new RegExp(`${url.split('/').slice(0, -2).join('/')}$`));
+    expect(await page.title()).toBe('Test Menu Article Categories');
+    let breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs').locator(":scope > *");
     await expect(breadcrumb).toHaveCount(3);
     await expect(breadcrumb.nth(2)).toContainText('Test Menu Article Categories');
-    await expect(expect(page.locator('main div.com-content-categories div a').filter({
+    expect(await page.locator('main div.com-content-categories div a').filter({
       hasText: 'Uncategorised'
-    })).toHaveAttribute('href')).toHaveText(new RegExp(`${url.split('/').slice(0, -1).join('/')}$`));
+    }).getAttribute('href')).toMatch(new RegExp(`${url.split('/').slice(0, -1).join('/')}$`));
     await page.goto(`${url.split('/').slice(0, -1).join('/')}`);
-    await expect(page.url()).toHaveText(new RegExp(`${url.split('/').slice(0, -1).join('/')}$`));
-    await expect(page.title()).toBe('Uncategorised');
+    expect(page.url()).toMatch(new RegExp(`${url.split('/').slice(0, -1).join('/')}$`));
+    expect(await page.title()).toBe('Uncategorised');
     await expect(page.locator('main h1')).toHaveCount(0);
-    breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs');
+    breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs').locator(":scope > *");
     await expect(breadcrumb).toHaveCount(4);
     await expect(breadcrumb.nth(2)).toContainText('Test Menu Article Categories');
     await expect(breadcrumb.nth(3)).toContainText('Uncategorised');
-    await expect(expect(page.locator('main div.com-content-category-blog h2 a').filter({
+    expect(await page.locator('main div.com-content-category-blog h2 a').filter({
       hasText: 'Test Article'
-    })).toHaveAttribute('href')).toHaveText(new RegExp(`${url}$`));
+    }).getAttribute('href')).toMatch(new RegExp(`${url}$`));
     await page.goto(url);
-    await expect(page.url()).toHaveText(new RegExp(`${url}$`));
-    await expect(page.title()).toBe('Test Article');
+    expect(page.url()).toMatch(new RegExp(`${url}$`));
+    expect(await page.title()).toBe('Test Article');
     await expect(page.locator('main h1').filter({
       hasText: 'Test Article'
     })).toBeVisible();
-    breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs');
+    breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs').locator(":scope > *");
     await expect(breadcrumb).toHaveCount(5);
     await expect(breadcrumb.nth(2)).toContainText('Test Menu Article Categories');
     await expect(breadcrumb.nth(3)).toContainText('Uncategorised');

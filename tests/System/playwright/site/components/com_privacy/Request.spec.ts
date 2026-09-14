@@ -40,7 +40,7 @@ test.describe('Test in frontend that the privacy request view', () => {
       link: 'index.php?option=com_privacy&view=request'
     });
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'Automated export information'}).click();
+    await page.locator('a').filter({ hasText: 'Automated export information' }).click();
     await page.locator('#jform_request_type').selectOption({
       label: 'Export'
     });
@@ -77,7 +77,7 @@ test.describe('Test in frontend that the privacy request view', () => {
       link: 'index.php?option=com_privacy&view=request'
     });
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'Automated remove information'}).click();
+    await page.locator('a').filter({ hasText: 'Automated remove information' }).click();
     await page.locator('#jform_request_type').selectOption({
       label: 'Remove'
     });

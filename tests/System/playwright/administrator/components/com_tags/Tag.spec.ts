@@ -20,10 +20,10 @@ test.describe('Test in backend that the tag form', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_tags&task=tag.add');
-    await page.locator('#jform_title').fill('Test tag');
+    await page.locator('#jform_title').fill("").fill('Test tag');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Tag saved');
-    await expect(page.getByText('Test tag')).toBeVisible();
+    await expect(page.getByText('Test tag').first()).toBeVisible();
   });
   test('can edit a tag', async ({
     page,
@@ -33,9 +33,9 @@ test.describe('Test in backend that the tag form', () => {
       title: 'Test tag'
     });
     await page.goto(`/administrator/index.php?option=com_tags&task=tag.edit&id=${id}`);
-    await page.locator('#jform_title').fill('Test tag edited');
+    await page.locator('#jform_title').fill("").fill('Test tag edited');
     await joomla.clickToolbarButton('Save & Close');
-    await expect(page.getByText('Test tag edited')).toBeVisible();
+    await expect(page.getByText('Test tag edited').first()).toBeVisible();
   });
   test('check redirection to list view', async ({
     page,

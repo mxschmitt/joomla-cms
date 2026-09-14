@@ -1,17 +1,15 @@
 // @ts-nocheck
 import { test, expect } from '../../../../joomla-playwright/src/fixtures';
 
-test.describe('Test that the webauthn system plugin', {
-  browser: '!firefox'
-}, () => {
-  test.beforeEach(async ({
-    page,
-    joomla
-  }) => {});
+test.describe('Test that the webauthn system plugin', { tag: '@chromium-only' }, () => {
+  test.beforeEach(async ({ joomla }) => {
+    await joomla.enableWebAuthn();
+  });
   test.afterEach(async ({
     page,
     joomla
   }) => {
+    await joomla.disableWebAuthn();
     await joomla.db_updateExtensionParameter('attestationSupport', '0', 'plg_system_webauthn');
   });
   test('can use passkeys in frontend', async ({
@@ -33,7 +31,7 @@ test.describe('Test that the webauthn system plugin', {
     await page.locator('.plg_system_webauthn-manage-edit').filter({
       hasText: 'Edit Name'
     }).click();
-    await page.locator('.webauthnManagementEditorRow input').fill('Test Passkey');
+    await page.locator('.webauthnManagementEditorRow input').fill("").fill('Test Passkey');
     await page.locator('.webauthnManagementEditorRow button').filter({
       hasText: 'Save'
     }).click();
@@ -44,7 +42,8 @@ test.describe('Test that the webauthn system plugin', {
     await page.locator('.mod-login .plg_system_webauthn_login_button').filter({
       hasText: 'Sign in with a passkey'
     }).click();
-    await expect(expect(page.locator('.mod-login-logout button[type=submit]')).toBeVisible()).toContainText('Log out');
+    await expect(page.locator('.mod-login-logout button[type=submit]')).toBeVisible();
+    await expect(page.locator('.mod-login-logout button[type=submit]')).toContainText('Log out');
     await page.goto('/index.php?option=com_users&view=profile');
     await page.locator('.com-users-profile__edit.btn-toolbar').filter({
       hasText: 'Edit Profile'
@@ -75,7 +74,7 @@ test.describe('Test that the webauthn system plugin', {
     await page.locator('.plg_system_webauthn-manage-edit').filter({
       hasText: 'Edit Name'
     }).click();
-    await page.locator('.webauthnManagementEditorRow input').fill('Test Passkey');
+    await page.locator('.webauthnManagementEditorRow input').fill("").fill('Test Passkey');
     await page.locator('.webauthnManagementEditorRow button').filter({
       hasText: 'Save'
     }).click();
@@ -129,7 +128,7 @@ test.describe('Test that the webauthn system plugin', {
     await joomla.searchForItem('test user');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Delete').click();
+    await page.getByText('Delete').first().click();
     await joomla.clickDialogConfirm(true);
     await joomla.checkForSystemMessage('User deleted.');
     data = await joomla.queryDB('SELECT * FROM #__webauthn_credentials');

@@ -19,10 +19,10 @@ test.describe('Test in backend that the Smart Search', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_content&task=article.add');
-    await page.locator('#jform_title').fill('Test article');
+    await page.locator('#jform_title').fill("").fill('Test article');
     await joomla.clickToolbarButton('Save & Close');
     await page.goto('/administrator/index.php?option=com_finder&view=index');
-    await expect(page.getByText('Test article')).toBeVisible();
+    await expect(page.getByText('Test article').first()).toBeVisible();
   });
   test('can purge the index', async ({
     page,

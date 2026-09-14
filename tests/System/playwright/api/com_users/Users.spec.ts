@@ -60,8 +60,7 @@ test.describe('Test that users API endpoint', () => {
       name: 'updated automated test user',
       groups: ['2']
     };
-    await joomla.api_patch(`/users/${id}`, updatedUserData);
-    const response = undefined;
+    const response = await joomla.api_patch(`/users/${id}`, updatedUserData);
     await expect(response.body.data.attributes.name).toContain('updated automated test user');
   });
   test('can delete a user', async ({
@@ -85,8 +84,7 @@ test.describe('Test that users API endpoint', () => {
       name: 'test',
       groups: ['2']
     };
-    await joomla.api_patch(`/users/${id}`, updatedUserData);
-    const response = undefined;
+    const response = await joomla.api_patch(`/users/${id}`, updatedUserData);
     await expect(response.body.data.attributes.name).toContain('test');
     await page.goto('/index.php?option=com_users&view=login');
     await page.locator('#username').fill('test');

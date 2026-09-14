@@ -20,10 +20,10 @@ test.describe('Test in backend that the contact form', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_contact&task=contact.add');
-    await page.locator('#jform_name').fill('Test contact');
+    await page.locator('#jform_name').fill("").fill('Test contact');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Contact saved.');
-    await expect(page.getByText('Test contact')).toBeVisible();
+    await expect(page.getByText('Test contact').first()).toBeVisible();
   });
   test('can change access level of a test contact', async ({
     page,

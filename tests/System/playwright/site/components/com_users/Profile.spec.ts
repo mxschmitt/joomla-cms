@@ -38,7 +38,7 @@ test.describe('Test in frontend that the users profile view', () => {
     });
     await joomla.doFrontendLogin('automatedtestuser', 'test', false);
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'Automated test user profile'}).click();
+    await page.locator('a').filter({ hasText: 'Automated test user profile' }).click();
     await expect(page.locator('#users-profile-core')).toContainText('Profile');
     await expect(page.locator('#users-profile-core')).toContainText('Name');
     await expect(page.locator('#users-profile-core')).toContainText('automated test user');

@@ -19,10 +19,10 @@ test.describe('Test in backend that the user group form', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_users&task=group.add');
-    await page.locator('#jform_title').fill('test group');
+    await page.locator('#jform_title').fill("").fill('test group');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Group saved.');
-    await expect(page.getByText('test group')).toBeVisible();
+    await expect(page.getByText('test group').first()).toBeVisible();
   });
   test('can edit a group', async ({
     page,
@@ -30,7 +30,7 @@ test.describe('Test in backend that the user group form', () => {
   }) => {
     const group = await joomla.db_createUserGroup();
     await page.goto(`/administrator/index.php?option=com_users&task=group.edit&id=${group.id}`);
-    await page.locator('#jform_title').fill('test group edited');
+    await page.locator('#jform_title').fill("").fill('test group edited');
     await joomla.clickToolbarButton('Save');
     await joomla.checkForSystemMessage('Group saved.');
   });

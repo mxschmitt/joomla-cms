@@ -20,10 +20,10 @@ test.describe('Test in backend that the article form', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_content&task=article.add');
-    await page.locator('#jform_title').fill('Test article');
+    await page.locator('#jform_title').fill("").fill('Test article');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Article saved.');
-    await expect(page.getByText('Test article')).toBeVisible();
+    await expect(page.getByText('Test article').first()).toBeVisible();
   });
   test('can change access level of a test article', async ({
     page,

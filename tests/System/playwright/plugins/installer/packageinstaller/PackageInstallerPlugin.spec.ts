@@ -8,7 +8,7 @@ test.describe('Test that the package installer plugin', () => {
   }) => {
     await joomla.doAdministratorLogin();
     await page.goto('/administrator/index.php?option=com_installer&view=install');
-    await page.locator('button[role="tab"]').filter({ hasText: 'Upload Package File'}).click();
+    await page.locator('button[role="tab"]').filter({ hasText: 'Upload Package File' }).click();
     await expect(page.locator('legend').filter({
       hasText: 'Upload & Install Joomla Extension'
     })).toBeVisible();

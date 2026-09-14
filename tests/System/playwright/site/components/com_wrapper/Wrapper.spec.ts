@@ -14,7 +14,7 @@ test.describe('Test in frontend that the wrapper view', () => {
       })
     });
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'automated test wrapper'}).click();
+    await page.locator('a').filter({ hasText: 'automated test wrapper' }).click();
     await expect(page.locator('.com-wrapper__iframe')).toBeVisible();
   });
 });

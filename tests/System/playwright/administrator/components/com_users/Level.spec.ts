@@ -19,10 +19,10 @@ test.describe('Test in backend that the user access level form', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_users&task=level.add');
-    await page.locator('#jform_title').fill('test level');
+    await page.locator('#jform_title').fill("").fill('test level');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Access level saved.');
-    await expect(page.getByText('test level')).toBeVisible();
+    await expect(page.getByText('test level').first()).toBeVisible();
   });
   test('can edit an access level', async ({
     page,
@@ -30,7 +30,7 @@ test.describe('Test in backend that the user access level form', () => {
   }) => {
     const level = await joomla.db_createUserLevel();
     await page.goto(`/administrator/index.php?option=com_users&task=level.edit&id=${level.id}`);
-    await page.locator('#jform_title').fill('test level edited');
+    await page.locator('#jform_title').fill("").fill('test level edited');
     await joomla.clickToolbarButton('Save');
     await joomla.checkForSystemMessage('Access level saved.');
   });

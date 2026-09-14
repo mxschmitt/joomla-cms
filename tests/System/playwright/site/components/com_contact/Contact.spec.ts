@@ -12,7 +12,7 @@ test.describe('Test in frontend that the contact details view', () => {
       user_id: id
     });
     await page.goto(`/index.php?option=com_contact&view=contact&id=${contact.id}`);
-    await expect(page.getByText('Contact Form')).toBeVisible();
+    await expect(page.getByText('Contact Form').first()).toBeVisible();
     await expect(page.locator('.m-0')).toBeVisible();
   });
   test('can display a custom field', async ({
@@ -42,8 +42,8 @@ test.describe('Test in frontend that the contact details view', () => {
       user_id: userId
     });
     await page.goto(`/index.php?option=com_contact&view=contact&id=${contact.id}`);
-    await expect(page.getByText('automated test_field group')).toBeVisible();
-    await expect(page.getByText('test field')).toBeVisible();
-    await expect(page.getByText('test value')).toBeVisible();
+    await expect(page.getByText('automated test_field group').first()).toBeVisible();
+    await expect(page.getByText('test field').first()).toBeVisible();
+    await expect(page.getByText('test value').first()).toBeVisible();
   });
 });

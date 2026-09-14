@@ -320,7 +320,7 @@ test.describe('Test in backend that the privacy consent component', () => {
     await page.locator('#list_fullordering').selectOption({
       label: 'Status ascending'
     });
-    await page.waitForResponse(resp => /POST/.test(resp.url()));
+    await page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*/administrator/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await expect(page.locator('tbody > :nth-child(1) > :nth-child(7)')).toContainText('invalidated consent user');
     await expect(page.locator('tbody > :nth-child(2) > :nth-child(7)')).toContainText('obsolete consent user');
     await expect(page.locator('tbody > :nth-child(3) > :nth-child(7)')).toContainText('valid consent user');
@@ -352,7 +352,7 @@ test.describe('Test in backend that the privacy consent component', () => {
     await page.locator('#list_fullordering').selectOption({
       label: 'Status descending'
     });
-    await page.waitForResponse(resp => /POST/.test(resp.url()));
+    await page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*/administrator/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await expect(page.locator('tbody > :nth-child(1) > :nth-child(7)')).toContainText('valid consent user');
     await expect(page.locator('tbody > :nth-child(2) > :nth-child(7)')).toContainText('obsolete consent user');
     await expect(page.locator('tbody > :nth-child(3) > :nth-child(7)')).toContainText('invalidated consent user');
@@ -391,7 +391,7 @@ test.describe('Test in backend that the privacy consent component', () => {
     await page.locator('#list_fullordering').selectOption({
       label: 'Username ascending'
     });
-    await page.waitForResponse(resp => /POST/.test(resp.url()));
+    await page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*/administrator/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await expect(page.locator('tbody > :nth-child(1) > :nth-child(4)')).toContainText('a test user');
     await expect(page.locator('tbody > :nth-child(2) > :nth-child(4)')).toContainText('b test user');
     await expect(page.locator('tbody > :nth-child(3) > :nth-child(4)')).toContainText('c test user');
@@ -430,7 +430,7 @@ test.describe('Test in backend that the privacy consent component', () => {
     await page.locator('#list_fullordering').selectOption({
       label: 'Username descending'
     });
-    await page.waitForResponse(resp => /POST/.test(resp.url()));
+    await page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*/administrator/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await expect(page.locator('tbody > :nth-child(1) > :nth-child(4)')).toContainText('c test user');
     await expect(page.locator('tbody > :nth-child(2) > :nth-child(4)')).toContainText('b test user');
     await expect(page.locator('tbody > :nth-child(3) > :nth-child(4)')).toContainText('a test user');
@@ -469,7 +469,7 @@ test.describe('Test in backend that the privacy consent component', () => {
     await page.locator('#list_fullordering').selectOption({
       label: 'Name descending'
     });
-    await page.waitForResponse(resp => /POST/.test(resp.url()));
+    await page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*/administrator/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await expect(page.locator('tbody > :nth-child(1) > th')).toContainText('c test user');
     await expect(page.locator('tbody > :nth-child(2) > th')).toContainText('b test user');
     await expect(page.locator('tbody > :nth-child(3) > th')).toContainText('a test user');
@@ -508,7 +508,7 @@ test.describe('Test in backend that the privacy consent component', () => {
     await page.locator('#list_fullordering').selectOption({
       label: 'Name ascending'
     });
-    await page.waitForResponse(resp => /POST/.test(resp.url()));
+    await page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*/administrator/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await expect(page.locator('tbody > :nth-child(1) > th')).toContainText('a test user');
     await expect(page.locator('tbody > :nth-child(2) > th')).toContainText('b test user');
     await expect(page.locator('tbody > :nth-child(3) > th')).toContainText('c test user');
@@ -547,7 +547,7 @@ test.describe('Test in backend that the privacy consent component', () => {
     await page.locator('#list_fullordering').selectOption({
       label: 'User ID ascending'
     });
-    await page.waitForResponse(resp => /POST/.test(resp.url()));
+    await page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*/administrator/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     const cellData = [];
     for (let i = 1; i < 4; i += 1) {
       const text = await page.locator(`tbody > :nth-child(${i}) > :nth-child(5)`).textContent();
@@ -594,7 +594,7 @@ test.describe('Test in backend that the privacy consent component', () => {
     await page.locator('#list_fullordering').selectOption({
       label: 'User ID descending'
     });
-    await page.waitForResponse(resp => /POST/.test(resp.url()));
+    await page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*/administrator/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     const cellData = [];
     for (let i = 1; i < 4; i += 1) {
       const text = await page.locator(`tbody > :nth-child(${i}) > :nth-child(5)`).textContent();
@@ -633,7 +633,7 @@ test.describe('Test in backend that the privacy consent component', () => {
     await page.locator('#list_fullordering').selectOption({
       label: 'Subject ascending'
     });
-    await page.waitForResponse(resp => /POST/.test(resp.url()));
+    await page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*/administrator/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await expect(page.locator('tbody > :nth-child(1) > :nth-child(6)')).toContainText('a test subject');
     await expect(page.locator('tbody > :nth-child(2) > :nth-child(6)')).toContainText('b test subject');
     await expect(page.locator('tbody > :nth-child(3) > :nth-child(6)')).toContainText('c test subject');
@@ -664,7 +664,7 @@ test.describe('Test in backend that the privacy consent component', () => {
     await page.locator('#list_fullordering').selectOption({
       label: 'Subject descending'
     });
-    await page.waitForResponse(resp => /POST/.test(resp.url()));
+    await page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*/administrator/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     await expect(page.locator('tbody > :nth-child(1) > :nth-child(6)')).toContainText('c test subject');
     await expect(page.locator('tbody > :nth-child(2) > :nth-child(6)')).toContainText('b test subject');
     await expect(page.locator('tbody > :nth-child(3) > :nth-child(6)')).toContainText('a test subject');
@@ -695,7 +695,7 @@ test.describe('Test in backend that the privacy consent component', () => {
     await page.locator('#list_fullordering').selectOption({
       label: 'Consented descending'
     });
-    await page.waitForResponse(resp => /POST/.test(resp.url()));
+    await page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*/administrator/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     const cellData = [];
     for (let i = 1; i < 4; i += 1) {
       const text = await page.locator(`:nth-child(${i}) > .break-word > .small`).textContent();
@@ -735,7 +735,7 @@ test.describe('Test in backend that the privacy consent component', () => {
     await page.locator('#list_fullordering').selectOption({
       label: 'Consented ascending'
     });
-    await page.waitForResponse(resp => /POST/.test(resp.url()));
+    await page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*/administrator/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     const cellData = [];
     for (let i = 1; i < 4; i += 1) {
       const text = await page.locator(`:nth-child(${i}) > .break-word > .small`).textContent();
@@ -776,7 +776,7 @@ test.describe('Test in backend that the privacy consent component', () => {
     await page.locator('#list_fullordering').selectOption({
       label: 'ID descending'
     });
-    await page.waitForResponse(resp => /POST/.test(resp.url()));
+    await page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*/administrator/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     const cellData = [];
     for (let i = 1; i < 4; i += 1) {
       const text = await page.locator(`tbody > :nth-child(${i}) > :nth-child(9)`).textContent();
@@ -816,7 +816,7 @@ test.describe('Test in backend that the privacy consent component', () => {
     await page.locator('#list_fullordering').selectOption({
       label: 'ID ascending'
     });
-    await page.waitForResponse(resp => /POST/.test(resp.url()));
+    await page.waitForResponse(resp => resp.request().method() === "POST" && /.*.*/administrator/index\.php\?option=com_privacy&view=consents/.test(resp.url()));
     const cellData = [];
     for (let i = 1; i < 4; i += 1) {
       const text = await page.locator(`tbody > :nth-child(${i}) > :nth-child(9)`).textContent();

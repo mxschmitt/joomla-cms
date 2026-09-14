@@ -23,14 +23,14 @@ test.describe('Test in backend that the user group list', () => {
       title: 'Test group'
     });
     await page.reload();
-    await expect(page.getByText('Test group')).toBeVisible();
+    await expect(page.getByText('Test group').first()).toBeVisible();
   });
   test('can open the group form', async ({
     page,
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await expect(page.getByText('User Group Details')).toBeVisible();
+    await expect(page.getByText('User Group Details').first()).toBeVisible();
   });
   test('can delete the test group', async ({
     page,

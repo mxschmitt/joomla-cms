@@ -27,11 +27,11 @@ test.describe('Test in frontend that the contact featured view', () => {
       link: 'index.php?option=com_contact&view=featured'
     });
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'automated test'}).click();
-    await expect(page.getByText('automated test contact 1')).toBeVisible();
-    await expect(page.getByText('automated test contact 2')).toBeVisible();
-    await expect(page.getByText('automated test contact 3')).toBeVisible();
-    await expect(page.getByText('automated test contact 4')).toBeVisible();
+    await page.locator('a').filter({ hasText: 'automated test' }).click();
+    await expect(page.getByText('automated test contact 1').first()).toBeVisible();
+    await expect(page.getByText('automated test contact 2').first()).toBeVisible();
+    await expect(page.getByText('automated test contact 3').first()).toBeVisible();
+    await expect(page.getByText('automated test contact 4').first()).toBeVisible();
   });
   test('can not display not featured contacts', async ({
     page,
@@ -50,8 +50,8 @@ test.describe('Test in frontend that the contact featured view', () => {
       link: 'index.php?option=com_contact&view=featured'
     });
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'automated test'}).click();
-    await expect(page.getByText('automated test contact 1')).toHaveCount(0);
-    await expect(page.getByText('automated test contact 2')).toHaveCount(0);
+    await page.locator('a').filter({ hasText: 'automated test' }).click();
+    await expect(page.getByText('automated test contact 1').first()).toHaveCount(0);
+    await expect(page.getByText('automated test contact 2').first()).toHaveCount(0);
   });
 });

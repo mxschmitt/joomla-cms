@@ -13,6 +13,6 @@ test.describe('Test in frontend that the users latest module', () => {
       module: 'mod_users_latest'
     });
     await page.goto('/');
-    await expect(page.getByText('automatedtestuser')).toBeVisible();
+    await expect(page.getByText('automatedtestuser').first()).toBeVisible();
   });
 });

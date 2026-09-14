@@ -27,11 +27,11 @@ test.describe('Test in frontend that the content categories view', () => {
       catid: id
     });
     await page.goto('/index.php?option=com_content&view=categories');
-    await expect(page.getByText('automated test category 1')).toBeVisible();
+    await expect(page.getByText('automated test category 1').first()).toBeVisible();
     await expect(page.locator(':nth-child(1) > .com-content-categories__item-title-wrapper > .com-content-categories__item-title > .badge').filter({
       hasText: 'Article Count: 1'
     })).toBeVisible();
-    await expect(page.getByText('automated test category 2')).toBeVisible();
+    await expect(page.getByText('automated test category 2').first()).toBeVisible();
     await expect(page.locator(':nth-child(2) > .com-content-categories__item-title-wrapper > .com-content-categories__item-title > .badge').filter({
       hasText: 'Article Count: 2'
     })).toBeVisible();
@@ -65,12 +65,12 @@ test.describe('Test in frontend that the content categories view', () => {
       link: 'index.php?option=com_content&view=categories'
     });
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'automated test categories'}).click();
-    await expect(page.getByText('automated test category 1')).toBeVisible();
+    await page.locator('a').filter({ hasText: 'automated test categories' }).click();
+    await expect(page.getByText('automated test category 1').first()).toBeVisible();
     await expect(page.locator(':nth-child(1) > .com-content-categories__item-title-wrapper > .com-content-categories__item-title > .badge').filter({
       hasText: 'Article Count: 1'
     })).toBeVisible();
-    await expect(page.getByText('automated test category 2')).toBeVisible();
+    await expect(page.getByText('automated test category 2').first()).toBeVisible();
     await expect(page.locator(':nth-child(2) > .com-content-categories__item-title-wrapper > .com-content-categories__item-title > .badge').filter({
       hasText: 'Article Count: 2'
     })).toBeVisible();

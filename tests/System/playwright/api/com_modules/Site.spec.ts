@@ -70,8 +70,7 @@ test.describe('Test that modules site API endpoint', () => {
     const updatedModuleData = {
       published: -2
     };
-    await joomla.api_patch(`/modules/site/${id}`, updatedModuleData);
-    const response = undefined;
+    const response = await joomla.api_patch(`/modules/site/${id}`, updatedModuleData);
     await expect(response.body.data.attributes.published).toBe(-2);
   });
   test('can delete a site module', async ({

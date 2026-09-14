@@ -21,7 +21,7 @@ test.describe('Install Joomla', () => {
     await joomla.prepareInstaller();
     await fillAdminStep(page, joomla, 'Short1!');
 
-    await expect(page.getByText("Password doesn't meet the site's requirements")).toBeVisible();
+    await expect(page.getByText("Password doesn't meet the site's requirements").first()).toBeVisible();
     await page.locator('#step2').click();
     await expect(page.locator('#installStep3')).toBeHidden();
   });
@@ -41,7 +41,7 @@ test.describe('Install Joomla', () => {
     await joomla.prepareInstaller();
     await fillAdminStep(page, joomla, ' ValidPass123!');
 
-    await expect(page.getByText('Password must not have spaces at the beginning or end')).toBeVisible();
+    await expect(page.getByText('Password must not have spaces at the beginning or end').first()).toBeVisible();
     await page.locator('#step2').click();
     await expect(page.locator('#installStep3')).toBeHidden();
   });
@@ -51,7 +51,7 @@ test.describe('Install Joomla', () => {
     await joomla.prepareInstaller();
     await fillAdminStep(page, joomla, 'ValidPass123! ');
 
-    await expect(page.getByText('Password must not have spaces at the beginning or end')).toBeVisible();
+    await expect(page.getByText('Password must not have spaces at the beginning or end').first()).toBeVisible();
     await page.locator('#step2').click();
     await expect(page.locator('#installStep3')).toBeHidden();
   });

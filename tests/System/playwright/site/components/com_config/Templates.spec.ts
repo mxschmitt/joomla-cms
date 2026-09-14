@@ -13,12 +13,12 @@ test.describe('Test in frontend that the config templates view', () => {
     joomla
   }) => {
     await page.goto('/index.php?option=com_config&view=templates');
-    await expect(page.title()).toBe('Home');
-    await page.locator('#params_siteDescription').fill('test site description');
+    expect(await page.title()).toBe('Home');
+    await page.locator('#params_siteDescription').fill("").fill('test site description');
     await page.locator('#templates-form button[data-submit-task="templates.apply"]').click();
     await joomla.checkForSystemMessage('Configuration saved.');
     await expect(page.locator('header div.site-description')).toContainText('test site description');
-    await expect(page.locator('#params_siteDescription')).toBeVisible();
+    await page.locator('#params_siteDescription').fill("");
     await page.locator('#templates-form button[data-submit-task="templates.apply"]').click();
     await joomla.checkForSystemMessage('Configuration saved.');
     await expect(page.locator('header div.site-description')).toHaveCount(0);
@@ -32,8 +32,8 @@ test.describe('Test in frontend that the config templates view', () => {
       link: 'index.php?option=com_config&view=templates'
     });
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'automated test template settings'}).click();
-    await expect(page.title()).toBe('automated test template settings');
+    await page.locator('a').filter({ hasText: 'automated test template settings' }).click();
+    expect(await page.title()).toBe('automated test template settings');
     await page.locator('#params_brand0').click();
     await page.locator('#templates-form button[data-submit-task="templates.apply"]').click();
     await joomla.checkForSystemMessage('Configuration saved.');

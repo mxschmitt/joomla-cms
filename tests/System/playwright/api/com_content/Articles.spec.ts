@@ -35,7 +35,9 @@ test.describe('Test that content API endpoint', () => {
       modified: '2025-03-15 20:00:00'
     });
     const response = await joomla.api_get('/content/articles?filter[modified_start]=2025-03-15 14:00:00&filter[modified_end]=2025-03-15 16:00:00');
-    await expect(expect(expect(response.body.data[0].attributes.title).toContain('automated test article within')).not.toContain('automated test article before')).not.toContain('automated test article after');
+    await expect(response.body.data[0].attributes.title).toContain('automated test article within');
+    await expect(response.body.data[0].attributes.title).not.toContain('automated test article before');
+    await expect(response.body.data[0].attributes.title).not.toContain('automated test article after');
   });
   test('can deliver a list of unpublished articles', async ({
     page,
@@ -79,7 +81,9 @@ test.describe('Test that content API endpoint', () => {
       fulltext: 'This is the full text.'
     });
     const response = await joomla.api_get(`/content/articles/${article.id}`);
-    await response.body.data.attributes;
+    const attrs = response.body.data.attributes;
+    expect(attrs.introtext).toContain('This is the intro text.');
+    expect(attrs.fulltext).toContain('This is the full text.');
   });
   test('can create an article', async ({
     page,
@@ -153,7 +157,7 @@ test.describe('Test that content API endpoint', () => {
       metadesc: '',
       metadata: ''
     });
-    await joomla.api_post('/content/articles', {
+    const response = await joomla.api_post('/content/articles', {
       title: 'test article',
       alias: 'test-article',
       catid: categoryId,
@@ -170,7 +174,6 @@ test.describe('Test that content API endpoint', () => {
       metadesc: '',
       metadata: ''
     });
-    const response = undefined;
     await expect(response.body.data.attributes.alias).toBe('test-article-2');
   });
 });

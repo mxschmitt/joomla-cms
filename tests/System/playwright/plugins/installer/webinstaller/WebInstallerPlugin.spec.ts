@@ -8,7 +8,7 @@ test.describe('Test that the web installer plugin', () => {
   }) => {
     await joomla.doAdministratorLogin();
     await page.goto('/administrator/index.php?option=com_installer&view=install');
-    await page.locator('button[role="tab"]').filter({ hasText: 'Install from Web'}).click();
+    await page.locator('button[role="tab"]').filter({ hasText: 'Install from Web' }).click();
     await expect(page.locator('legend').filter({
       hasText: 'Install from Web'
     })).toBeVisible();

@@ -19,11 +19,11 @@ test.describe('Test in backend that the newsfeed form', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_newsfeeds&task=newsfeed.add');
-    await page.locator('#jform_name').fill('Test newsfeed');
-    await page.locator('#jform_link').fill('https://newsfeedtesturl');
+    await page.locator('#jform_name').fill("").fill('Test newsfeed');
+    await page.locator('#jform_link').fill("").fill('https://newsfeedtesturl');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('News feed saved.');
-    await expect(page.getByText('Test newsfeed')).toBeVisible();
+    await expect(page.getByText('Test newsfeed').first()).toBeVisible();
   });
   test('can change access level of a test newsfeed', async ({
     page,

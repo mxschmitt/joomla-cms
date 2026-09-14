@@ -16,7 +16,7 @@ test.describe('Test in frontend that the config modules view', () => {
     await expect(page.locator('nav.mod-breadcrumbs__wrapper li.mod-breadcrumbs__here')).toBeVisible();
     await expect(page.locator('nav.mod-breadcrumbs__wrapper li.mod-breadcrumbs__divider')).toHaveCount(0);
     await page.locator('nav.mod-breadcrumbs__wrapper a.jmodedit').click();
-    await expect(page.title()).toBe('Module Settings');
+    expect(await page.title()).toBe('Module Settings');
     await page.locator('#options button.accordion-button').filter({
       hasText: 'Options'
     }).click();

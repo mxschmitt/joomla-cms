@@ -11,6 +11,6 @@ test.describe('Test in frontend that the custom module', () => {
       content: '<p>Automated test text</p>'
     });
     await page.goto('/');
-    await expect(page.getByText('Automated test text')).toBeVisible();
+    await expect(page.getByText('Automated test text').first()).toBeVisible();
   });
 });

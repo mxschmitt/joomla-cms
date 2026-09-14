@@ -45,8 +45,10 @@ export interface HttpResult<T = any> {
 export interface MailMessage {
   sender?: string;
   body?: string;
+  html?: string | false;
   headers?: Record<string, string>;
   receivers?: Record<string, unknown>;
+  attachments?: unknown[];
 }
 
 export interface JoomlaHelpers {

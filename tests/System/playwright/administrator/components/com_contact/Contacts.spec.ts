@@ -23,14 +23,14 @@ test.describe('Test in backend that the contacts list', () => {
       name: 'Test contact'
     });
     await page.reload();
-    await expect(page.getByText('Test contact')).toBeVisible();
+    await expect(page.getByText('Test contact').first()).toBeVisible();
   });
   test('can open the contact form', async ({
     page,
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await expect(page.getByText('Contacts: New')).toBeVisible();
+    await expect(page.getByText('Contacts: New').first()).toBeVisible();
   });
   test('can publish the test contact', async ({
     page,
@@ -44,7 +44,7 @@ test.describe('Test in backend that the contacts list', () => {
     await joomla.searchForItem('Test contact');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Publish').click();
+    await page.getByText('Publish').first().click();
     await joomla.checkForSystemMessage('Contact published.');
   });
   test('can unpublish the test contact', async ({
@@ -59,7 +59,7 @@ test.describe('Test in backend that the contacts list', () => {
     await joomla.searchForItem('Test contact');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Unpublish').click();
+    await page.getByText('Unpublish').first().click();
     await joomla.checkForSystemMessage('Contact unpublished.');
   });
   test('can feature the test contact', async ({
@@ -91,7 +91,7 @@ test.describe('Test in backend that the contacts list', () => {
     await joomla.searchForItem('Test contact');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Unfeature').click();
+    await page.getByText('Unfeature').first().click();
     await joomla.checkForSystemMessage('Contact unfeatured.');
   });
   test('can trash the test contact', async ({
@@ -105,7 +105,7 @@ test.describe('Test in backend that the contacts list', () => {
     await joomla.searchForItem('Test contact');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Trash').click();
+    await page.getByText('Trash').first().click();
     await joomla.checkForSystemMessage('Contact trashed.');
   });
   test('can delete the test contact', async ({

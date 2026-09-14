@@ -120,27 +120,60 @@ function itsToMember(object, pathArg) {
 
 let interceptMatchers = new Map();
 
-function urlMatcherFromIntercept(arg) {
+function isHttpMethodLiteral(arg) {
+  return t.isStringLiteral(arg) && /^(GET|POST|PUT|PATCH|DELETE|HEAD)$/i.test(arg.value);
+}
+
+function urlMatcherFromIntercept(arg, methodArg = null) {
+  let urlTest;
   if (t.isStringLiteral(arg)) {
     const source = arg.value.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*');
-    return t.arrowFunctionExpression(
-      [t.identifier('resp')],
-      t.callExpression(
-        t.memberExpression(t.regExpLiteral(source), t.identifier('test')),
-        [t.callExpression(t.memberExpression(t.identifier('resp'), t.identifier('url')), [])],
-      ),
+    urlTest = t.callExpression(
+      t.memberExpression(t.regExpLiteral(source), t.identifier('test')),
+      [t.callExpression(t.memberExpression(t.identifier('resp'), t.identifier('url')), [])],
     );
-  }
-  if (t.isRegExpLiteral(arg) || t.isNewExpression(arg)) {
-    return t.arrowFunctionExpression(
-      [t.identifier('resp')],
-      t.callExpression(
-        t.memberExpression(clone(arg), t.identifier('test')),
-        [t.callExpression(t.memberExpression(t.identifier('resp'), t.identifier('url')), [])],
-      ),
+  } else if (t.isRegExpLiteral(arg) || t.isNewExpression(arg)) {
+    urlTest = t.callExpression(
+      t.memberExpression(clone(arg), t.identifier('test')),
+      [t.callExpression(t.memberExpression(t.identifier('resp'), t.identifier('url')), [])],
     );
+  } else {
+    urlTest = t.booleanLiteral(true);
   }
-  return t.arrowFunctionExpression([t.identifier('resp')], t.booleanLiteral(true));
+  if (methodArg && t.isStringLiteral(methodArg)) {
+    const methodTest = t.binaryExpression(
+      '===',
+      t.callExpression(
+        t.memberExpression(
+          t.callExpression(t.memberExpression(t.identifier('resp'), t.identifier('request')), []),
+          t.identifier('method'),
+        ),
+        [],
+      ),
+      t.stringLiteral(methodArg.value.toUpperCase()),
+    );
+    urlTest = t.logicalExpression('&&', methodTest, urlTest);
+  }
+  return t.arrowFunctionExpression([t.identifier('resp')], urlTest);
+}
+
+function isPlaywrightExpect(node) {
+  let current = node;
+  while (current) {
+    if (t.isCallExpression(current) && t.isIdentifier(current.callee, { name: 'expect' })) {
+      return true;
+    }
+    if (t.isCallExpression(current) && t.isMemberExpression(current.callee)) {
+      current = current.callee.object;
+      continue;
+    }
+    if (t.isMemberExpression(current)) {
+      current = current.object;
+      continue;
+    }
+    return false;
+  }
+  return false;
 }
 
 function convertShould(target, args) {
@@ -158,6 +191,7 @@ function convertShould(target, args) {
   const map = {
     'be.visible': ['toBeVisible', []],
     'not.be.visible': ['toBeHidden', []],
+    'be.not.visible': ['toBeHidden', []],
     exist: ['toBeVisible', []],
     'not.exist': ['toHaveCount', [t.numericLiteral(0)]],
     'be.checked': ['toBeChecked', []],
@@ -181,6 +215,12 @@ function convertShould(target, args) {
   if (name === 'contain.text' || name === 'contain' || name === 'include') {
     return t.callExpression(t.memberExpression(expectCall, t.identifier('toContainText')), [clone(value)]);
   }
+  if (name === 'not.contain.text' || name === 'not.contain' || name === 'not.include') {
+    return t.callExpression(
+      t.memberExpression(t.memberExpression(expectCall, t.identifier('not')), t.identifier('toContainText')),
+      [clone(value)],
+    );
+  }
   if (name === 'have.text') {
     return t.callExpression(t.memberExpression(expectCall, t.identifier('toHaveText')), [clone(value)]);
   }
@@ -192,12 +232,14 @@ function convertShould(target, args) {
     return t.callExpression(t.memberExpression(expectCall, t.identifier('toHaveAttribute')), attrArgs);
   }
   if (name === 'have.class') {
-    return t.callExpression(t.memberExpression(expectCall, t.identifier('toHaveClass')), [clone(value)]);
+    const arg = t.isStringLiteral(value) ? t.regExpLiteral(`\\b${value.value}\\b`) : clone(value);
+    return t.callExpression(t.memberExpression(expectCall, t.identifier('toHaveClass')), [arg]);
   }
   if (name === 'not.have.class') {
+    const arg = t.isStringLiteral(value) ? t.regExpLiteral(`\\b${value.value}\\b`) : clone(value);
     return t.callExpression(
       t.memberExpression(t.memberExpression(expectCall, t.identifier('not')), t.identifier('toHaveClass')),
-      [clone(value)],
+      [arg],
     );
   }
   if (name === 'have.length' || name === 'have.lengthOf') {
@@ -299,6 +341,9 @@ function convertCyChain(node) {
   let expr = null;
   let needsAwait = true;
   const trailing = [];
+  const pendingAsserts = [];
+  let locatorTarget = null;
+  let pendingAttr = null;
   let i = 1;
 
   if (cmd.method === 'task') {
@@ -342,13 +387,21 @@ function convertCyChain(node) {
     if (t.isStringLiteral(cmd.args[0]) && cmd.args[0].value.startsWith('@')) {
       expr = t.identifier(cmd.args[0].value.slice(1));
       needsAwait = false;
+      locatorTarget = expr;
     } else {
       expr = pageLocator(cmd.args[0]);
       needsAwait = false;
+      locatorTarget = expr;
     }
   } else if (cmd.method === 'contains') {
     if (cmd.args.length === 1) {
-      expr = t.callExpression(t.memberExpression(t.identifier('page'), t.identifier('getByText')), [clone(cmd.args[0])]);
+      expr = t.callExpression(
+        t.memberExpression(
+          t.callExpression(t.memberExpression(t.identifier('page'), t.identifier('getByText')), [clone(cmd.args[0])]),
+          t.identifier('first'),
+        ),
+        [],
+      );
     } else {
       expr = t.callExpression(
         t.memberExpression(pageLocator(cmd.args[0]), t.identifier('filter')),
@@ -356,6 +409,7 @@ function convertCyChain(node) {
       );
     }
     needsAwait = false;
+    locatorTarget = expr;
   } else if (cmd.method === 'focused') {
     expr = t.callExpression(t.memberExpression(t.identifier('page'), t.identifier('locator')), [t.stringLiteral(':focus')]);
     needsAwait = false;
@@ -376,7 +430,9 @@ function convertCyChain(node) {
   } else if (cmd.method === 'intercept') {
     const asStep = methods.find((step) => step.method === 'as');
     const alias = asStep && t.isStringLiteral(asStep.args[0]) ? asStep.args[0].value : 'response';
-    interceptMatchers.set(alias, urlMatcherFromIntercept(cmd.args[0]));
+    const methodArg = isHttpMethodLiteral(cmd.args[0]) ? cmd.args[0] : null;
+    const urlArg = methodArg ? cmd.args[1] : cmd.args[0];
+    interceptMatchers.set(alias, urlMatcherFromIntercept(urlArg, methodArg));
     return { node: t.identifier('undefined'), await: false, skip: true };
   } else if (cmd.method === 'wait') {
     const arg = cmd.args[0];
@@ -416,6 +472,7 @@ function convertCyChain(node) {
   } else {
     return { node, await: false };
   }
+  let valueTarget = expr;
 
   for (; i < methods.length; i += 1) {
     const step = methods[i];
@@ -440,16 +497,41 @@ function convertCyChain(node) {
         ],
       };
     }
-    if (step.method === 'should') {
-      if (needsAwait === false && (cmd.method === 'get' || cmd.method === 'contains' || cmd.method === 'focused')) {
-        expr = convertShould(expr, step.args);
-        needsAwait = true;
-      } else if (cmd.method === 'wrap' || cmd.method === 'exec' || cmd.method === 'task' || cmd.method === 'request' || cmd.method === 'api_get' || cmd.method === 'title') {
-        const assertion = step.args[0];
+    if (step.method === 'should' || step.method === 'and') {
+      const assertion = step.args[0];
+      if (t.isStringLiteral(assertion) && assertion.value === 'have.attr' && !step.args[2] && locatorTarget) {
+        pendingAttr = step.args[1];
+        continue;
+      }
+      if (pendingAttr && locatorTarget) {
+        const attrExpr = t.awaitExpression(
+          t.callExpression(t.memberExpression(clone(locatorTarget), t.identifier('getAttribute')), [clone(pendingAttr)]),
+        );
+        pendingAttr = null;
+        const name = t.isStringLiteral(assertion) ? assertion.value : '';
+        const expectCall = t.callExpression(t.identifier('expect'), [attrExpr]);
+        if (name === 'contain' || name === 'include' || name === 'have.string') {
+          expr = t.callExpression(t.memberExpression(expectCall, t.identifier('toContain')), [clone(step.args[1])]);
+        } else if (name === 'match') {
+          expr = t.callExpression(t.memberExpression(expectCall, t.identifier('toMatch')), [clone(step.args[1])]);
+        } else if (name === 'equal' || name === 'eq') {
+          expr = t.callExpression(t.memberExpression(expectCall, t.identifier('toBe')), [clone(step.args[1])]);
+        } else {
+          expr = convertShould(locatorTarget, [t.stringLiteral('have.attr'), pendingAttr, step.args[1]].filter(Boolean));
+        }
+        needsAwait = false;
+        continue;
+      }
+      const valueMethods = cmd.method === 'wrap' || cmd.method === 'exec' || cmd.method === 'task' || cmd.method === 'request' || cmd.method === 'api_get' || cmd.method === 'title' || cmd.method === 'url';
+      if (isPlaywrightExpect(expr) && (locatorTarget || valueMethods)) {
+        pendingAsserts.push(expr);
+      }
+      if (valueMethods) {
         const value = step.args[1];
         if (t.isStringLiteral(assertion)) {
           const name = assertion.value;
-          const expectCall = t.callExpression(t.identifier('expect'), [expr]);
+          const targetExpr = cmd.method === 'title' ? t.awaitExpression(clone(valueTarget)) : clone(valueTarget);
+          const expectCall = t.callExpression(t.identifier('expect'), [targetExpr]);
           if (name === 'contain' || name === 'include' || name === 'have.string') {
             expr = t.callExpression(t.memberExpression(expectCall, t.identifier('toContain')), [clone(value)]);
           } else if (name === 'not.include' || name === 'not.contain') {
@@ -472,10 +554,13 @@ function convertCyChain(node) {
           } else {
             expr = convertShould(expr, step.args);
           }
+        } else if (t.isFunctionExpression(assertion) || t.isArrowFunctionExpression(assertion)) {
+          return { node: expr, await: needsAwait, thenArgs: [assertion] };
         }
-        needsAwait = true;
+        needsAwait = cmd.method !== 'title' && cmd.method !== 'url';
       } else {
-        expr = convertShould(expr, step.args);
+        const target = locatorTarget && isPlaywrightExpect(expr) ? locatorTarget : expr;
+        expr = convertShould(locatorTarget || target, step.args);
         needsAwait = true;
       }
       continue;
@@ -486,9 +571,12 @@ function convertCyChain(node) {
         needsAwait = false;
       }
       expr = itsToMember(expr, step.args[0]);
+      valueTarget = expr;
       continue;
     }
     if (step.method === 'clear') {
+      expr = t.callExpression(t.memberExpression(expr, t.identifier('fill')), [t.stringLiteral('')]);
+      needsAwait = true;
       continue;
     }
     if (step.method === 'type') {
@@ -506,7 +594,12 @@ function convertCyChain(node) {
       continue;
     }
     if (step.method === 'click') {
-      expr = t.callExpression(t.memberExpression(expr, t.identifier('click')), step.args.map(clone));
+      if (isPlaywrightExpect(expr) && locatorTarget) {
+        pendingAsserts.push(expr);
+        expr = t.callExpression(t.memberExpression(clone(locatorTarget), t.identifier('click')), step.args.map(clone));
+      } else {
+        expr = t.callExpression(t.memberExpression(expr, t.identifier('click')), step.args.map(clone));
+      }
       needsAwait = true;
       continue;
     }
@@ -587,6 +680,7 @@ function convertCyChain(node) {
     if (step.method === 'find') {
       expr = t.callExpression(t.memberExpression(expr, t.identifier('locator')), [clone(step.args[0])]);
       needsAwait = false;
+      locatorTarget = expr;
       continue;
     }
     if (step.method === 'contains' && cmd.method !== 'contains') {
@@ -595,21 +689,37 @@ function convertCyChain(node) {
         [t.objectExpression([t.objectProperty(t.identifier('hasText'), clone(step.args[0]))])],
       );
       needsAwait = false;
+      locatorTarget = expr;
+      continue;
+    }
+    if (step.method === 'children') {
+      expr = t.callExpression(t.memberExpression(expr, t.identifier('locator')), [t.stringLiteral(':scope > *')]);
+      needsAwait = false;
+      locatorTarget = expr;
+      continue;
+    }
+    if (step.method === 'next') {
+      expr = t.callExpression(t.memberExpression(expr, t.identifier('locator')), [t.stringLiteral('xpath=following-sibling::*[1]')]);
+      needsAwait = false;
+      locatorTarget = expr;
       continue;
     }
     if (step.method === 'first') {
       expr = t.callExpression(t.memberExpression(expr, t.identifier('first')), []);
       needsAwait = false;
+      locatorTarget = expr;
       continue;
     }
     if (step.method === 'last') {
       expr = t.callExpression(t.memberExpression(expr, t.identifier('last')), []);
       needsAwait = false;
+      locatorTarget = expr;
       continue;
     }
     if (step.method === 'eq') {
       expr = t.callExpression(t.memberExpression(expr, t.identifier('nth')), [clone(step.args[0])]);
       needsAwait = false;
+      locatorTarget = expr;
       continue;
     }
     if (step.method === 'parent' || step.method === 'closest') {
@@ -629,22 +739,20 @@ function convertCyChain(node) {
       const callback = step.args[0];
       return { node: expr, await: false, withinArg: callback };
     }
-    if (step.method === 'and') {
-      expr = convertShould(expr, step.args);
-      needsAwait = true;
-      continue;
-    }
   }
 
-  if (trailing.length) {
-    return {
-      node: expr,
-      await: needsAwait,
-      statements: [
-        t.expressionStatement(needsAwait ? t.awaitExpression(expr) : expr),
-        ...trailing.map((item) => t.expressionStatement(t.awaitExpression(item))),
-      ],
-    };
+  if (pendingAttr && locatorTarget) {
+    expr = convertShould(locatorTarget, [t.stringLiteral('have.attr'), pendingAttr]);
+    needsAwait = true;
+  }
+
+  const extraStatements = [
+    ...pendingAsserts.map((item) => t.expressionStatement(t.awaitExpression(item))),
+    ...trailing.map((item) => t.expressionStatement(t.awaitExpression(item))),
+  ];
+  if (extraStatements.length) {
+    extraStatements.push(t.expressionStatement(needsAwait ? t.awaitExpression(expr) : expr));
+    return { node: expr, await: needsAwait, statements: extraStatements };
   }
 
   return { node: expr, await: needsAwait };
@@ -879,9 +987,25 @@ function expandThens(expr, needsAwait, callbacks) {
         currentAwait = converted.await;
       }
     } else {
-      statements.push(...convertStatementList(cb.body.body));
-      current = t.identifier('undefined');
-      currentAwait = false;
+      const lastOrig = cb.body.body[cb.body.body.length - 1];
+      const converted = convertStatementList(cb.body.body);
+      if (t.isReturnStatement(lastOrig) && lastOrig.argument && converted.length) {
+        const last = converted.pop();
+        statements.push(...converted);
+        if (t.isExpressionStatement(last)) {
+          const argument = t.isAwaitExpression(last.expression) ? last.expression.argument : last.expression;
+          current = argument;
+          currentAwait = t.isAwaitExpression(last.expression);
+        } else {
+          statements.push(last);
+          current = t.identifier('undefined');
+          currentAwait = false;
+        }
+      } else {
+        statements.push(...converted);
+        current = t.identifier('undefined');
+        currentAwait = false;
+      }
     }
   });
   if (current && !t.isIdentifier(current, { name: 'undefined' })) {
@@ -987,12 +1111,15 @@ function convertStatementList(statements) {
 
 function postProcess(code) {
   let s = code;
+  s = s.replace(/test\.describe\((['"`][^'"`]+['"`]), \{\s*browser: '!firefox'\s*\},/g, 'test.describe($1, { tag: \'@chromium-only\' },');
+  s = s.replace(/Cypress\.config\((['"`])baseUrl\1\)/g, 'joomla.config.baseURL');
   s = s.replace(/Cypress\.expose\((['"`])([^'"`]+)\1\)/g, 'joomla.expose.$2');
   s = s.replace(/window\.sessionStorage\.setItem\(([^,]+),\s*([^)]+)\)/g, 'await joomla.setSessionStorage($1, $2)');
   s = s.replace(/Cypress\.session\.clearAllSavedSessions\(\);?/g, '');
   s = s.replace(/await await /g, 'await ');
   s = s.replace(/await const /g, 'const ');
   s = s.replace(/\.to\.contain\(/g, '.toContain(');
+  s = s.replace(/\.to\.include\(/g, '.toContain(');
   s = s.replace(/expect\(([^)]+)\)\.to\.eq\(/g, 'expect($1).toBe(');
   s = s.replace(/expect\(([^)]+)\)\.to\.equal\(/g, 'expect($1).toBe(');
   s = s.replace(/expect\(([^)]+)\)\.to\.match\(/g, 'expect($1).toMatch(');
@@ -1004,7 +1131,20 @@ function postProcess(code) {
   s = s.replace(/expect\(([^)]+)\)\.to\.contains\(/g, 'expect($1).toContain(');
   s = s.replace(/test\.afterAll\(async \(\{ page, joomla \}\)/g, 'test.afterAll(async ({ joomla })');
   s = s.replace(/test\.beforeAll\(async \(\{ page, joomla \}\)/g, 'test.beforeAll(async ({ joomla })');
-  s = s.replace(/locator\('([^']+):contains\(([^)]+)\)'\)/g, "locator('$1').filter({ hasText: $2 })");
+  s = s.replace(/locator\('([^']+):contains\(([^)]+)\)'\)/g, (_, sel, text) => {
+    const quoted = /^['"`]/.test(text.trim()) ? text.trim() : `'${text.trim()}'`;
+    return `locator('${sel}').filter({ hasText: ${quoted} })`;
+  });
+  s = s.replace(/hasText:\s+(?!['"`])([^}\n]+?)\s*\}/g, "hasText: '$1' }");
+  s = s.replace(/expect\(([^)]+)\)\.to\.have\.property\(/g, 'expect($1).toHaveProperty(');
+  s = s.replace(/(\n\s*)(await page\.locator\('body'\)\.pressSequentially\(([^;]+)\);)\n(\s*)await page\.waitForResponse\(([^;]+)\);/g,
+    '$1const __wait = page.waitForResponse($5);\n$4await page.locator(\'body\').pressSequentially($3);\n$4await __wait;');
+  s = s.replace(/await expect\(page\.title\(\)\)\.(toBe|toContain)\(/g, 'expect(await page.title()).$1(');
+  s = s.replace(/await expect\(page\.url\(\)\)\.toHaveText\(/g, 'expect(page.url()).toMatch(');
+  s = s.replace(/await expect\(page\.url\(\)\)\.toBe\(/g, 'expect(page.url()).toBe(');
+  s = s.replace(/await expect\(page\.title\(\)\)\.toHaveText\(/g, 'expect(await page.title()).toMatch(');
+  s = s.replace(/(\n\s*)(await (?:joomla\.clickToolbarButton\([^;]+\)|page\.goto\([^;]+\)|page\.locator\([^;]+\)\.click\(\)|page\.getByText\([^;]+\)(?:\.first\(\))?\.click\(\));)\n(\s*)(const __wait = page\.waitForResponse\([^;]+;)\n(\s*)await __wait;/g, '$1$4$1$2\n$5await __wait;');
+  s = s.replace(/await joomla\.api_(patch|post|get|delete)\(([\s\S]*?)\);\n(\s*)const response = undefined;/g, 'const response = await joomla.api_$1($2);');
   return s;
 }
 
@@ -1023,7 +1163,10 @@ function cleanupGenerated(code) {
     const map = { visit: 'page.goto', get: 'page.locator', contains: 'page.getByText', wrap: '', request: 'joomla.http', exec: 'joomla.exec', reload: 'page.reload', intercept: 'page.waitForResponse', wait: 'page.waitForTimeout', task: 'joomla.queryDB' };
     return map[cmd] || m;
   });
-  s = s.replace(/locator\('([^']+):contains\(([^)]+)\)'\)/g, 'locator(\'$1\').filter({ hasText: $2 })');
+  s = s.replace(/locator\('([^']+):contains\(([^)]+)\)'\)/g, (_, sel, text) => {
+    const quoted = /^['"`]/.test(text.trim()) ? text.trim() : `'${text.trim()}'`;
+    return `locator('${sel}').filter({ hasText: ${quoted} })`;
+  });
 
   // Duplicate const declarations in the same function become later assignments.
   s = s.replace(/test\(([\s\S]*?)(?=\n  test\(|\n\}\);)/g, (block) => {
@@ -1045,9 +1188,17 @@ function cleanupGenerated(code) {
 
 function convertFile(srcFile) {
   const rel = relative(srcRoot, srcFile);
-  if (rel === 'install/Installation.cy.js'
-    || rel === 'plugins/system/sef/SefPlugin.cy.js'
-    || rel === 'site/components/com_content/CustomFields.cy.js') {
+  const skip = new Set([
+    'install/Installation.cy.js',
+    'plugins/system/sef/SefPlugin.cy.js',
+    'site/components/com_content/CustomFields.cy.js',
+    'administrator/components/com_users/Mfa.cy.js',
+    'site/components/com_users/Mfa.cy.js',
+    'plugins/system/tasknotification/TaskNotification.cy.js',
+    'plugins/system/shortcut/ShortcutPlugin.cy.js',
+    'cli/Finder.cy.js',
+  ]);
+  if (skip.has(rel)) {
     return;
   }
   const dest = join(destRoot, rel.replace(/\.cy\.js$/, '.spec.ts'));
@@ -1061,7 +1212,19 @@ function convertFile(srcFile) {
     `import { test, expect } from '${importPath}';`,
     ...existingImports.filter((line) => !line.includes('cypress') && !line.includes('@playwright')),
   ].join('\n');
-  const body = cleanupGenerated(postProcess(generated).replace(/^import .+\n/gm, ''));
+  let body = cleanupGenerated(postProcess(generated).replace(/^import .+\n/gm, ''));
+  if (original.includes('WebAuthn.enable')) {
+    body = body.replace(
+      /test\.beforeEach\(async \(\{[\s\S]*?\}\) => \{\s*\}\);/,
+      'test.beforeEach(async ({ joomla }) => {\n    await joomla.enableWebAuthn();\n  });',
+    );
+    if (!body.includes('disableWebAuthn')) {
+      body = body.replace(
+        /(test\.afterEach\(async \(\{[\s\S]*?\}\) => \{\n)/,
+        '$1    await joomla.disableWebAuthn();\n',
+      );
+    }
+  }
   const output = `// @ts-nocheck\n${importBlock}\n\n${body.trim()}\n`;
   mkdirSync(dirname(dest), { recursive: true });
   writeFileSync(dest, output);

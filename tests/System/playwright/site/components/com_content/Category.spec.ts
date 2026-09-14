@@ -29,11 +29,11 @@ test.describe('Test in frontend that the content category view', () => {
         path: 'automated-test/root'
       });
       await page.goto('/');
-      await page.locator('a').filter({ hasText: 'automated test'}).click();
-      await expect(page.getByText('article 1')).toBeVisible();
-      await expect(page.getByText('article 2')).toBeVisible();
-      await expect(page.getByText('article 3')).toBeVisible();
-      await expect(page.getByText('article 4')).toBeVisible();
+      await page.locator('a').filter({ hasText: 'automated test' }).click();
+      await expect(page.getByText('article 1').first()).toBeVisible();
+      await expect(page.getByText('article 2').first()).toBeVisible();
+      await expect(page.getByText('article 3').first()).toBeVisible();
+      await expect(page.getByText('article 4').first()).toBeVisible();
     });
     test(`can display a list of articles in the ${layout} layout without a menu item`, async ({
       page,
@@ -55,10 +55,10 @@ test.describe('Test in frontend that the content category view', () => {
         catid: article.catid
       });
       await page.goto(`/index.php?option=com_content&view=category&id=${article.catid}&layout=${layout}`);
-      await expect(page.getByText('article 1')).toBeVisible();
-      await expect(page.getByText('article 2')).toBeVisible();
-      await expect(page.getByText('article 3')).toBeVisible();
-      await expect(page.getByText('article 4')).toBeVisible();
+      await expect(page.getByText('article 1').first()).toBeVisible();
+      await expect(page.getByText('article 2').first()).toBeVisible();
+      await expect(page.getByText('article 3').first()).toBeVisible();
+      await expect(page.getByText('article 4').first()).toBeVisible();
     });
   });
   test('can open the article form in the default layout', async ({
@@ -76,8 +76,8 @@ test.describe('Test in frontend that the content category view', () => {
     });
     await joomla.doFrontendLogin();
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'automated test'}).click();
-    await page.locator('a').filter({ hasText: 'New Article'}).click();
+    await page.locator('a').filter({ hasText: 'automated test' }).click();
+    await page.locator('a').filter({ hasText: 'New Article' }).click();
     await expect(page.locator('#adminForm')).toBeVisible();
   });
 });

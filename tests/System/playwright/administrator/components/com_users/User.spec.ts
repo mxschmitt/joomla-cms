@@ -19,14 +19,14 @@ test.describe('Test in backend that the user form', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_users&task=user.add');
-    await page.locator('#jform_name').fill('test user');
-    await page.locator('#jform_username').fill('test');
-    await page.locator('#jform_email').fill('test@example.com');
-    await page.locator('#jform_password').fill('testtesttest');
-    await page.locator('#jform_password2').fill('testtesttest');
+    await page.locator('#jform_name').fill("").fill('test user');
+    await page.locator('#jform_username').fill("").fill('test');
+    await page.locator('#jform_email').fill("").fill('test@example.com');
+    await page.locator('#jform_password').fill("").fill('testtesttest');
+    await page.locator('#jform_password2').fill("").fill('testtesttest');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('User saved');
-    await expect(page.getByText('test user')).toBeVisible();
+    await expect(page.getByText('test user').first()).toBeVisible();
   });
   test('can edit a user', async ({
     page,
@@ -34,11 +34,11 @@ test.describe('Test in backend that the user form', () => {
   }) => {
     const id = await joomla.db_createUser();
     await page.goto(`/administrator/index.php?option=com_users&task=user.edit&id=${id}`);
-    await page.locator('#jform_name').fill('test edited');
-    await page.locator('#jform_username').fill('testedited');
-    await page.locator('#jform_password').fill('testeditedtest');
-    await page.locator('#jform_password2').fill('testeditedtest');
-    await page.locator('#jform_email').fill('testedited@example.com');
+    await page.locator('#jform_name').fill("").fill('test edited');
+    await page.locator('#jform_username').fill("").fill('testedited');
+    await page.locator('#jform_password').fill("").fill('testeditedtest');
+    await page.locator('#jform_password2').fill("").fill('testeditedtest');
+    await page.locator('#jform_email').fill("").fill('testedited@example.com');
     await joomla.clickToolbarButton('Save');
     await joomla.checkForSystemMessage('User saved.');
   });
@@ -55,15 +55,15 @@ test.describe('Test in backend that the user form', () => {
       requireReset: 1
     });
     await page.goto('/administrator/index.php?option=com_users');
-    await expect(page.getByText('Password Reset Required')).toBeVisible();
+    await expect(page.getByText('Password Reset Required').first()).toBeVisible();
     await joomla.doAdministratorLogout();
     await page.goto('administrator/index.php');
     await page.locator('#mod-login-username').fill('test');
     await page.locator('#mod-login-password').fill('test');
     await page.locator('#btn-login-submit').click();
-    await expect(page.getByText('You are required to reset your password before proceeding.')).toBeVisible();
-    await page.locator('#jform_password').fill('testresetpswd');
-    await page.locator('#jform_password2').fill('testresetpswd');
+    await expect(page.getByText('You are required to reset your password before proceeding.').first()).toBeVisible();
+    await page.locator('#jform_password').fill("").fill('testresetpswd');
+    await page.locator('#jform_password2').fill("").fill('testresetpswd');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('User saved.');
     await joomla.doAdministratorLogout();
@@ -72,6 +72,6 @@ test.describe('Test in backend that the user form', () => {
     await page.locator('#mod-login-password').fill('testresetpswd');
     await page.locator('#btn-login-submit').click();
     await page.goto('/administrator/index.php?option=com_users');
-    await expect(page.getByText('Password Reset Required')).toHaveCount(0);
+    await expect(page.getByText('Password Reset Required').first()).toHaveCount(0);
   });
 });

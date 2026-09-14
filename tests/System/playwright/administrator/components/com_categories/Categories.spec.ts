@@ -25,14 +25,14 @@ test.describe('Test in backend that the categories list', () => {
       title: 'Test category'
     });
     await page.reload();
-    await expect(page.getByText('Test category')).toBeVisible();
+    await expect(page.getByText('Test category').first()).toBeVisible();
   });
   test('can open the category form', async ({
     page,
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await expect(page.getByText('New Category')).toBeVisible();
+    await expect(page.getByText('New Category').first()).toBeVisible();
   });
   test('can publish the test category', async ({
     page,
@@ -46,7 +46,7 @@ test.describe('Test in backend that the categories list', () => {
     await joomla.searchForItem('Test category');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Publish').click();
+    await page.getByText('Publish').first().click();
     await joomla.checkForSystemMessage('Category published.');
   });
   test('can unpublish the test category', async ({
@@ -61,7 +61,7 @@ test.describe('Test in backend that the categories list', () => {
     await joomla.searchForItem('Test category');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Unpublish').click();
+    await page.getByText('Unpublish').first().click();
     await joomla.checkForSystemMessage('Category unpublished.');
   });
   test('can trash the test category', async ({
@@ -75,7 +75,7 @@ test.describe('Test in backend that the categories list', () => {
     await joomla.searchForItem('Test category');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Trash').click();
+    await page.getByText('Trash').first().click();
     await joomla.checkForSystemMessage('Category trashed.');
   });
   test('can delete the test category', async ({

@@ -40,7 +40,7 @@ test.describe('Test in frontend that the users reset view', () => {
       link: 'index.php?option=com_users&view=reset'
     });
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'Automated test reset'}).click();
+    await page.locator('a').filter({ hasText: 'Automated test reset' }).click();
     await page.locator('#jform_email').fill('test@example.com');
     await page.locator('.controls > .btn').click();
     const mails = await joomla.getMails();

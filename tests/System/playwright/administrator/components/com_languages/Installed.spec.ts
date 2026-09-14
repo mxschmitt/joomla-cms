@@ -31,6 +31,6 @@ test.describe('Test in backend that the installed languages', () => {
     page,
     joomla
   }) => {
-    await expect(page.getByText(' Install Languages ')).toBeVisible();
+    await expect(page.getByText(' Install Languages ').first()).toBeVisible();
   });
 });

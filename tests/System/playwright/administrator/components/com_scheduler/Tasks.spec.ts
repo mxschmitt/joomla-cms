@@ -25,26 +25,26 @@ test.describe('Test in backend that the tasks list', () => {
     page,
     joomla
   }) => {
-    await expect(page.getByText('Update Notification')).toBeVisible();
+    await expect(page.getByText('Update Notification').first()).toBeVisible();
   });
   test('can open the task list', async ({
     page,
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await expect(page.getByText('Select a Task type')).toBeVisible();
-    await expect(page.getByText('GET Request')).toBeVisible();
+    await expect(page.getByText('Select a Task type').first()).toBeVisible();
+    await expect(page.getByText('GET Request').first()).toBeVisible();
   });
   test('can publish the test task', async ({
     page,
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await page.locator('#comSchedulerSelectSearch').fill('GET');
+    await page.locator('#comSchedulerSelectSearch').fill("").fill('GET');
     await page.locator('a[href*="plg_task_requests_task_get"]').click();
-    await page.locator('#jform_title').fill('Test task');
-    await page.locator('#jform_params_url').fill('www.test.task');
-    await page.locator('#jform_execution_rules_interval_minutes').fill('1');
+    await page.locator('#jform_title').fill("").fill('Test task');
+    await page.locator('#jform_params_url').fill("").fill('www.test.task');
+    await page.locator('#jform_execution_rules_interval_minutes').fill("").fill('1');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Item saved');
   });
@@ -53,18 +53,18 @@ test.describe('Test in backend that the tasks list', () => {
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await page.locator('#comSchedulerSelectSearch').fill('GET');
+    await page.locator('#comSchedulerSelectSearch').fill("").fill('GET');
     await page.locator('a[href*="plg_task_requests_task_get"]').click();
-    await page.locator('#jform_title').fill('Test task');
-    await page.locator('#jform_params_url').fill('www.test.task');
-    await page.locator('#jform_execution_rules_interval_minutes').fill('1');
+    await page.locator('#jform_title').fill("").fill('Test task');
+    await page.locator('#jform_params_url').fill("").fill('www.test.task');
+    await page.locator('#jform_execution_rules_interval_minutes').fill("").fill('1');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Item saved');
     await page.reload();
     await joomla.searchForItem('Test task');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Disable').click();
+    await page.getByText('Disable').first().click();
     await joomla.checkForSystemMessage('Task disabled');
   });
   test('can trash the test task', async ({
@@ -72,11 +72,11 @@ test.describe('Test in backend that the tasks list', () => {
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await page.locator('#comSchedulerSelectSearch').fill('GET');
+    await page.locator('#comSchedulerSelectSearch').fill("").fill('GET');
     await page.locator('a[href*="plg_task_requests_task_get"]').click();
-    await page.locator('#jform_title').fill('Test task');
-    await page.locator('#jform_params_url').fill('www.test.task');
-    await page.locator('#jform_execution_rules_interval_minutes').fill('1');
+    await page.locator('#jform_title').fill("").fill('Test task');
+    await page.locator('#jform_params_url').fill("").fill('www.test.task');
+    await page.locator('#jform_execution_rules_interval_minutes').fill("").fill('1');
     await page.locator('#jform_state').selectOption({
       label: 'Disabled'
     });
@@ -86,7 +86,7 @@ test.describe('Test in backend that the tasks list', () => {
     await joomla.searchForItem('Test task');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Trash').click();
+    await page.getByText('Trash').first().click();
     await joomla.checkForSystemMessage('Task trashed');
   });
   test('can delete the test task', async ({
@@ -94,11 +94,11 @@ test.describe('Test in backend that the tasks list', () => {
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await page.locator('#comSchedulerSelectSearch').fill('GET');
+    await page.locator('#comSchedulerSelectSearch').fill("").fill('GET');
     await page.locator('a[href*="plg_task_requests_task_get"]').click();
-    await page.locator('#jform_title').fill('Test task');
-    await page.locator('#jform_params_url').fill('www.test.task');
-    await page.locator('#jform_execution_rules_interval_minutes').fill('1');
+    await page.locator('#jform_title').fill("").fill('Test task');
+    await page.locator('#jform_params_url').fill("").fill('www.test.task');
+    await page.locator('#jform_execution_rules_interval_minutes').fill("").fill('1');
     await page.locator('#jform_state').selectOption({
       label: 'Trashed'
     });

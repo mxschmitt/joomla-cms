@@ -40,7 +40,7 @@ test.describe('Test in frontend that the content component with custom fields', 
   test('displays a custom text field value', async ({ page, joomla }) => {
     await createFieldWithValue(joomla, { title: 'Test Text Field', name: 'test-text-field-frontend', type: 'text' }, 'My custom text value');
     await visitContentFrontend(page);
-    await expect(page.getByText('My custom text value')).toBeVisible();
+    await expect(page.getByText('My custom text value').first()).toBeVisible();
   });
 
   test('does not display an unpublished field', async ({ page, joomla }) => {
@@ -61,7 +61,7 @@ test.describe('Test in frontend that the content component with custom fields', 
     }, 'Value with a hidden label');
     await visitContentFrontend(page);
     await expect(page.getByText('Hidden Label Field')).toHaveCount(0);
-    await expect(page.getByText('Value with a hidden label')).toBeVisible();
+    await expect(page.getByText('Value with a hidden label').first()).toBeVisible();
   });
 
   test('applies a custom display class to the field container', async ({ page, joomla }) => {
@@ -96,6 +96,6 @@ test.describe('Test in frontend that the content component with custom fields', 
       params: JSON.stringify({ prefix: 'Before...', suffix: '...After' }),
     }, 'the value');
     await visitContentFrontend(page);
-    await expect(page.getByText('Before... the value ...After')).toBeVisible();
+    await expect(page.getByText('Before... the value ...After').first()).toBeVisible();
   });
 });

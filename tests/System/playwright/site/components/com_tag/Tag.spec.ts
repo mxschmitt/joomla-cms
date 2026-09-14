@@ -23,11 +23,11 @@ test.describe('Test in frontend that the tags tag view', () => {
       link: 'index.php?option=com_tags&view=tags'
     });
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'automated test tags'}).click();
-    await expect(page.getByText('automated test tag 1')).toBeVisible();
-    await expect(page.getByText('automated test tag 2')).toBeVisible();
-    await expect(page.getByText('automated test tag 3')).toBeVisible();
-    await expect(page.getByText('automated test tag 4')).toBeVisible();
+    await page.locator('a').filter({ hasText: 'automated test tags' }).click();
+    await expect(page.getByText('automated test tag 1').first()).toBeVisible();
+    await expect(page.getByText('automated test tag 2').first()).toBeVisible();
+    await expect(page.getByText('automated test tag 3').first()).toBeVisible();
+    await expect(page.getByText('automated test tag 4').first()).toBeVisible();
   });
   test('can display a list of tags without a menu item', async ({
     page,
@@ -46,9 +46,9 @@ test.describe('Test in frontend that the tags tag view', () => {
       title: 'automated test tag 4'
     });
     await page.goto('/index.php?option=com_tags&view=tags');
-    await expect(page.getByText('automated test tag 1')).toBeVisible();
-    await expect(page.getByText('automated test tag 2')).toBeVisible();
-    await expect(page.getByText('automated test tag 3')).toBeVisible();
-    await expect(page.getByText('automated test tag 4')).toBeVisible();
+    await expect(page.getByText('automated test tag 1').first()).toBeVisible();
+    await expect(page.getByText('automated test tag 2').first()).toBeVisible();
+    await expect(page.getByText('automated test tag 3').first()).toBeVisible();
+    await expect(page.getByText('automated test tag 4').first()).toBeVisible();
   });
 });

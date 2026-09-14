@@ -15,7 +15,7 @@ test.describe('Test that newsfeed API endpoint', () => {
     }) => {
       await joomla.db_createNewsFeed({
         name: 'automated test feed',
-        link: `${Cypress.config('baseUrl')}/tests/System/data/com_newsfeeds/${file}.xml`
+        link: `${joomla.config.baseURL}/tests/System/data/com_newsfeeds/${file}.xml`
       });
       let response = await joomla.api_get('/newsfeeds/feeds');
       await expect(response.body.data[0].attributes.name).toContain('automated test feed');
@@ -30,7 +30,7 @@ test.describe('Test that newsfeed API endpoint', () => {
       response = await joomla.api_post('/newsfeeds/feeds', {
         name: 'automated test feed',
         alias: 'test-feed',
-        link: `${Cypress.config('baseUrl')}/tests/System/data/com_newsfeeds/${file}.xml`,
+        link: `${joomla.config.baseURL}/tests/System/data/com_newsfeeds/${file}.xml`,
         catid: categoryId,
         published: 1,
         language: '*',
@@ -74,7 +74,7 @@ test.describe('Test that newsfeed API endpoint', () => {
       let feed = await joomla.db_createNewsFeed({
         name: 'automated test contact',
         access: 1,
-        link: `${Cypress.config('baseUrl')}/tests/System/data/com_newsfeeds/${file}.xml`
+        link: `${joomla.config.baseURL}/tests/System/data/com_newsfeeds/${file}.xml`
       });
       response = await joomla.api_patch(`/newsfeeds/feeds/${feed.id}`, {
         name: 'updated automated test feed'
@@ -88,7 +88,7 @@ test.describe('Test that newsfeed API endpoint', () => {
       feed = await joomla.db_createNewsFeed({
         name: 'automated test contact',
         access: 1,
-        link: `${Cypress.config('baseUrl')}/tests/System/data/com_newsfeeds/${file}.xml`,
+        link: `${joomla.config.baseURL}/tests/System/data/com_newsfeeds/${file}.xml`,
         published: -2
       });
       await joomla.api_delete(`/newsfeeds/feeds/${feed.id}`);

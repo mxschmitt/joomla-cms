@@ -110,7 +110,7 @@ test.describe('Test that banners API endpoint', () => {
       failOnStatusCode: false
     });
     expect(response.status).toBe(404);
-    expect(response.body.data.message).to.include('Resource not found');
+    expect(response.body.data.message).toContain('Resource not found');
   });
   test('cannot delete a banner that is not trashed', async ({
     page,
@@ -129,6 +129,6 @@ test.describe('Test that banners API endpoint', () => {
       failOnStatusCode: false
     });
     expect(response.status).toBe(409);
-    expect(response.body.data.message).to.include('must be trashed before it can be deleted');
+    expect(response.body.data.message).toContain('must be trashed before it can be deleted');
   });
 });

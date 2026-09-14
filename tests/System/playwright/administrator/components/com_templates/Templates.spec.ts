@@ -64,10 +64,10 @@ test.describe('Test in backend that the templates list', () => {
   }) => {
     await page.goto('/administrator/index.php?option=com_templates&view=templates&client_id=1');
     await joomla.clickToolbarButton('Options');
-    await page.waitForResponse(resp => resp.url().includes('com_templates'));
-    await expect(page.title()).toContain('Template: Options');
+    await page.waitForResponse(resp => /.*.*/administrator/index\.php\?option=com_config&view=component&component=com_templates.*/.test(resp.url()));
+    expect(await page.title()).toContain('Template: Options');
     await expect(page.locator('h1.page-title')).toContainText('Template: Options');
     await joomla.clickToolbarButton('Cancel');
-    await page.waitForResponse(resp => resp.url().includes('com_templates'));
+    await page.waitForResponse(resp => /.*.*/administrator/index\.php\?option=com_templates&view=templates&client_id=1.*/.test(resp.url()));
   });
 });

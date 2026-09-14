@@ -26,11 +26,11 @@ test.describe('Test in frontend that the newsfeeds category view', () => {
       link: `index.php?option=com_newsfeeds&view=category&id=${feed.catid}`
     });
     await page.goto('/');
-    await page.locator('a').filter({ hasText: 'automated test feeds'}).click();
-    await expect(page.getByText('automated test feed 1')).toBeVisible();
-    await expect(page.getByText('automated test feed 2')).toBeVisible();
-    await expect(page.getByText('automated test feed 3')).toBeVisible();
-    await expect(page.getByText('automated test feed 4')).toBeVisible();
+    await page.locator('a').filter({ hasText: 'automated test feeds' }).click();
+    await expect(page.getByText('automated test feed 1').first()).toBeVisible();
+    await expect(page.getByText('automated test feed 2').first()).toBeVisible();
+    await expect(page.getByText('automated test feed 3').first()).toBeVisible();
+    await expect(page.getByText('automated test feed 4').first()).toBeVisible();
   });
   test('can display a list of feeds without a menu item', async ({
     page,
@@ -52,9 +52,9 @@ test.describe('Test in frontend that the newsfeeds category view', () => {
       catid: feed.catid
     });
     await page.goto(`/index.php?option=com_newsfeeds&view=category&id=${feed.catid}`);
-    await expect(page.getByText('automated test feed 1')).toBeVisible();
-    await expect(page.getByText('automated test feed 2')).toBeVisible();
-    await expect(page.getByText('automated test feed 3')).toBeVisible();
-    await expect(page.getByText('automated test feed 4')).toBeVisible();
+    await expect(page.getByText('automated test feed 1').first()).toBeVisible();
+    await expect(page.getByText('automated test feed 2').first()).toBeVisible();
+    await expect(page.getByText('automated test feed 3').first()).toBeVisible();
+    await expect(page.getByText('automated test feed 4').first()).toBeVisible();
   });
 });

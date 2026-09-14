@@ -34,8 +34,8 @@ test.describe('Test in frontend that the contact site router', () => {
     // expect(response.status).toBe(301);
     // expect(response.redirectedToUrl).toMatch(new RegExp(`${url}$`));
     await page.goto(url);
-    await expect(page.url()).toHaveText(new RegExp(`${url}$`));
-    await expect(page.title()).toBe('Test Contact');
+    expect(page.url()).toMatch(new RegExp(`${url}$`));
+    expect(await page.title()).toBe('Test Contact');
     await expect(page.locator('main h1').filter({
       hasText: 'Home'
     })).toBeVisible();
@@ -45,7 +45,7 @@ test.describe('Test in frontend that the contact site router', () => {
     await expect(page.locator('main h3').filter({
       hasText: 'Contact'
     })).toBeVisible();
-    const breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs');
+    const breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs').locator(":scope > *");
     await expect(breadcrumb).toHaveCount(4);
     await expect(breadcrumb.nth(2)).toContainText('Uncategorised');
     await expect(breadcrumb.nth(3)).toContainText('Test Contact');
@@ -90,15 +90,15 @@ test.describe('Test in frontend that the contact site router', () => {
     expect(response.status).toBe(301);
     expect(response.redirectedToUrl).toMatch(new RegExp(`${url}$`));
     await page.goto(url);
-    await expect(page.url()).toHaveText(new RegExp(`${url}$`));
-    await expect(page.title()).toBe('Test Menu Single Contact');
+    expect(page.url()).toMatch(new RegExp(`${url}$`));
+    expect(await page.title()).toBe('Test Menu Single Contact');
     await expect(page.locator('main h1').filter({
       hasText: 'Test Contact'
     })).toBeVisible();
     await expect(page.locator('main h2').filter({
       hasText: 'Contact'
     })).toBeVisible();
-    const breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs');
+    const breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs').locator(":scope > *");
     await expect(breadcrumb).toHaveCount(3);
     await expect(breadcrumb.nth(2)).toContainText('Test Menu Single Contact');
   });
@@ -130,27 +130,27 @@ test.describe('Test in frontend that the contact site router', () => {
     expect(response.status).toBe(301);
     expect(response.redirectedToUrl).toMatch(new RegExp(`${url}$`));
     await page.goto(url.split('/').slice(0, -1).join('/'));
-    await expect(page.url()).toHaveText(new RegExp(`${url.split('/').slice(0, -1).join('/')}$`));
-    await expect(page.title()).toBe('Test Menu Contact Category');
+    expect(page.url()).toMatch(new RegExp(`${url.split('/').slice(0, -1).join('/')}$`));
+    expect(await page.title()).toBe('Test Menu Contact Category');
     await expect(page.locator('main h1').filter({
       hasText: 'Uncategorised'
     })).toBeVisible();
-    let breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs');
+    let breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs').locator(":scope > *");
     await expect(breadcrumb).toHaveCount(3);
     await expect(breadcrumb.nth(2)).toContainText('Test Menu Contact Category');
-    await expect(expect(page.locator('main div.com-contact-category a').filter({
+    expect(await page.locator('main div.com-contact-category a').filter({
       hasText: 'Test Contact'
-    })).toHaveAttribute('href')).toHaveText(new RegExp(`${url}$`));
+    }).getAttribute('href')).toMatch(new RegExp(`${url}$`));
     await page.goto(url);
-    await expect(page.url()).toHaveText(new RegExp(`${url}$`));
-    await expect(page.title()).toBe('Test Contact');
+    expect(page.url()).toMatch(new RegExp(`${url}$`));
+    expect(await page.title()).toBe('Test Contact');
     await expect(page.locator('main h1').filter({
       hasText: 'Test Contact'
     })).toBeVisible();
     await expect(page.locator('main h2').filter({
       hasText: 'Contact'
     })).toBeVisible();
-    breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs');
+    breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs').locator(":scope > *");
     await expect(breadcrumb).toHaveCount(4);
     await expect(breadcrumb.nth(2)).toContainText('Test Menu Contact Category');
     await expect(breadcrumb.nth(3)).toContainText('Test Contact');
@@ -177,37 +177,37 @@ test.describe('Test in frontend that the contact site router', () => {
     expect(response.status).toBe(301);
     expect(response.redirectedToUrl).toMatch(new RegExp(`${url}$`));
     await page.goto(url.split('/').slice(0, -2).join('/'));
-    await expect(page.url()).toHaveText(new RegExp(`${url.split('/').slice(0, -2).join('/')}$`));
-    await expect(page.title()).toBe('Test Menu Contact Categories');
-    let breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs');
+    expect(page.url()).toMatch(new RegExp(`${url.split('/').slice(0, -2).join('/')}$`));
+    expect(await page.title()).toBe('Test Menu Contact Categories');
+    let breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs').locator(":scope > *");
     await expect(breadcrumb).toHaveCount(3);
     await expect(breadcrumb.nth(2)).toContainText('Test Menu Contact Categories');
-    await expect(expect(page.locator('main div.com-contact-categories h3 a').filter({
+    expect(await page.locator('main div.com-contact-categories h3 a').filter({
       hasText: 'Uncategorised'
-    })).toHaveAttribute('href')).toHaveText(new RegExp(`${url.split('/').slice(0, -1).join('/')}$`));
+    }).getAttribute('href')).toMatch(new RegExp(`${url.split('/').slice(0, -1).join('/')}$`));
     await page.goto(url.split('/').slice(0, -1).join('/'));
-    await expect(page.url()).toHaveText(new RegExp(`${url.split('/').slice(0, -1).join('/')}$`));
-    await expect(page.title()).toBe('Test Menu Contact Categories');
+    expect(page.url()).toMatch(new RegExp(`${url.split('/').slice(0, -1).join('/')}$`));
+    expect(await page.title()).toBe('Test Menu Contact Categories');
     await expect(page.locator('main h1').filter({
       hasText: 'Uncategorised'
     })).toBeVisible();
-    breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs');
+    breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs').locator(":scope > *");
     await expect(breadcrumb).toHaveCount(4);
     await expect(breadcrumb.nth(2)).toContainText('Test Menu Contact Categories');
     await expect(breadcrumb.nth(3)).toContainText('Uncategorised');
-    await expect(expect(page.locator('main div.com-contact-category a').filter({
+    expect(await page.locator('main div.com-contact-category a').filter({
       hasText: 'Test Contact'
-    })).toHaveAttribute('href')).toHaveText(new RegExp(`${url}$`));
+    }).getAttribute('href')).toMatch(new RegExp(`${url}$`));
     await page.goto(url);
-    await expect(page.url()).toHaveText(new RegExp(`${url}$`));
-    await expect(page.title()).toBe('Test Contact');
+    expect(page.url()).toMatch(new RegExp(`${url}$`));
+    expect(await page.title()).toBe('Test Contact');
     await expect(page.locator('main h1').filter({
       hasText: 'Test Contact'
     })).toBeVisible();
     await expect(page.locator('main h2').filter({
       hasText: 'Contact'
     })).toBeVisible();
-    breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs');
+    breadcrumb = page.locator('nav.mod-breadcrumbs__wrapper ol.mod-breadcrumbs').locator(":scope > *");
     await expect(breadcrumb).toHaveCount(5);
     await expect(breadcrumb.nth(2)).toContainText('Test Menu Contact Categories');
     await expect(breadcrumb.nth(3)).toContainText('Uncategorised');

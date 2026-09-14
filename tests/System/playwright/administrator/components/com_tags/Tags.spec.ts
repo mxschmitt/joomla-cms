@@ -23,14 +23,14 @@ test.describe('Test in backend that the custom tags list', () => {
       title: 'Test tag'
     });
     await page.reload();
-    await expect(page.getByText('Test tag')).toBeVisible();
+    await expect(page.getByText('Test tag').first()).toBeVisible();
   });
   test('can open the tag form', async ({
     page,
     joomla
   }) => {
     await joomla.clickToolbarButton('New');
-    await expect(page.getByText('Tags: New')).toBeVisible();
+    await expect(page.getByText('Tags: New').first()).toBeVisible();
   });
   test('can publish the test tag', async ({
     page,
@@ -44,7 +44,7 @@ test.describe('Test in backend that the custom tags list', () => {
     await joomla.searchForItem('Test tag');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Publish').click();
+    await page.getByText('Publish').first().click();
     await joomla.checkForSystemMessage('Tag published');
   });
   test('can unpublish the test tag', async ({
@@ -59,7 +59,7 @@ test.describe('Test in backend that the custom tags list', () => {
     await joomla.searchForItem('Test tag');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Unpublish').click();
+    await page.getByText('Unpublish').first().click();
     await joomla.checkForSystemMessage('Tag unpublished');
   });
   test('can trash the test tag', async ({
@@ -73,7 +73,7 @@ test.describe('Test in backend that the custom tags list', () => {
     await joomla.searchForItem('Test tag');
     await joomla.checkAllResults();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Trash').click();
+    await page.getByText('Trash').first().click();
     await joomla.checkForSystemMessage('Tag trashed');
   });
   test('can delete the test tag', async ({

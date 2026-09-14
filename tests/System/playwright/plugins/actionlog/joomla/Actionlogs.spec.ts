@@ -20,16 +20,16 @@ test.describe('Test that the Action Logs plugin', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_users&task=user.add');
-    await page.locator('#jform_name').fill('test user');
-    await page.locator('#jform_username').fill('test');
-    await page.locator('#jform_email').fill('test@example.com');
-    await page.locator('#jform_password').fill('testtesttest');
-    await page.locator('#jform_password2').fill('testtesttest');
+    await page.locator('#jform_name').fill("").fill('test user');
+    await page.locator('#jform_username').fill("").fill('test');
+    await page.locator('#jform_email').fill("").fill('test@example.com');
+    await page.locator('#jform_password').fill("").fill('testtesttest');
+    await page.locator('#jform_password2').fill("").fill('testtesttest');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('User saved');
-    await expect(page.getByText('test user')).toBeVisible();
+    await expect(page.getByText('test user').first()).toBeVisible();
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText('added new user')).toBeVisible();
+    await expect(page.getByText('added new user').first()).toBeVisible();
   });
   test('logs user modifications (backend)', async ({
     page,
@@ -37,15 +37,15 @@ test.describe('Test that the Action Logs plugin', () => {
   }) => {
     const id = await joomla.db_createUser();
     await page.goto(`/administrator/index.php?option=com_users&task=user.edit&id=${id}`);
-    await page.locator('#jform_name').fill('test edited');
-    await page.locator('#jform_username').fill('testedited');
-    await page.locator('#jform_password').fill('testeditedtest');
-    await page.locator('#jform_password2').fill('testeditedtest');
-    await page.locator('#jform_email').fill('testedited@example.com');
+    await page.locator('#jform_name').fill("").fill('test edited');
+    await page.locator('#jform_username').fill("").fill('testedited');
+    await page.locator('#jform_password').fill("").fill('testeditedtest');
+    await page.locator('#jform_password2').fill("").fill('testeditedtest');
+    await page.locator('#jform_email').fill("").fill('testedited@example.com');
     await joomla.clickToolbarButton('Save');
     await joomla.checkForSystemMessage('User saved.');
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText('updated the user')).toBeVisible();
+    await expect(page.getByText('updated the user').first()).toBeVisible();
   });
   test('logs blocking and unblocking via user profile toggle (backend)', async ({
     page,
@@ -57,13 +57,13 @@ test.describe('Test that the Action Logs plugin', () => {
     await joomla.clickToolbarButton('Save');
     await joomla.checkForSystemMessage('User saved.');
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText('blocked user')).toBeVisible();
+    await expect(page.getByText('blocked user').first()).toBeVisible();
     await page.goto(`/administrator/index.php?option=com_users&task=user.edit&id=${id}`);
     await page.locator('label[for="jform_block1"]').click();
     await joomla.clickToolbarButton('Save');
     await joomla.checkForSystemMessage('User saved.');
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText('unblocked user')).toBeVisible();
+    await expect(page.getByText('unblocked user').first()).toBeVisible();
   });
   test('logs blocking / unblocking directly from the List table view (backend)', async ({
     page,
@@ -71,20 +71,20 @@ test.describe('Test that the Action Logs plugin', () => {
   }) => {
     await joomla.db_createUser();
     await page.goto('/administrator/index.php?option=com_users&view=users');
-    await page.locator('#filter_search').fill('test@example.com');
+    await page.locator('#filter_search').fill("").fill('test@example.com');
     await page.locator('.btn-group .btn').first().click();
     await page.locator('input[type="checkbox"][name="cid[]"]').first().check();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Block').click();
+    await page.getByText('Block').first().click();
     await joomla.checkForSystemMessage('User blocked.');
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
     await expect(page.locator('tbody tr')).toBeTruthy();
     await page.goto('/administrator/index.php?option=com_users&view=users');
-    await page.locator('#filter_search').fill('test@example.com');
+    await page.locator('#filter_search').fill("").fill('test@example.com');
     await page.locator('.btn-group .btn').first().click();
     await page.locator('input[type="checkbox"][name="cid[]"]').first().check();
     await joomla.clickToolbarButton('Action');
-    await page.getByText('Unblock').click();
+    await page.getByText('Unblock').first().click();
     await joomla.checkForSystemMessage('User unblocked.');
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
     await expect(page.locator('tbody tr')).toBeTruthy();
@@ -104,7 +104,7 @@ test.describe('Test that the Action Logs plugin', () => {
       hasText: 'Register'
     }).click();
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText('registered')).toBeVisible();
+    await expect(page.getByText('registered').first()).toBeVisible();
     await joomla.db_updateExtensionParameter('allowUserRegistration', '0', 'com_users');
   });
   test('logs editing profile from frontend', async ({
@@ -120,12 +120,12 @@ test.describe('Test that the Action Logs plugin', () => {
     }).click();
     await page.reload();
     await page.goto('/index.php?option=com_users&view=profile&layout=edit');
-    await page.locator('#jform_name').fill('test edited frontend');
+    await page.locator('#jform_name').fill("").fill('test edited frontend');
     await page.locator('button[type="submit"]').filter({
       hasText: 'Save'
     }).click();
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText('updated the user')).toBeVisible();
+    await expect(page.getByText('updated the user').first()).toBeVisible();
   });
   test('logs username remind request from frontend', async ({
     page,
@@ -133,12 +133,12 @@ test.describe('Test that the Action Logs plugin', () => {
   }) => {
     await joomla.db_createUser();
     await page.goto('/index.php?option=com_users&view=remind');
-    await expect(page.locator('#jform_email')).toBeVisible().fill('test@example.com');
+    await expect(page.locator('#jform_email')).toBeVisible().fill("").fill('test@example.com');
     await page.locator('button[type="submit"]').filter({
       hasText: 'Submit'
     }).click();
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText('requested a username reminder for their account ')).toBeVisible();
+    await expect(page.getByText('requested a username reminder for their account ').first()).toBeVisible();
   });
   test('logs password reset request from frontend', async ({
     page,
@@ -146,11 +146,11 @@ test.describe('Test that the Action Logs plugin', () => {
   }) => {
     await joomla.db_createUser();
     await page.goto('/index.php?option=com_users&view=reset');
-    await expect(page.locator('#jform_email')).toBeVisible().fill('test@example.com');
+    await expect(page.locator('#jform_email')).toBeVisible().fill("").fill('test@example.com');
     await page.locator('button[type="submit"]').filter({
       hasText: 'Submit'
     }).click();
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
-    await expect(page.getByText('requested a password reset for their account ')).toBeVisible();
+    await expect(page.getByText('requested a password reset for their account ').first()).toBeVisible();
   });
 });

@@ -25,7 +25,7 @@ test.describe('Test in backend that the category form', () => {
     await expect(page.locator('#jform_title')).toBeVisible().fill('Test category');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Category saved.');
-    await expect(page.getByText('Test category')).toBeVisible();
+    await expect(page.getByText('Test category').first()).toBeVisible();
   });
   test('can change access level of a test category', async ({
     page,

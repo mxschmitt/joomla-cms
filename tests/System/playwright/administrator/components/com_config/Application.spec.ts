@@ -34,8 +34,8 @@ test.describe('Test in backend that the application configuration', () => {
     await page.locator('#jform_mailer').selectOption({
       label: 'smtp'
     });
-    await page.locator('#jform_smtphost').fill(joomla.expose.smtp_host);
-    await page.locator('#jform_smtpport').fill(joomla.expose.smtp_port);
+    await page.locator('#jform_smtphost').fill("").fill(joomla.expose.smtp_host);
+    await page.locator('#jform_smtpport').fill("").fill(joomla.expose.smtp_port);
     await page.locator('#jform_smtpsecure').selectOption({
       label: 'none'
     });
