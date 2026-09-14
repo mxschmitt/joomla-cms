@@ -1,0 +1,20 @@
+{
+  "name": "joomla-playwright",
+  "version": "0.1.0",
+  "description": "TypeScript helpers for using Playwright with Joomla for testing. Local counterpart to joomla-cypress.",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/types.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./fixtures": "./src/fixtures.ts"
+  },
+  "keywords": [
+    "Joomla",
+    "Playwright"
+  ],
+  "license": "GPL-2.0-or-later",
+  "peerDependencies": {
+    "@playwright/test": ">=1.50.0"
+  }
+}

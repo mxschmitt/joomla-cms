@@ -103,6 +103,10 @@ RoboFile.ini
 /tests/System/output/videos
 !/tests/System/output/videos/.gitkeep
 cypress.config.mjs
+/tests/System/output/playwright-report
+/tests/System/output/playwright-results
+/test-results
+/playwright-report
 
 # WebAuthn FIDO metadata cache
 /build/fido/fido.jwt

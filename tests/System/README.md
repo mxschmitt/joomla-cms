@@ -90,6 +90,23 @@ For example, to run all tests without the installation step:
 npx cypress run --spec 'tests/System/integration/{administrator,site,api,plugins}/**/*.cy.js'
 ```
 
+## Playwright (experimental TypeScript mirror)
+
+Playwright is TypeScript-native, so the mirrored system tests live in `tests/System/playwright/**/*.spec.ts` with helpers in `tests/System/joomla-playwright/`. Cypress remains the primary runner until the Playwright suite is fully green.
+
+```
+npx playwright install chromium
+npm run playwright:test
+```
+
+Override the site URL with `JOOMLA_TEST_BASE_URL` (default `http://localhost/`). The install project runs first; later specs share one CMS database, so Playwright uses a single worker.
+
+> [!NOTE]
+> You can execute single Playwright specs, e.g. to run the installation step only.
+> ```
+> npx playwright test tests/System/playwright/install/Installation.spec.ts
+> ```
+
 > [!NOTE]
 > Cypress has a nice GUI that lists all the existing tests and can launch a browser where the tests are executed.
 > It is really helpful to be able to rewind in case of problems and see how the automatic browser works.
