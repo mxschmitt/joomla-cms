@@ -27,6 +27,6 @@ test.describe('Test in backend that the application configuration', () => {
     expect(mails.length).toBe(1);
     expect(mails[0].body).toContain('This is a test mail sent using');
     expect(mails[0].sender).toBe(joomla.expose.email);
-    expect(mails[0].receivers).toHaveProperty(joomla.expose.email);
+    expect(mails[0].receivers?.[joomla.expose.email]).toBeTruthy();
   });
 });

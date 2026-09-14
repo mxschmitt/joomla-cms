@@ -69,7 +69,7 @@ test.describe('Test that the sef system plugin', () => {
     const noSlash = await joomla.http({ url: '/index.php/component/users/login', followRedirect: false });
     expect(noSlash.status).toBe(200);
     await page.goto('/');
-    await expect(page.locator('li.nav-item').filter({ hasText: 'Home' })).toHaveAttribute('href', /\/index\.php$/);
+    await expect(page.locator('li.nav-item a').filter({ hasText: 'Home' })).toHaveAttribute('href', /\/index\.php$/);
   });
 
   test('can process if option \'trailingslash\' enabled', async ({ page, joomla }) => {
@@ -80,7 +80,7 @@ test.describe('Test that the sef system plugin', () => {
     const slash = await joomla.http({ url: '/index.php/component/users/login/', followRedirect: false });
     expect(slash.status).toBe(200);
     await page.goto('/');
-    await expect(page.locator('li.nav-item').filter({ hasText: 'Home' })).toHaveAttribute('href', /\/index\.php\/$/);
+    await expect(page.locator('li.nav-item a').filter({ hasText: 'Home' })).toHaveAttribute('href', /\/index\.php\/$/);
   });
 
   test('can process if option \'strictrouting\' enabled', async ({ joomla }) => {

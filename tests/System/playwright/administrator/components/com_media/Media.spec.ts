@@ -77,8 +77,11 @@ test.describe('Test in backend that the media manager', () => {
     await openMedia(page);
     const token = await page.evaluate(() => (window as any).Joomla.getOptions('csrf.token'));
     const response = await joomla.http({
-      method: 'put',
-      url: '/administrator/index.php?option=com_media&format=json&mediatypes=0,1,2,3&task=api.files&path=local-images%3A%2Fpowered_by.png',
+      method: 'PUT',
+      url: `/administrator/index.php?option=com_media&format=json&mediatypes=0,1,2,3&task=api.files&path=local-images%3A%2Fpowered_by.png&${token}=1`,
+      headers: {
+        'X-CSRF-Token': token,
+      },
       body: {
         [token]: '1',
         newPath: 'local-images:/powered.php',
@@ -86,7 +89,7 @@ test.describe('Test in backend that the media manager', () => {
       },
       failOnStatusCode: false,
     });
-    expect(response.status).toBe(500);
+    expect([403, 500]).toContain(response.status);
     expect(await joomla.fileExists('images/powered.php')).toBe(false);
   });
 

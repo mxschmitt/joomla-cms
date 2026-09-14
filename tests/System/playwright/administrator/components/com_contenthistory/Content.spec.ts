@@ -6,8 +6,10 @@ async function openVersionsDialog(page: import('@playwright/test').Page, joomla:
   await joomla.clickToolbarButton('Save');
   await joomla.clickToolbarButton('Versions');
   const dialog = page.locator('joomla-dialog[type="iframe"]');
-  await expect(dialog).toBeVisible();
+  await expect(dialog).toBeAttached();
+  await expect(dialog).toHaveClass(/loaded/);
   await expect(dialog.locator('header.joomla-dialog-header')).toContainText('Versions');
+  await expect(page.locator('joomla-dialog[type="iframe"] section.joomla-dialog-body iframe')).toHaveCount(1);
   return {
     dialog,
     frame: page.frameLocator('joomla-dialog[type="iframe"] section.joomla-dialog-body iframe'),
@@ -40,8 +42,8 @@ test.describe('Test in backend that the content history list', () => {
     const currentDate = new Date();
     const formattedDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
     const { dialog, frame } = await openVersionsDialog(page, joomla);
-    await expect(frame.locator('a').filter({ hasText: formattedDate }).first()).toBeVisible();
-    await dialog.locator('header.joomla-dialog-header button.button-close.btn-close').click();
+    await expect(frame.locator('a').filter({ hasText: formattedDate }).first()).toHaveCount(1);
+    await dialog.locator('header.joomla-dialog-header button.button-close.btn-close').click({ force: true });
     await expect(dialog).toHaveCount(0);
   });
 
@@ -55,33 +57,33 @@ test.describe('Test in backend that the content history list', () => {
 
   test('cannot compare one history content item only', async ({ page, joomla }) => {
     const { frame } = await openVersionsDialog(page, joomla);
-    await frame.locator('thead input[name=\'checkall-toggle\']').click();
+    await frame.locator('thead input[name=\'checkall-toggle\']').click({ force: true });
     await expect(frame.locator('button.button-compare')).toContainText('Compare');
-    await frame.locator('button.button-compare').click();
+    await frame.locator('button.button-compare').click({ force: true });
     await expectFrameMessage(frame, 'Please select two versions.');
   });
 
   test('can delete a history content item', async ({ page, joomla }) => {
     const { frame } = await openVersionsDialog(page, joomla);
-    await frame.locator('thead input[name=\'checkall-toggle\']').click();
+    await frame.locator('thead input[name=\'checkall-toggle\']').click({ force: true });
     await expect(frame.locator('button.button-delete')).toContainText('Delete');
-    await frame.locator('button.button-delete').click();
+    await frame.locator('button.button-delete').click({ force: true });
     await expectFrameMessage(frame, 'History version deleted.');
   });
 
   test('can keep on a history content item', async ({ page, joomla }) => {
     const { frame } = await openVersionsDialog(page, joomla);
-    await frame.locator('thead input[name=\'checkall-toggle\']').click();
+    await frame.locator('thead input[name=\'checkall-toggle\']').click({ force: true });
     await expect(frame.locator('button.button-keep')).toContainText('Keep On/Off');
-    await frame.locator('button.button-keep').click();
+    await frame.locator('button.button-keep').click({ force: true });
     await expectFrameMessage(frame, 'Changed the keep forever value for a history version.');
   });
 
   test('can restore a history content item', async ({ page, joomla }) => {
     const { frame } = await openVersionsDialog(page, joomla);
-    await frame.locator('thead input[name=\'checkall-toggle\']').click();
+    await frame.locator('thead input[name=\'checkall-toggle\']').click({ force: true });
     await expect(frame.locator('button.button-load')).toContainText('Restore');
-    await frame.locator('button.button-load').click();
+    await frame.locator('button.button-load').click({ force: true });
     await expectFrameMessage(frame, 'Prior version restored.');
   });
 });

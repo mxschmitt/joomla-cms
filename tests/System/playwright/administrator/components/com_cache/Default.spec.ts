@@ -20,10 +20,7 @@ test.describe('Test in backend that the cache', () => {
 
   test('can clear expired cache', async ({ page, joomla }) => {
     await page.locator('#toolbar-delete2').click();
-    const confirm = page.locator('div.buttons-holder button[data-button-ok]');
-    if (await confirm.count()) {
-      await confirm.first().click();
-    }
+    await page.getByRole('button', { name: 'Yes' }).click();
     await joomla.checkForSystemMessage('Expired cached items have been cleared');
   });
 
