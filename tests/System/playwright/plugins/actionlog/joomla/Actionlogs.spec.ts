@@ -20,11 +20,11 @@ test.describe('Test that the Action Logs plugin', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_users&task=user.add');
-    await page.locator('#jform_name').fill("").fill('test user');
-    await page.locator('#jform_username').fill("").fill('test');
-    await page.locator('#jform_email').fill("").fill('test@example.com');
-    await page.locator('#jform_password').fill("").fill('testtesttest');
-    await page.locator('#jform_password2').fill("").fill('testtesttest');
+    await page.locator('#jform_name').fill('test user');
+    await page.locator('#jform_username').fill('test');
+    await page.locator('#jform_email').fill('test@example.com');
+    await page.locator('#jform_password').fill('testtesttest');
+    await page.locator('#jform_password2').fill('testtesttest');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('User saved');
     await expect(page.getByText('test user').first()).toBeVisible();
@@ -37,11 +37,11 @@ test.describe('Test that the Action Logs plugin', () => {
   }) => {
     const id = await joomla.db_createUser();
     await page.goto(`/administrator/index.php?option=com_users&task=user.edit&id=${id}`);
-    await page.locator('#jform_name').fill("").fill('test edited');
-    await page.locator('#jform_username').fill("").fill('testedited');
-    await page.locator('#jform_password').fill("").fill('testeditedtest');
-    await page.locator('#jform_password2').fill("").fill('testeditedtest');
-    await page.locator('#jform_email').fill("").fill('testedited@example.com');
+    await page.locator('#jform_name').fill('test edited');
+    await page.locator('#jform_username').fill('testedited');
+    await page.locator('#jform_password').fill('testeditedtest');
+    await page.locator('#jform_password2').fill('testeditedtest');
+    await page.locator('#jform_email').fill('testedited@example.com');
     await joomla.clickToolbarButton('Save');
     await joomla.checkForSystemMessage('User saved.');
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
@@ -71,7 +71,7 @@ test.describe('Test that the Action Logs plugin', () => {
   }) => {
     await joomla.db_createUser();
     await page.goto('/administrator/index.php?option=com_users&view=users');
-    await page.locator('#filter_search').fill("").fill('test@example.com');
+    await page.locator('#filter_search').fill('test@example.com');
     await page.locator('.btn-group .btn').first().click();
     await page.locator('input[type="checkbox"][name="cid[]"]').first().check();
     await joomla.clickToolbarButton('Action');
@@ -80,7 +80,7 @@ test.describe('Test that the Action Logs plugin', () => {
     await page.goto('/administrator/index.php?option=com_actionlogs&view=actionlogs');
     await expect(page.locator('tbody tr')).toBeTruthy();
     await page.goto('/administrator/index.php?option=com_users&view=users');
-    await page.locator('#filter_search').fill("").fill('test@example.com');
+    await page.locator('#filter_search').fill('test@example.com');
     await page.locator('.btn-group .btn').first().click();
     await page.locator('input[type="checkbox"][name="cid[]"]').first().check();
     await joomla.clickToolbarButton('Action');
@@ -120,7 +120,7 @@ test.describe('Test that the Action Logs plugin', () => {
     }).click();
     await page.reload();
     await page.goto('/index.php?option=com_users&view=profile&layout=edit');
-    await page.locator('#jform_name').fill("").fill('test edited frontend');
+    await page.locator('#jform_name').fill('test edited frontend');
     await page.locator('button[type="submit"]').filter({
       hasText: 'Save'
     }).click();
@@ -133,7 +133,7 @@ test.describe('Test that the Action Logs plugin', () => {
   }) => {
     await joomla.db_createUser();
     await page.goto('/index.php?option=com_users&view=remind');
-    await expect(page.locator('#jform_email')).toBeVisible().fill("").fill('test@example.com');
+    await expect(page.locator('#jform_email')).toBeVisible().fill('test@example.com');
     await page.locator('button[type="submit"]').filter({
       hasText: 'Submit'
     }).click();
@@ -146,7 +146,7 @@ test.describe('Test that the Action Logs plugin', () => {
   }) => {
     await joomla.db_createUser();
     await page.goto('/index.php?option=com_users&view=reset');
-    await expect(page.locator('#jform_email')).toBeVisible().fill("").fill('test@example.com');
+    await expect(page.locator('#jform_email')).toBeVisible().fill('test@example.com');
     await page.locator('button[type="submit"]').filter({
       hasText: 'Submit'
     }).click();

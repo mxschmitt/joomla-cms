@@ -48,7 +48,8 @@ test.describe('Test in backend that the category form', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_categories&task=category.add&extension=com_content&filter[published]=');
+    const __wait = page.waitForResponse(resp => /index\.php\?option=com_categories&view=categories&extension=com_content/.test(resp.url()));
     await joomla.clickToolbarButton('Cancel');
-    await page.waitForResponse(resp => /index\.php\?option=com_categories&view=categories&extension=com_content/.test(resp.url()));
+    await __wait;
   });
 });

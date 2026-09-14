@@ -20,7 +20,7 @@ test.describe('Test in backend that the article form', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_content&task=article.add');
-    await page.locator('#jform_title').fill("").fill('Test article');
+    await page.locator('#jform_title').fill('Test article');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Article saved.');
     await expect(page.getByText('Test article').first()).toBeVisible();
@@ -46,7 +46,8 @@ test.describe('Test in backend that the article form', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_content&task=article.add');
+    const __wait = page.waitForResponse(resp => /index\.php\?option=com_content&view=articles/.test(resp.url()));
     await joomla.clickToolbarButton('Cancel');
-    await page.waitForResponse(resp => /index\.php\?option=com_content&view=articles/.test(resp.url()));
+    await __wait;
   });
 });

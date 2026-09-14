@@ -34,8 +34,8 @@ test.describe('Test in frontend that the users profile view edit layout', () => 
     });
     await joomla.doFrontendLogin('automatedtestuser2', 'test', false);
     await page.goto('/index.php?option=com_users&view=profile&layout=edit');
-    await page.locator('#jform_name').fill("").fill('automated test user edited');
-    await page.locator('#jform_email1').fill("").fill('testedited@example.com');
+    await page.locator('#jform_name').fill('automated test user edited');
+    await page.locator('#jform_email1').fill('testedited@example.com');
     await page.locator('.controls > .btn-primary').click({
       force: true
     });
@@ -59,8 +59,8 @@ test.describe('Test in frontend that the users profile view edit layout', () => 
     await joomla.doFrontendLogin('automatedtestuser', 'test', false);
     await page.goto('/');
     await page.locator('a').filter({ hasText: 'Automated test edit' }).click();
-    await page.locator('#jform_name').fill("").fill('automated test user edited');
-    await page.locator('#jform_email1').fill("").fill('testedited@example.com');
+    await page.locator('#jform_name').fill('automated test user edited');
+    await page.locator('#jform_email1').fill('testedited@example.com');
     await expect(page.locator('.controls > .btn-primary')).toBeVisible();
     await page.locator('.controls > .btn-primary').click({
       force: true

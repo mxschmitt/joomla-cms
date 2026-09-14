@@ -26,7 +26,8 @@ test.describe('Test in backend that the mails', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_mails&task=template.edit&template_id=com_actionlogs.notification&language=en-GB');
+    const __wait = page.waitForResponse(resp => /index\.php\?option=com_mails&view=templates/.test(resp.url()));
     await joomla.clickToolbarButton('Cancel');
-    await page.waitForResponse(resp => /index\.php\?option=com_mails&view=templates/.test(resp.url()));
+    await __wait;
   });
 });

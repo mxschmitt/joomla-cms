@@ -31,7 +31,7 @@ test.describe('Test that the webauthn system plugin', { tag: '@chromium-only' },
     await page.locator('.plg_system_webauthn-manage-edit').filter({
       hasText: 'Edit Name'
     }).click();
-    await page.locator('.webauthnManagementEditorRow input').fill("").fill('Test Passkey');
+    await page.locator('.webauthnManagementEditorRow input').fill('Test Passkey');
     await page.locator('.webauthnManagementEditorRow button').filter({
       hasText: 'Save'
     }).click();
@@ -74,7 +74,7 @@ test.describe('Test that the webauthn system plugin', { tag: '@chromium-only' },
     await page.locator('.plg_system_webauthn-manage-edit').filter({
       hasText: 'Edit Name'
     }).click();
-    await page.locator('.webauthnManagementEditorRow input').fill("").fill('Test Passkey');
+    await page.locator('.webauthnManagementEditorRow input').fill('Test Passkey');
     await page.locator('.webauthnManagementEditorRow button').filter({
       hasText: 'Save'
     }).click();

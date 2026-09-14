@@ -63,11 +63,13 @@ test.describe('Test in backend that the styles list', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_templates&view=styles&client_id=0');
+    let __wait = page.waitForResponse(resp => /.*.*\/administrator\/index\.php\?option=com_config&view=component&component=com_templates.*/.test(resp.url()));
     await joomla.clickToolbarButton('Options');
-    await page.waitForResponse(resp => /.*.*/administrator/index\.php\?option=com_config&view=component&component=com_templates.*/.test(resp.url()));
+    await __wait;
     expect(await page.title()).toContain('Template: Options');
     await expect(page.locator('h1.page-title')).toContainText('Template: Options');
+    __wait = page.waitForResponse(resp => /.*.*\/administrator\/index\.php\?option=com_templates&view=styles&client_id=0.*/.test(resp.url()));
     await joomla.clickToolbarButton('Cancel');
-    await page.waitForResponse(resp => /.*.*/administrator/index\.php\?option=com_templates&view=styles&client_id=0.*/.test(resp.url()));
+    await __wait;
   });
 });

@@ -39,7 +39,7 @@ test.describe('Test in frontend that the config config view', () => {
     await page.locator('a').filter({ hasText: 'automated test site configuration' }).click();
     expect(await page.title()).toBe('automated test site configuration');
     await expect(page.locator('head meta[name=description]')).toHaveCount(0);
-    await page.locator('#jform_MetaDesc').fill("").fill('test meta description');
+    await page.locator('#jform_MetaDesc').fill('test meta description');
     await page.locator('#application-form button[data-submit-task="config.apply"]').click();
     await joomla.checkForSystemMessage('Configuration saved.');
     expect(await page.locator('head meta[name=description]').getAttribute('content')).toContain('test meta description');

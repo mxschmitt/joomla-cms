@@ -14,7 +14,7 @@ test.describe('Test in frontend that the config templates view', () => {
   }) => {
     await page.goto('/index.php?option=com_config&view=templates');
     expect(await page.title()).toBe('Home');
-    await page.locator('#params_siteDescription').fill("").fill('test site description');
+    await page.locator('#params_siteDescription').fill('test site description');
     await page.locator('#templates-form button[data-submit-task="templates.apply"]').click();
     await joomla.checkForSystemMessage('Configuration saved.');
     await expect(page.locator('header div.site-description')).toContainText('test site description');

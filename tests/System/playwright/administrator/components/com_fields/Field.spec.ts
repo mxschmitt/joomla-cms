@@ -20,7 +20,7 @@ test.describe('Test in backend that the field form', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_fields&task=field.add&context=com_content.article');
-    await page.locator('#jform_title').fill("").fill('Test field');
+    await page.locator('#jform_title').fill('Test field');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Field saved');
     await expect(page.getByText('Test field').first()).toBeVisible();
@@ -30,8 +30,9 @@ test.describe('Test in backend that the field form', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_fields&task=field.add&context=com_content.article');
+    const __wait = page.waitForResponse(resp => /index\.php\?option=com_fields&view=fields&context=com_content\.article/.test(resp.url()));
     await joomla.clickToolbarButton('Cancel');
-    await page.waitForResponse(resp => /index\.php\?option=com_fields&view=fields&context=com_content\.article/.test(resp.url()));
+    await __wait;
   });
   test('can edit a field', async ({
     page,
@@ -41,7 +42,7 @@ test.describe('Test in backend that the field form', () => {
       title: 'Test field'
     });
     await page.goto(`/administrator/index.php?option=com_fields&task=field.edit&id=${id}&context=com_content.article`);
-    await page.locator('#jform_title').fill("").fill('Test field edited');
+    await page.locator('#jform_title').fill('Test field edited');
     await joomla.clickToolbarButton('Save & Close');
     await expect(page.getByText('Test field edited').first()).toBeVisible();
   });

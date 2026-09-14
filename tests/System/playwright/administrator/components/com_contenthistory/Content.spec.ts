@@ -20,7 +20,7 @@ test.describe('Test in backend that the content history list', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_content&task=article.add');
-    await page.locator('#jform_title').fill("").fill('Test article versions');
+    await page.locator('#jform_title').fill('Test article versions');
     await joomla.clickToolbarButton('Save');
     await joomla.clickToolbarButton('Versions');
     await expect(page.locator('.joomla-dialog-header')).toContainText('Versions');
@@ -30,7 +30,7 @@ test.describe('Test in backend that the content history list', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_content&task=article.add');
-    await page.locator('#jform_title').fill("").fill('Test article versions');
+    await page.locator('#jform_title').fill('Test article versions');
     await joomla.clickToolbarButton('Save');
     await joomla.clickToolbarButton('Versions');
     const currentDate = new Date();
@@ -45,7 +45,7 @@ test.describe('Test in backend that the content history list', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_content&task=article.add');
-    await page.locator('#jform_title').fill("").fill('Test article versions');
+    await page.locator('#jform_title').fill('Test article versions');
     await joomla.clickToolbarButton('Save');
     await joomla.clickToolbarButton('Versions');
     const dialogContent = page.locator('joomla-dialog[type="iframe"]');
@@ -59,7 +59,7 @@ test.describe('Test in backend that the content history list', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_content&task=article.add');
-    await page.locator('#jform_title').fill("").fill('Test article versions');
+    await page.locator('#jform_title').fill('Test article versions');
     await joomla.clickToolbarButton('Save');
     await joomla.clickToolbarButton('Versions');
     const dialogContent = page.locator('joomla-dialog[type="iframe"]');
@@ -71,7 +71,7 @@ test.describe('Test in backend that the content history list', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_content&task=article.add');
-    await page.locator('#jform_title').fill("").fill('Test article versions');
+    await page.locator('#jform_title').fill('Test article versions');
     await joomla.clickToolbarButton('Save');
     await joomla.clickToolbarButton('Versions');
     const dialogContent = page.locator('joomla-dialog[type="iframe"]');
@@ -83,7 +83,7 @@ test.describe('Test in backend that the content history list', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_content&task=article.add');
-    await page.locator('#jform_title').fill("").fill('Test article versions');
+    await page.locator('#jform_title').fill('Test article versions');
     await joomla.clickToolbarButton('Save');
     await joomla.clickToolbarButton('Versions');
     const dialogContent = page.locator('joomla-dialog[type="iframe"]');
@@ -95,7 +95,7 @@ test.describe('Test in backend that the content history list', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_content&task=article.add');
-    await page.locator('#jform_title').fill("").fill('Test article versions');
+    await page.locator('#jform_title').fill('Test article versions');
     await joomla.clickToolbarButton('Save');
     await joomla.clickToolbarButton('Versions');
     const dialogContent = page.locator('joomla-dialog[type="iframe"]');

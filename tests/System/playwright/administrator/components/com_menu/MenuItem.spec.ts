@@ -41,7 +41,7 @@ test.describe('Test in backend that the menu list', () => {
     });
     await page.goto('administrator/index.php?option=com_menus&task=item.add');
     await expect(page.getByText('Menus: New Item').first()).toBeVisible();
-    await page.locator('#jform_title').fill("").fill('can create menu item');
+    await page.locator('#jform_title').fill('can create menu item');
     await page.locator('button[data-modal-config*="Menu Item Type"]').first().click();
     await expect(page.getByText('Menu Item Type').first()).toBeVisible();
     const $body = page.frameLocator('iframe');

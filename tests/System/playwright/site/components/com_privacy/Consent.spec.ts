@@ -81,11 +81,11 @@ test.describe('Test in frontend that the privacy consent view', () => {
     joomla
   }) => {
     await page.goto('/index.php?option=com_users&view=registration');
-    await page.locator('#jform_name').fill("").fill('test user');
-    await page.locator('#jform_username').fill("").fill('test');
-    await page.locator('#jform_email1').fill("").fill('test@example.com');
-    await page.locator('#jform_password1').fill("").fill('testtesttest');
-    await page.locator('#jform_password2').fill("").fill('testtesttest');
+    await page.locator('#jform_name').fill('test user');
+    await page.locator('#jform_username').fill('test');
+    await page.locator('#jform_email1').fill('test@example.com');
+    await page.locator('#jform_password1').fill('testtesttest');
+    await page.locator('#jform_password2').fill('testtesttest');
     await page.locator('.com-users-registration__register').click();
     await expect(page.locator('.alert-message')).toContainText("Registration failed: Agreement to the site's Privacy Policy is required.");
   });
@@ -94,11 +94,11 @@ test.describe('Test in frontend that the privacy consent view', () => {
     joomla
   }) => {
     await page.goto('/index.php?option=com_users&view=registration');
-    await page.locator('#jform_name').fill("").fill('test user');
-    await page.locator('#jform_username').fill("").fill('test');
-    await page.locator('#jform_email1').fill("").fill('test@example.com');
-    await page.locator('#jform_password1').fill("").fill('testtesttest');
-    await page.locator('#jform_password2').fill("").fill('testtesttest');
+    await page.locator('#jform_name').fill('test user');
+    await page.locator('#jform_username').fill('test');
+    await page.locator('#jform_email1').fill('test@example.com');
+    await page.locator('#jform_password1').fill('testtesttest');
+    await page.locator('#jform_password2').fill('testtesttest');
     await page.locator('#jform_privacyconsent_privacy0').click();
     await page.locator('.com-users-registration__register').click();
     await expect(page.locator('.alert-message')).toContainText('Your account has been created and a verification link has been sent to the email address you entered. Note that you must verify the account by selecting the verification link when you get the email and then an administrator will activate your account before you can login.');

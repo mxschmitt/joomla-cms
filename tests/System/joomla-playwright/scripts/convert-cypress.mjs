@@ -127,7 +127,7 @@ function isHttpMethodLiteral(arg) {
 function urlMatcherFromIntercept(arg, methodArg = null) {
   let urlTest;
   if (t.isStringLiteral(arg)) {
-    const source = arg.value.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*');
+    const source = arg.value.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\//g, '\\/');
     urlTest = t.callExpression(
       t.memberExpression(t.regExpLiteral(source), t.identifier('test')),
       [t.callExpression(t.memberExpression(t.identifier('resp'), t.identifier('url')), [])],
@@ -575,6 +575,10 @@ function convertCyChain(node) {
       continue;
     }
     if (step.method === 'clear') {
+      const next = methods[i + 1];
+      if (next && (next.method === 'type' || next.method === 'fill')) {
+        continue;
+      }
       expr = t.callExpression(t.memberExpression(expr, t.identifier('fill')), [t.stringLiteral('')]);
       needsAwait = true;
       continue;
@@ -1143,7 +1147,10 @@ function postProcess(code) {
   s = s.replace(/await expect\(page\.url\(\)\)\.toHaveText\(/g, 'expect(page.url()).toMatch(');
   s = s.replace(/await expect\(page\.url\(\)\)\.toBe\(/g, 'expect(page.url()).toBe(');
   s = s.replace(/await expect\(page\.title\(\)\)\.toHaveText\(/g, 'expect(await page.title()).toMatch(');
-  s = s.replace(/(\n\s*)(await (?:joomla\.clickToolbarButton\([^;]+\)|page\.goto\([^;]+\)|page\.locator\([^;]+\)\.click\(\)|page\.getByText\([^;]+\)(?:\.first\(\))?\.click\(\));)\n(\s*)(const __wait = page\.waitForResponse\([^;]+;)\n(\s*)await __wait;/g, '$1$4$1$2\n$5await __wait;');
+  s = s.replace(/\.fill\(""\)\.fill\(/g, '.fill(');
+  s = s.replace(/\.fill\(''\)\.fill\(/g, '.fill(');
+  s = s.replace(/(\n\s*)(await (?:joomla\.clickToolbarButton\([^;]+\)|page\.goto\([^;]+\)|page\.locator\([^;]+\)\.(?:click|pressSequentially)\([^;]+\)|page\.getByText\([^;]+\)(?:\.first\(\))?\.click\(\));)\n(\s*)await page\.waitForResponse\(([^;]+)\);/g,
+    '$1const __wait = page.waitForResponse($4);$1$2\n$3await __wait;');
   s = s.replace(/await joomla\.api_(patch|post|get|delete)\(([\s\S]*?)\);\n(\s*)const response = undefined;/g, 'const response = await joomla.api_$1($2);');
   return s;
 }

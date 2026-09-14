@@ -20,7 +20,7 @@ test.describe('Test in backend that the module form', () => {
     joomla
   }) => {
     await page.goto('/administrator/index.php?option=com_modules&task=module.add&client_id=0&eid=44');
-    await page.locator('#jform_title').fill("").fill('Test module');
+    await page.locator('#jform_title').fill('Test module');
     await joomla.clickToolbarButton('Save & Close');
     await joomla.checkForSystemMessage('Module saved');
     await expect(page.getByText('Test module').first()).toBeVisible();
@@ -34,7 +34,7 @@ test.describe('Test in backend that the module form', () => {
       module: 'mod_custom'
     });
     await page.goto(`/administrator/index.php?option=com_modules&task=module.edit&id=${id}`);
-    await page.locator('#jform_title').fill("").fill('Test module edited');
+    await page.locator('#jform_title').fill('Test module edited');
     await joomla.clickToolbarButton('Save & Close');
     await expect(page.getByText('Test module edited').first()).toBeVisible();
   });
